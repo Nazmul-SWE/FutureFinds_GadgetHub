@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Created</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style> body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; } </style>
+  <link rel="icon" href="/static/images/Future Finds banner.png" />
+  <meta name="color-scheme" content="light" />
+</head>
+<body class="min-h-screen bg-gray-50 py-10">
+  <div class="max-w-2xl mx-auto px-4">
+    <div class="mb-6 text-center">
+      <h1 class="text-3xl font-bold text-gray-900">Order Created</h1>
+      <p class="text-gray-600">Review your order and proceed to payment.</p>
+    </div>
+
+    <div class="bg-white shadow rounded-xl p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500">Order ID</p>
+          <p class="text-xl font-semibold text-gray-900">#{{ order.id }}</p>
+        </div>
+        <div class="text-right">
+          <p class="text-sm text-gray-500">Amount</p>
+          <p class="text-2xl font-bold text-indigo-600">{{ order.amount }} {{ order.currency }}</p>
+        </div>
+      </div>
+      <div class="mt-4 border-t pt-4">
+        <p class="text-gray-700"><span class="font-medium">Description:</span> {{ order.description|default:'Order payment' }}</p>
+      </div>
+      <div class="mt-8">
+        <a href="{% url 'payments:sslcz_start' order.id %}"
+           class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-5 py-3 text-white font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+          Proceed to Pay with SSLCommerz
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h9.69L10.22 6.03a.75.75 0 1 1 1.06-1.06l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 1 1-1.06-1.06l3.22-3.22H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" /></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-6 text-center">
+      <a href="/cart/" class="text-indigo-600 hover:text-indigo-800 font-medium">Back to cart</a>
+    </div>
+  </div>
+</body>
+</html>

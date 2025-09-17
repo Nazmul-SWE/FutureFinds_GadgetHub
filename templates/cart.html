@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <title>Cart</title>
+</head>
+
+
+<body class="bg-gray-100">
+
+  <!-- Navigation section Start-->
+<nav  class="bg-slate-950"  >
+    <!-- Navigation section Start-->
+<div class="navbar shadow-sm w-5/6 mx-auto py-7">
+
+  <div class="navbar-start">
+    <div class="dropdown">
+      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
+      </div>
+      <ul
+        tabindex="0"
+        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        <li><a>Item 1</a></li>
+        <li>
+          <a>Parent</a>
+          <ul class="p-2">
+            <li><a>Submenu 1</a></li>
+            <li><a>Submenu 2</a></li>
+          </ul>
+        </li>
+        <li><a>Item 3</a></li>
+      </ul>
+    </div>
+    <a href="{% url 'home' %}"class="btn btn-ghost text-orange-400 text-5xl font-bold">Future<span class=" text-blue-400 font-bold text-5xl">Finds</span></a>
+  </div>
+
+
+
+
+  <div class="navbar-end rounded">
+
+      <!-- Amazon -->
+{% if user.is_authenticated %}
+  <!-- Show Sign up (logout) if logged in -->
+  <button class="btn bg-[#5EBB2B] text-white border-[#4eaa0c] text-xl">
+    <a href="{% url 'logout' %}">Sign up</a>
+  </button>
+{% else %}
+  <!-- Show Sign in if not logged in -->
+  <button class="btn bg-[#FF9900] text-black border-[#e17d00] text-xl">
+    <a href="{% url 'login' %}">Sign in</a>
+  </button>
+{% endif %}
+
+
+
+
+  </div>
+
+</div>
+<!-- Navigation section End-->
+</nav>
+
+
+<!-- Navigation section End-->
+
+
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Your Cart</h1>
+
+        {% if cart_items %}
+        <div class="grid grid-cols-1 gap-4">
+            {% for item in cart_items %}
+            <div class="card bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
+                <div class="flex items-center">
+                    {% if item.product.image %}
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-16 h-16 object-cover rounded-md mr-4">
+                    {% endif %}
+                    <div>
+                        <h2 class="text-lg font-semibold">{{ item.product.name }}</h2>
+                        <p class="text-gray-600">Price: {{ item.product.price }} BDT</p>
+                        <p class="text-gray-600">Quantity: {{ item.quantity }}</p>
+                        <p class="text-gray-600">Total: {{ item.get_total_price }} BDT</p>
+                    </div>
+                </div>
+                <div class="flex space-x-2">
+                    <a href="{% url 'update_cart_item' item.id 'increase' %}" class="btn btn-sm btn-primary">+</a>
+                    <a href="{% url 'update_cart_item' item.id 'decrease' %}" class="btn btn-sm btn-secondary">-</a>
+                    <a href="{% url 'update_cart_item' item.id 'remove' %}" class="btn btn-sm btn-error">Remove</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-6 p-4 bg-white shadow-md rounded-lg">
+            <h2 class="text-xl font-bold">Total Price: {{ total_price }} BDT</h2>
+            <div class="mt-4">
+                <a href="{% url 'checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center">
+            <p class="text-gray-600">Your cart is empty.</p>
+            <a href="{% url 'products' %}" class="btn btn-primary mt-4">Shop Now</a>
+        </div>
+        {% endif %}
+    </div>
+
+
+
+</body>
+
+</html>

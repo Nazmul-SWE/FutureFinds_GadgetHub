@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Checkout</title>
+</head>
+<body class="bg-gray-100">
+  <!-- Navigation section Start-->
+<nav  class="bg-slate-950"  >
+    <!-- Navigation section Start-->
+<div class="navbar shadow-sm w-5/6 mx-auto py-7">
+
+  <div class="navbar-start">
+    <div class="dropdown">
+      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
+      </div>
+      <ul
+        tabindex="0"
+        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        <li><a>Item 1</a></li>
+        <li>
+          <a>Parent</a>
+          <ul class="p-2">
+            <li><a>Submenu 1</a></li>
+            <li><a>Submenu 2</a></li>
+          </ul>
+        </li>
+        <li><a>Item 3</a></li>
+      </ul>
+    </div>
+    <a href="{% url 'home' %}"class="btn btn-ghost text-orange-400 text-5xl font-bold">Future<span class=" text-blue-400 font-bold text-5xl">Finds</span></a>
+  </div>
+
+
+
+
+  <div class="navbar-end rounded">
+
+      <!-- Amazon -->
+{% if user.is_authenticated %}
+  <!-- Show Sign up (logout) if logged in -->
+  <button class="btn bg-[#5EBB2B] text-white border-[#4eaa0c] text-xl">
+    <a href="{% url 'logout' %}">Sign up</a>
+  </button>
+{% else %}
+  <!-- Show Sign in if not logged in -->
+  <button class="btn bg-[#FF9900] text-black border-[#e17d00] text-xl">
+    <a href="{% url 'login' %}">Sign in</a>
+  </button>
+{% endif %}
+
+
+
+
+  </div>
+
+</div>
+<!-- Navigation section End-->
+</nav>
+
+
+<!-- Navigation section End-->
+
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Checkout</h1>
+
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+            <ul class="mb-4">
+                {% for item in cart_items %}
+                <li class="flex justify-between border-b py-2">
+                    <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+                    <span>{{ item.get_total_price }} BDT</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="flex justify-between font-bold text-lg">
+                <span>Total:</span>
+                <span>{{ total_price }} BDT</span>
+            </div>
+        </div>
+
+        <form method="POST" class="mt-6 bg-white shadow-md rounded-lg p-6">
+            {% csrf_token %}
+            <h2 class="text-xl font-semibold mb-4">Shipping Details</h2>
+            <div class="mb-4">
+                <label for="address" class="block text-gray-700 font-medium mb-2">Address</label>
+                <textarea id="address" name="address" rows="3" class="textarea textarea-bordered w-full" required></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="phone" class="block text-gray-700 font-medium mb-2">Phone</label>
+                <input type="text" id="phone" name="phone" class="input input-bordered w-full" required>
+            </div>
+            <div class="mb-4">
+                <label for="payment_method" class="block text-gray-700 font-medium mb-2">Payment Method</label>
+                <select id="payment_method" name="payment_method" class="select select-bordered w-full" required>
+                    <option value="Bkash">Bkash</option>
+                    <option value="Nagad">Nagad</option>
+                    <option value="Cash on Delivery">Cash on Delivery</option>
+                </select>
+            </div>
+            <div class="mt-6">
+                <button type="submit" class="btn btn-primary w-full">Proceed to Confirm Order</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
