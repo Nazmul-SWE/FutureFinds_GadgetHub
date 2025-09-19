@@ -18,7 +18,11 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-10 text-green-600"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-2.56a.75.75 0 1 0-1.06-1.06l-4.72 4.72-1.78-1.78a.75.75 0 0 0-1.06 1.06l2.31 2.31a.75.75 0 0 0 1.06 0l5.31-5.31Z" clip-rule="evenodd" /></svg>
       </div>
       <h1 class="text-2xl font-bold text-gray-900">Payment Successful</h1>
-      <p class="mt-2 text-gray-600">Your order has been paid successfully.</p>
+      {% if is_rental %}
+        <p class="mt-2 text-gray-600">Your rental order has been paid successfully.</p>
+      {% else %}
+        <p class="mt-2 text-gray-600">Your order has been paid successfully.</p>
+      {% endif %}
 
       <div class="mt-6 grid grid-cols-2 gap-6 text-left">
         <div>
@@ -31,8 +35,13 @@
         </div>
       </div>
 
-      <div class="mt-8">
-        <a href="/" class="btn btn-primary bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg">Continue Shopping</a>
+      <div class="mt-8 space-x-4">
+        {% if is_rental %}
+          <a href="{% url 'rental_orders' %}" class="btn btn-primary bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg">View Rental Orders</a>
+        {% else %}
+          <a href="{% url 'orders' %}" class="btn btn-primary bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg">View Orders</a>
+        {% endif %}
+        <a href="/" class="btn btn-outline px-6 py-3 rounded-lg">Continue Shopping</a>
       </div>
     </div>
   </div>

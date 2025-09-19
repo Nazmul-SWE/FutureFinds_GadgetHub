@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Rental Orders</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<!-- Navbar -->
+<nav class="bg-slate-950">
+  <div class="navbar shadow-sm w-5/6 mx-auto py-7">
+    <div class="navbar-start">
+      <a class="btn btn-ghost text-orange-400 text-5xl font-bold">
+        Future<span class="text-blue-400 font-bold text-5xl">Finds</span>
+      </a>
+    </div>
+
+    <div class="navbar-center hidden lg:flex">
+      <ul class="menu menu-horizontal px-1">
+        <li><a href="{% url 'home' %}" class="text-gray-200 text-xl font-bold">Home</a></li>
+        <li><a href="{% url 'rental_products' %}" class="text-gray-200 text-xl font-bold">Rent</a></li>
+        <li><a href="{% url 'orders' %}" class="text-gray-200 text-xl font-bold">Orders</a></li>
+        <li><a href="#footer_part" class="text-gray-200 text-xl font-bold">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="navbar-end">
+      <a href="#" class='px-4 py-2 text-xl rounded font-semibold text-gray-200'>Hi, {{ user.username }}</a>
+      {% if user.is_authenticated %}
+        <button class="btn bg-[#5EBB2B] text-white border-[#4eaa0c] text-xl">
+          <a href="{% url 'logout' %}">Sign out</a>
+        </button>
+      {% else %}
+        <button class="btn bg-[#FF9900] text-black border-[#e17d00] text-xl">
+          <a href="{% url 'login' %}">Sign in</a>
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- Rental Orders -->
+<main class="container mx-auto mt-16 mb-16">
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">My Rental Orders</h2>
+
+  {% if orders %}
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse bg-white shadow-lg rounded-lg overflow-hidden">
+      <thead>
+        <tr class="bg-gray-100 text-gray-700">
+          <th class="border px-4 py-3 text-left">Product</th>
+          <th class="border px-4 py-3 text-left">Rental Period</th>
+          <th class="border px-4 py-3 text-left">Total Price</th>
+          <th class="border px-4 py-3 text-left">Status</th>
+          <th class="border px-4 py-3 text-left">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr class="hover:bg-gray-50">
+          <td class="border px-4 py-2">{{ order.product.title }}</td>
+          <td class="border px-4 py-2">{{ order.rental_start_date }} → {{ order.rental_end_date }}</td>
+          <td class="border px-4 py-2">৳ {{ order.total_rent_price }}</td>
+          <td class="border px-4 py-2">{{ order.status }}</td>
+          <td class="border px-4 py-2">
+            {% if order.status == "Pending" or order.status == "Confirmed" %}
+            <a href="{% url 'cancel_rental_order' order.id %}"
+               class="inline-block bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
+              Cancel
+            </a>
+            {% else %}
+            <span class="text-gray-500">No Actions</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-gray-600 mt-6">You have no rental orders yet.</p>
+  {% endif %}
+
+  <div class="mt-8">
+    <a href="{% url 'rental_products' %}"
+       class="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
+      Browse Rentals
+    </a>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer id="footer_part" class="bg-slate-950">
+  <footer class="footer text-base-content border-base-300 border-t px-10 py-6">
+    <aside class="grid-flow-col items-center">
+      <p class="text-xl text-white">Future Finds Ltd.<br/>Providing reliable tech since 2025</p>
+    </aside>
+  </footer>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirm Rental - {{ product.title }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<!-- Navbar -->
+<nav class="bg-slate-950">
+  <div class="navbar shadow-sm w-5/6 mx-auto py-7">
+    <div class="navbar-start">
+      <a class="btn btn-ghost text-orange-400 text-5xl font-bold">
+        Future<span class="text-blue-400 font-bold text-5xl">Finds</span>
+      </a>
+    </div>
+
+    <div class="navbar-center hidden lg:flex">
+      <ul class="menu menu-horizontal px-1">
+        <li><a href="{% url 'home' %}" class="text-gray-200 text-xl font-bold">Home</a></li>
+        <li><a href="{% url 'rental_products' %}" class="text-gray-200 text-xl font-bold">Rent</a></li>
+        <li><a href="{% url 'orders' %}" class="text-gray-200 text-xl font-bold">Orders</a></li>
+        <li><a href="#footer_part" class="text-gray-200 text-xl font-bold">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="navbar-end">
+      <a href="#" class='px-4 py-2 text-xl rounded font-semibold text-gray-200'>Hi, {{ user.username }}</a>
+      {% if user.is_authenticated %}
+        <button class="btn bg-[#5EBB2B] text-white border-[#4eaa0c] text-xl">
+          <a href="{% url 'logout' %}">Sign out</a>
+        </button>
+      {% else %}
+        <button class="btn bg-[#FF9900] text-black border-[#e17d00] text-xl">
+          <a href="{% url 'login' %}">Sign in</a>
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- Confirm Rental -->
+<main class="container mx-auto my-16">
+  <div class="bg-white shadow-md rounded-lg p-6 w-5/6 mx-auto">
+    <h2 class="text-xl font-semibold mb-4">Confirm Your Rental</h2>
+
+    <ul class="mb-4">
+      <li><strong>Product:</strong> {{ product.title }}</li>
+      <li><strong>Start Date:</strong> {{ rental_start_date }}</li>
+      <li><strong>End Date:</strong> {{ rental_end_date }}</li>
+      <li><strong>Total Price:</strong> {{ total_price }} BDT</li>
+    </ul>
+
+    <form method="post" class="mt-6">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary w-full">Proceed to Payment</button>
+    </form>
+
+
+    <div class="mt-6 text-center">
+      <a href="{% url 'rental_checkout' product.id %}"
+         class="text-blue-600 font-medium hover:underline hover:text-blue-700 transition">
+        ← Go Back
+      </a>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer id="footer_part" class="bg-slate-950 mt-16">
+  <footer class="footer text-base-content border-base-300 border-t px-10 py-6">
+    <aside class="grid-flow-col items-center">
+      <p class="text-xl text-white">Future Finds Ltd.<br/>Providing reliable tech since 2025</p>
+    </aside>
+  </footer>
+</footer>
+
+</body>
+</html>

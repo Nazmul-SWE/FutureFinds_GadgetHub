@@ -65,48 +65,50 @@
 
 <!-- Navigation section End-->
 
-    <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6">Checkout</h1>
 
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
-            <ul class="mb-4">
-                {% for item in cart_items %}
-                <li class="flex justify-between border-b py-2">
-                    <span>{{ item.product.name }} (x{{ item.quantity }})</span>
-                    <span>{{ item.get_total_price }} BDT</span>
-                </li>
-                {% endfor %}
-            </ul>
-            <div class="flex justify-between font-bold text-lg">
-                <span>Total:</span>
-                <span>{{ total_price }} BDT</span>
-            </div>
+
+
+  <div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">Checkout</h1>
+
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+        <ul class="mb-4">
+            {% for item in cart_items %}
+            <li class="flex justify-between border-b py-2">
+                <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+                <span>{{ item.get_total_price }} BDT</span>
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="flex justify-between font-bold text-lg">
+            <span>Total:</span>
+            <span>{{ total_price }} BDT</span>
+        </div>
+    </div>
+
+    <form method="POST" class="mt-6 bg-white shadow-md rounded-lg p-6">
+        {% csrf_token %}
+        <h2 class="text-xl font-semibold mb-4">Shipping Details</h2>
+
+        <div class="mb-4">
+            <label for="address" class="block text-gray-700 font-medium mb-2">Address</label>
+            <textarea id="address" name="address" rows="3" class="textarea textarea-bordered w-full" required></textarea>
         </div>
 
-        <form method="POST" class="mt-6 bg-white shadow-md rounded-lg p-6">
-            {% csrf_token %}
-            <h2 class="text-xl font-semibold mb-4">Shipping Details</h2>
-            <div class="mb-4">
-                <label for="address" class="block text-gray-700 font-medium mb-2">Address</label>
-                <textarea id="address" name="address" rows="3" class="textarea textarea-bordered w-full" required></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="phone" class="block text-gray-700 font-medium mb-2">Phone</label>
-                <input type="text" id="phone" name="phone" class="input input-bordered w-full" required>
-            </div>
-            <div class="mb-4">
-                <label for="payment_method" class="block text-gray-700 font-medium mb-2">Payment Method</label>
-                <select id="payment_method" name="payment_method" class="select select-bordered w-full" required>
-                    <option value="Bkash">Bkash</option>
-                    <option value="Nagad">Nagad</option>
-                    <option value="Cash on Delivery">Cash on Delivery</option>
-                </select>
-            </div>
-            <div class="mt-6">
-                <button type="submit" class="btn btn-primary w-full">Proceed to Confirm Order</button>
-            </div>
-        </form>
-    </div>
+        <div class="mb-4">
+            <label for="phone" class="block text-gray-700 font-medium mb-2">Phone</label>
+            <input type="text" id="phone" name="phone" class="input input-bordered w-full" required>
+        </div>
+
+        <!-- Hidden payment method (SSLCommerz) -->
+        <input type="hidden" name="payment_method" value="SSLCommerz">
+
+        <div class="mt-6">
+            <button type="submit" class="btn btn-primary w-full">Proceed to Confirm Order</button>
+        </div>
+    </form>
+</div>
+
 </body>
 </html>

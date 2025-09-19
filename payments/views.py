@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseBadRequest
+from django.contrib.auth.models import User
 from .models import Order, Transaction
 import uuid
 import json
@@ -165,10 +166,93 @@ def sslcz_success(request):
     order.status = 'paid'
     order.save()
 
-    # Clear user's cart after successful payment
+    # Handle successful payment - check if it's a regular order or rental order
     if order.user_id:
-        CartItem.objects.filter(user_id=order.user_id).delete()
-    return render(request, 'payments/success.html', {'order': order, 'tx': tx})
+        import datetime
+        
+        # Check if this is a rental order (has rental data in session)
+        rental_product_id = request.session.get('rental_product_id')
+        
+        if rental_product_id:
+            # This is a rental order
+            from products.models import ProductRent, RentalOrder
+            
+            try:
+                rental_start_date = request.session.get('rental_start_date')
+                rental_end_date = request.session.get('rental_end_date')
+                
+                if rental_start_date and rental_end_date:
+                    rental_start_date = datetime.datetime.strptime(rental_start_date, '%Y-%m-%d').date()
+                    rental_end_date = datetime.datetime.strptime(rental_end_date, '%Y-%m-%d').date()
+                    
+                    product = ProductRent.objects.get(id=rental_product_id)
+                    
+                    # Create rental order
+                    rental_order = RentalOrder.objects.create(
+                        user_id=order.user_id,
+                        product=product,
+                        rental_start_date=rental_start_date,
+                        rental_end_date=rental_end_date,
+                        status='Confirmed'
+                    )
+                    
+                    # Clear rental session data
+                    for key in ['rental_product_id', 'rental_start_date', 'rental_end_date', 'rental_total_price', 'rental_payment_method']:
+                        request.session.pop(key, None)
+                        
+            except Exception as e:
+                print(f"Error creating rental order: {str(e)}")
+        else:
+            # This is a regular product order
+            from products.models import Order as ProductOrder, OrderItem
+            
+            # Get cart items before clearing
+            cart_items = CartItem.objects.filter(user_id=order.user_id)
+            
+            # Get address and phone from session or payment response
+            user_obj = User.objects.get(id=order.user_id)
+            address = request.session.get('checkout_address', '')
+            phone = request.session.get('checkout_phone', '')
+            
+            # Create order in products app
+            product_order = ProductOrder.objects.create(
+                user=user_obj,
+                total_price=order.amount,
+                address=address,
+                phone=phone,
+                payment_method='SSLCommerz',
+                status='Confirmed'
+            )
+            
+            # Create order items
+            for item in cart_items:
+                OrderItem.objects.create(
+                    order=product_order,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price=item.get_total_price(),
+                )
+                # Update stock
+                item.product.stock -= item.quantity
+                if item.product.stock <= 0:
+                    item.product.is_available = False
+                item.product.save()
+            
+            # Clear cart
+            cart_items.delete()
+            
+            # Clear session data
+            for key in ['checkout_address', 'checkout_phone', 'checkout_payment_method', 'checkout_total_price']:
+                request.session.pop(key, None)
+    
+    # Check if this was a rental order to redirect appropriately
+    is_rental = 'rental_product_id' in request.session
+    
+    return render(request, 'payments/success.html', {
+        'order': order, 
+        'tx': tx,
+        'is_rental': is_rental
+    })
 
 
 @csrf_exempt

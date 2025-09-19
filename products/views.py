@@ -8,10 +8,8 @@ from django.db import transaction
 from django.db.models import Sum, F
 from django.shortcuts import redirect
 from django.http import HttpResponse
-from payments.models import Order
-
-
-
+from payments.models import Order as PaymentOrder
+import datetime
 def home(request):
     categories = Category.objects.all()
     return render(request, 'home.html', {'categories': categories})
@@ -184,7 +182,7 @@ def checkout(request):
         # If not Cash on Delivery, create an order and redirect to SSLCOMMERZ
         if payment_method.lower() != 'cash on delivery':
             description = ', '.join([f"{item.product.name} x{item.quantity}" for item in cart_items])[:250]
-            order = Order.objects.create(
+            order = PaymentOrder.objects.create(
                 user=request.user,
                 amount=total_price,
                 description=description
@@ -198,3 +196,216 @@ def checkout(request):
         'cart_items': cart_items,
         'total_price': total_price,
     })
+
+
+@login_required
+def confirm_order(request):
+    user = request.user
+    cart_items = CartItem.objects.filter(user=user).select_related('product')
+
+    address = request.session.get('checkout_address')
+    phone = request.session.get('checkout_phone')
+    total_price = request.session.get('checkout_total_price')
+    payment_method = request.session.get('checkout_payment_method')
+
+    if not address or not phone or not total_price or not payment_method:
+        messages.error(request, "Checkout details are missing. Please restart the process.")
+        return redirect('checkout')
+
+    if request.method == 'POST':
+        try:
+            with transaction.atomic():
+                order = Order.objects.create(
+                    user=user,
+                    total_price=total_price,
+                    address=address,
+                    phone=phone,
+                    payment_method=payment_method
+                )
+
+                for item in cart_items:
+                    if not item.product:
+                        raise Exception("Product not found in cart item.")
+
+                    OrderItem.objects.create(
+                        order=order,
+                        product=item.product,
+                        quantity=item.quantity,
+                        price=item.get_total_price(),
+                    )
+                    item.product.stock -= item.quantity
+                    if item.product.stock <= 0:
+                        item.product.is_available = False
+                    item.product.save()
+
+                cart_items.delete()
+
+                # Clear session
+                for key in ['checkout_address', 'checkout_phone', 'checkout_payment_method', 'checkout_total_price']:
+                    request.session.pop(key, None)
+
+                messages.success(request, f"Order placed successfully! Order ID: {order.id}")
+                print(f"Order ID: {order.id}")
+                return redirect('thanks')
+
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+            print(f"Error: {str(e)}")
+            return redirect('checkout')
+
+    return render(request, 'confirm_order.html', {
+        'cart_items': cart_items,
+        'total_price': total_price,
+        'address': address,
+        'phone': phone,
+        'payment_method': payment_method,
+    })
+
+
+
+
+@login_required(login_url='login')
+def orders(request):
+    user = request.user
+    orders = Order.objects.filter(user=user).prefetch_related('items__product')
+
+    return render(request, 'orders.html', {'orders': orders})
+
+
+@login_required(login_url='login')
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return render(request, 'order_details.html', {'order': order})
+
+
+@login_required
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    if order.status == 'Pending':
+        # Restore the stock of the products in the order
+        for item in order.items.all():
+            item.product.stock += item.quantity
+            item.product.save()
+
+        # Delete the order
+        order.delete()
+        messages.success(request, 'Order canceled successfully.')
+    else:
+        messages.error(request, 'Only pending orders can be canceled.')
+
+    return redirect('orders')
+
+
+
+
+
+def rental_products(request):
+    products = ProductRent.objects.filter(available=True)
+    return render(request, 'rental_products.html', {'products': products})
+
+# Rental product detail
+def rental_product_detail(request, pk):
+    product = get_object_or_404(ProductRent, id=pk)
+    return render(request, 'rental_product_detail.html', {'product': product})
+
+# Rental checkout: choose start & end dates
+@login_required
+def rental_checkout(request, pk):
+    product = get_object_or_404(ProductRent, id=pk)
+
+    if request.method == 'POST':
+        rental_start_date = request.POST.get('rental_start_date')
+        rental_end_date = request.POST.get('rental_end_date')
+
+        if not rental_start_date or not rental_end_date:
+            messages.error(request, "Please select rental start and end dates.")
+            return redirect('rental_product_detail', pk=product.id)
+
+        try:
+            rental_start_date = datetime.datetime.strptime(rental_start_date, '%Y-%m-%d').date()
+            rental_end_date = datetime.datetime.strptime(rental_end_date, '%Y-%m-%d').date()
+        except ValueError:
+            messages.error(request, "Invalid date format.")
+            return redirect('rental_product_detail', pk=product.id)
+
+        if rental_end_date <= rental_start_date:
+            messages.error(request, "Rental end date must be after the start date.")
+            return redirect('rental_product_detail', pk=product.id)
+
+        request.session['rental_start_date'] = rental_start_date.strftime('%Y-%m-%d')
+        request.session['rental_end_date'] = rental_end_date.strftime('%Y-%m-%d')
+
+        return redirect('rental_confirm', pk=product.id)
+
+    return render(request, 'rental_checkout.html', {'product': product})
+
+# Confirm rental order
+
+# Confirm rental order
+@login_required
+def rental_confirm(request, pk):
+    product = get_object_or_404(ProductRent, id=pk)
+    rental_start_date = request.session.get('rental_start_date')
+    rental_end_date = request.session.get('rental_end_date')
+
+    if not rental_start_date or not rental_end_date:
+        messages.error(request, "Rental dates missing. Please restart the process.")
+        return redirect('rental_product_detail', pk=product.id)
+
+    rental_start_date = datetime.datetime.strptime(rental_start_date, '%Y-%m-%d').date()
+    rental_end_date = datetime.datetime.strptime(rental_end_date, '%Y-%m-%d').date()
+
+    if request.method == 'POST':
+        try:
+            with transaction.atomic():
+                rental_days = (rental_end_date - rental_start_date).days
+                total_price = rental_days * product.rent_price_per_day
+                
+                # Store rental details in session for payment
+                request.session['rental_product_id'] = product.id
+                request.session['rental_start_date'] = rental_start_date.strftime('%Y-%m-%d')
+                request.session['rental_end_date'] = rental_end_date.strftime('%Y-%m-%d')
+                request.session['rental_total_price'] = float(total_price)
+                request.session['rental_payment_method'] = 'SSLCommerz'
+                
+                # Create payment order and redirect to SSLCommerz
+                description = f"Rental: {product.title} from {rental_start_date} to {rental_end_date}"
+                payment_order = PaymentOrder.objects.create(
+                    user=request.user,
+                    amount=total_price,
+                    description=description
+                )
+                return redirect('payments:sslcz_start', order_id=payment_order.id)
+                    
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+            return redirect('rental_product_detail', pk=product.id)
+
+    rental_days = (rental_end_date - rental_start_date).days
+    total_price = rental_days * product.rent_price_per_day
+
+    return render(request, 'rental_confirm.html', {
+        'product': product,
+        'rental_start_date': rental_start_date,
+        'rental_end_date': rental_end_date,
+        'total_price': total_price,
+    })
+
+# List rental orders
+@login_required
+def rental_orders(request):
+    orders = RentalOrder.objects.filter(user=request.user).order_by('-id')
+    return render(request, 'rental_orders.html', {"orders": orders})
+
+# Cancel rental order
+@login_required
+def cancel_rental_order(request, order_id):
+    order = get_object_or_404(RentalOrder, id=order_id, user=request.user)
+    if order.status in ["Pending", "Confirmed"]:
+        order.status = "Cancelled"
+        order.save()
+        messages.success(request, "Rental order cancelled successfully.")
+    else:
+        messages.error(request, "This order cannot be cancelled.")
+    return redirect('rental_orders')

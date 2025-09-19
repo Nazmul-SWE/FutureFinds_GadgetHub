@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rental Product Detail - {{ product.title }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<!-- Navbar -->
+<nav class="bg-slate-950">
+  <div class="navbar shadow-sm w-5/6 mx-auto py-7">
+    <div class="navbar-start">
+      <a class="btn btn-ghost text-orange-400 text-5xl font-bold">Future<span class="text-blue-400 font-bold text-5xl">Finds</span></a>
+    </div>
+
+    <div class="navbar-center hidden lg:flex">
+      <ul class="menu menu-horizontal px-1">
+        <li><a href="{% url 'home' %}" class="text-gray-200 text-xl font-bold">Home</a></li>
+        <li><a href="{% url 'rental_products' %}" class="text-gray-200 text-xl font-bold">Rent</a></li>
+        <li><a href="{% url 'orders' %}" class="text-gray-200 text-xl font-bold">Orders</a></li>
+        <li><a href="#footer_part" class="text-gray-200 text-xl font-bold">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="navbar-end">
+      <a href="#" class='px-4 py-2 text-xl rounded font-semibold text-gray-200'>Hi, {{user.username}}</a>
+      {% if user.is_authenticated %}
+        <button class="btn bg-[#5EBB2B] text-white border-[#4eaa0c] text-xl">
+          <a href="{% url 'logout' %}">Sign out</a>
+        </button>
+      {% else %}
+        <button class="btn bg-[#FF9900] text-black border-[#e17d00] text-xl">
+          <a href="{% url 'login' %}">Sign in</a>
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- Rental Product Detail -->
+<main class="container mx-auto my-16">
+  <div class="bg-white shadow-lg rounded-xl p-8 w-5/6 mx-auto">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">{{ product.title }}</h2>
+
+    <div class="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-10">
+      <img src="{{ product.image.url }}" alt="{{ product.title }}" class="w-72 h-72 object-cover rounded-xl shadow-md">
+
+      <div>
+        <p class="text-gray-700 mb-2"><strong>Category:</strong> {{ product.get_category_display }}</p>
+        
+        <p class="text-gray-700 mb-2"><strong>Price per day:</strong> ৳ {{ product.rent_price_per_day }}</p>
+        <p class="text-gray-700 mb-4"><strong>Description:</strong> {{ product.description }}</p>
+      </div>
+    </div>
+
+    {% if product.available %}
+      <div class="mt-8">
+        <a href="{% url 'rental_checkout' product.pk %}"
+           class="w-full block text-center bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition duration-300 ease-in-out transform hover:scale-105">
+          Proceed to Checkout
+        </a>
+      </div>
+    {% else %}
+      <p class="text-red-500 mt-6 font-semibold">⚠ This product is currently unavailable.</p>
+    {% endif %}
+
+    <div class="mt-6">
+      <a href="{% url 'rental_products' %}"
+         class="inline-block bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 transition duration-300">
+        ← Back to Rentals
+      </a>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer id="footer_part" class="bg-slate-950 mt-16">
+  <footer class="footer text-base-content border-base-300 border-t px-10 py-6">
+    <aside class="grid-flow-col items-center">
+      <p class="text-xl text-white">Future Finds Ltd.<br/>Providing reliable tech since 2025</p>
+    </aside>
+  </footer>
+</footer>
+
+</body>
+</html>
