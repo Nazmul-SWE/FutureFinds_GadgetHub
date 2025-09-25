@@ -409,3 +409,41 @@ def cancel_rental_order(request, order_id):
     else:
         messages.error(request, "This order cannot be cancelled.")
     return redirect('rental_orders')
+
+def flash_sale(request):
+    now = timezone.now()
+    flash_sale_products = FlashSaleProduct.objects.filter(start_time__lte=now, end_time__gte=now)
+    return render(request, 'flash_sale.html', {'flash_sale_products': flash_sale_products})
+
+def purchase_flash_sale(request, pk):
+    # Dummy purchase logic (implement your own)
+    # You can create an Order model and save purchase info here
+    return redirect('flash_sale')
+
+def flash_sale_detail(request, pk):
+    product = get_object_or_404(FlashSaleProduct, pk=pk)
+    return render(request, "flash_sale_detail.html", {"product": product})
+
+def flash_sale_checkout(request, pk):
+    product = get_object_or_404(FlashSaleProduct, pk=pk)
+
+    if request.method == "POST":
+        address = request.POST.get("address")
+        phone = request.POST.get("phone")
+
+        # Save order (assuming you have a model FlashSaleOrder)
+        order = FlashSaleOrder.objects.create(
+            user=request.user,
+            product=product,
+            quantity=1,  # default 1 for Buy Now
+            address=address,
+            phone=phone,
+            total_price=product.get_sale_price(),
+        )
+
+        return redirect("order_success")  # redirect to a success page
+
+    return render(request, "flash_sale_checkout.html", {
+        "cart_items": [{"product": product, "quantity": 1, "get_total_price": product.get_sale_price()}],
+        "total_price": product.get_sale_price(),
+    })

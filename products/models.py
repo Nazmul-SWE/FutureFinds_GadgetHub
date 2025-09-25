@@ -135,4 +135,29 @@ class RentalOrderItem(models.Model):
         return f"{self.quantity} of {self.product.title} in Rental Order {self.rental_order.id}"
 
 
+class FlashSaleProduct(models.Model):
+    name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='flash_sale_images/', blank=True, null=True)
+    discount_type = models.CharField(
+        max_length=10,
+        choices=[('percent', 'Percent'), ('fixed', 'Fixed')],
+        default='percent'
+    )
+    original_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount_value = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        help_text="Enter percentage for percent discount, or fixed amount for fixed discount"
+    )
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
+    def get_sale_price(self):
+        if self.discount_type == 'percent':
+            return self.original_price * (1 - self.discount_value / 100)
+        else:  # fixed
+            return self.original_price - self.discount_value
+
+    def __str__(self):
+        return self.name

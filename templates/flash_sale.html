@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flash Sale Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+{% load static %}
+
+<!-- Navbar (copy from your home.html if needed) -->
+<nav class="bg-slate-950">
+  <div class="navbar shadow-sm w-5/6 mx-auto py-7">
+    <div class="navbar-start">
+      <a class="btn btn-ghost text-orange-400 text-5xl font-bold">
+        Future<span class=" text-blue-400 font-bold text-5xl">Finds</span>
+      </a>
+    </div>
+    <div class="navbar-center hidden lg:flex">
+      <ul class="menu menu-horizontal px-1">
+        <li><a href="{% url 'home' %}" class="text-gray-200 text-xl font-bold">Home</a></li>
+        <li><a href="{% url 'orders' %}" class="text-gray-200 text-xl font-bold">Orders</a></li>
+        <li><a href="{% url 'rental_products' %}" class="text-gray-200 text-xl font-bold">Rent</a></li>
+        <li><a href="{% url 'flash_sale' %}" class="text-gray-200 text-xl font-bold">Flash Sale</a></li>
+        <li><a href="#footer_part" class="text-gray-200 text-xl font-bold">Contact</a></li>
+      </ul>
+    </div>
+    <div class="navbar-end rounded">
+      <a href="#" class='px-4 py-2 text-xl rounded font-semibold text-gray-200'>Hi, {{ user.username }}</a>
+      {% if user.is_authenticated %}
+        <button class="btn bg-[#5EBB2B] text-white border-[#4eaa0c] text-xl">
+          <a href="{% url 'logout' %}">Sign out</a>
+        </button>
+      {% else %}
+        <button class="btn bg-[#FF9900] text-black border-[#e17d00] text-xl">
+          <a href="{% url 'login' %}">Sign in</a>
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- Flash Sale Products Section -->
+<div class="container mx-auto mt-10 mb-10">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Flash Sale Products</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for sale in flash_sale_products %}
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            {% if sale.image %}
+                <img src="{{ sale.image.url }}" alt="{{ sale.name }}" class="w-full h-48 object-cover">
+            {% else %}
+                <img src="{% static 'images/default.png' %}" alt="No Image" class="w-full h-48 object-cover">
+            {% endif %}
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-gray-800">{{ sale.name }}</h3>
+                <p class="text-gray-600 mt-2"><strong>Original Price:</strong> <del>৳ {{ sale.original_price }}</del></p>
+                <p class="text-gray-600"><strong>Sale Price:</strong> ৳ {{ sale.get_sale_price }}</p>
+                <p class="text-gray-600">
+                    <strong>Discount:</strong>
+                    {% if sale.discount_type == 'percent' %}
+                        {{ sale.discount_value }}%
+                    {% else %}
+                        ৳ {{ sale.discount_value }}
+                    {% endif %}
+                </p>
+                <div class="mt-4">
+                    <a href="{% url 'flash_sale_detail' sale.pk %}"
+   class="block text-center bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition duration-300">
+    Buy Now
+</a>
+
+
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-gray-600 mt-6 col-span-4 text-center">No flash sale products available right now.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Footer -->
+<footer id="footer_part" class="bg-slate-950">
+  <footer class="footer text-base-content border-base-300 border-t px-10 py-4">
+    <aside class="grid-flow-col items-center">
+      <p class="text-xl text-white">
+        Future Finds Ltd.<br />
+        Providing reliable tech since 2025
+      </p>
+    </aside>
+  </footer>
+</footer>
+
+</body>
+</html>
