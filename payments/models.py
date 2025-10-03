@@ -29,3 +29,4 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.gateway} tx {self.transaction_id} ({'ok' if self.success else 'pending'})"
+

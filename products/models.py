@@ -161,3 +161,106 @@ class FlashSaleProduct(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class PreOrderProduct(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    image = models.ImageField(upload_to='preorder_images/', blank=True, null=True)
+    expected_release_date = models.DateField()
+    preorder_start_date = models.DateTimeField()
+    preorder_end_date = models.DateTimeField()
+    max_preorder_quantity = models.PositiveIntegerField(default=100)
+    current_preorders = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def is_preorder_available(self):
+        now = timezone.now()
+        return (self.is_active and
+                self.preorder_start_date <= now <= self.preorder_end_date and
+                self.current_preorders < self.max_preorder_quantity)
+
+    def preorder_slots_remaining(self):
+        return self.max_preorder_quantity - self.current_preorders
+
+    def __str__(self):
+        return self.name
+
+
+class PreOrderItem(models.Model):
+    preorder_product = models.ForeignKey(PreOrderProduct, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='preorder_carts')
+
+    def __str__(self):
+        return f"{self.quantity} of {self.preorder_product.name}"
+
+    def get_total_price(self):
+        return self.quantity * self.preorder_product.price
+
+
+class PreOrder(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="preorders")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    STATUS_CHOICES = [
+        ("Pending", "Pending"),
+        ("Confirmed", "Confirmed"),
+        ("Fulfilled", "Fulfilled"),
+        ("Cancelled", "Cancelled"),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Pending")
+
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
+
+    PAYMENT_CHOICES = [
+        ("SSLCommerz", "SSLCommerz"),
+    ]
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default="SSLCommerz")
+
+    def __str__(self):
+        return f"PreOrder {self.id} by {self.user.username}"
+
+
+class PreOrderOrderItem(models.Model):
+    preorder = models.ForeignKey(PreOrder, on_delete=models.CASCADE, related_name="items")
+    preorder_product = models.ForeignKey(PreOrderProduct, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.quantity} of {self.preorder_product.name} in PreOrder {self.preorder.id}"
+
+
+class FlashSaleOrder(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='flash_sale_orders')
+    product = models.ForeignKey(FlashSaleProduct, on_delete=models.CASCADE, related_name='flash_sale_orders')
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    address = models.TextField()
+    phone = models.CharField(max_length=15)
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('Pending', 'Pending'),
+            ('Confirmed', 'Confirmed'),
+            ('Delivered', 'Delivered'),
+            ('Cancelled', 'Cancelled'),
+        ],
+        default='Pending'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"FlashSaleOrder {self.id} by {self.user.username}"
+
+    def get_total_price(self):
+        return self.quantity * self.price

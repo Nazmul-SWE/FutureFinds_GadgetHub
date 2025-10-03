@@ -166,14 +166,61 @@ def sslcz_success(request):
     order.status = 'paid'
     order.save()
 
-    # Handle successful payment - check if it's a regular order or rental order
+    # Handle successful payment - check if it's a regular order, rental order, or pre-order
     if order.user_id:
         import datetime
+        
+        # Check if this is a pre-order (has preorder data in session)
+        preorder_checkout_address = request.session.get('preorder_checkout_address')
         
         # Check if this is a rental order (has rental data in session)
         rental_product_id = request.session.get('rental_product_id')
         
-        if rental_product_id:
+        if preorder_checkout_address:
+            # This is a pre-order
+            from products.models import PreOrder, PreOrderOrderItem, PreOrderItem
+            
+            try:
+                # Get pre-order items before clearing
+                preorder_items = PreOrderItem.objects.filter(user_id=order.user_id)
+                
+                # Get address and phone from session
+                user_obj = User.objects.get(id=order.user_id)
+                address = request.session.get('preorder_checkout_address', '')
+                phone = request.session.get('preorder_checkout_phone', '')
+                
+                # Create pre-order in products app
+                preorder = PreOrder.objects.create(
+                    user=user_obj,
+                    total_price=order.amount,
+                    address=address,
+                    phone=phone,
+                    payment_method='SSLCommerz',
+                    status='Confirmed'
+                )
+                
+                # Create pre-order items
+                for item in preorder_items:
+                    PreOrderOrderItem.objects.create(
+                        preorder=preorder,
+                        preorder_product=item.preorder_product,
+                        quantity=item.quantity,
+                        price=item.get_total_price(),
+                    )
+                    # Update preorder count
+                    item.preorder_product.current_preorders += item.quantity
+                    item.preorder_product.save()
+                
+                # Clear preorder cart
+                preorder_items.delete()
+                
+                # Clear session data
+                for key in ['preorder_checkout_address', 'preorder_checkout_phone', 'preorder_checkout_payment_method', 'preorder_checkout_total_price']:
+                    request.session.pop(key, None)
+                    
+            except Exception as e:
+                print(f"Error creating pre-order: {str(e)}")
+        elif rental_product_id:
             # This is a rental order
             from products.models import ProductRent, RentalOrder
             
@@ -245,13 +292,15 @@ def sslcz_success(request):
             for key in ['checkout_address', 'checkout_phone', 'checkout_payment_method', 'checkout_total_price']:
                 request.session.pop(key, None)
     
-    # Check if this was a rental order to redirect appropriately
+    # Check if this was a rental order or pre-order to redirect appropriately
     is_rental = 'rental_product_id' in request.session
+    is_preorder = 'preorder_checkout_address' in request.session
     
     return render(request, 'payments/success.html', {
         'order': order, 
         'tx': tx,
-        'is_rental': is_rental
+        'is_rental': is_rental,
+        'is_preorder': is_preorder
     })
 
 

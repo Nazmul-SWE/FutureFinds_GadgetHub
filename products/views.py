@@ -447,3 +447,224 @@ def flash_sale_checkout(request, pk):
         "cart_items": [{"product": product, "quantity": 1, "get_total_price": product.get_sale_price()}],
         "total_price": product.get_sale_price(),
     })
+
+
+# Pre-order views
+def preorder_products(request):
+    now = timezone.now()
+    preorder_products = PreOrderProduct.objects.filter(
+        is_active=True,
+        preorder_start_date__lte=now,
+        preorder_end_date__gte=now
+    )
+    return render(request, 'preorder.html', {'preorder_products': preorder_products})
+
+
+def preorder_product_detail(request, pk):
+    product = get_object_or_404(PreOrderProduct, pk=pk)
+    return render(request, 'preorder_detail.html', {'product': product})
+
+
+@login_required(login_url='login')
+def add_to_preorder_cart(request, product_id):
+    product = get_object_or_404(PreOrderProduct, id=product_id)
+    user = request.user
+
+    if not product.is_preorder_available():
+        messages.error(request, "This pre-order is no longer available.")
+        return redirect('preorder_products')
+
+    # Check if the product is already in the preorder cart
+    preorder_item, created = PreOrderItem.objects.get_or_create(user=user, preorder_product=product)
+
+    if not created:
+        # If the item already exists, increase the quantity
+        if product.preorder_slots_remaining() > preorder_item.quantity:
+            preorder_item.quantity += 1
+            preorder_item.save()
+            messages.success(request, f"{product.name} quantity increased in pre-order cart.")
+        else:
+            messages.warning(request, "No more pre-order slots available.")
+    else:
+        messages.success(request, f"{product.name} added to pre-order cart.")
+
+    return redirect('preorder_cart')
+
+
+@login_required(login_url='login')
+def preorder_cart(request):
+    user = request.user
+    preorder_items = PreOrderItem.objects.filter(user=user)
+
+    # Calculate the total price of items in the preorder cart
+    total_price = preorder_items.aggregate(
+        total_price=Sum(F('quantity') * F('preorder_product__price'))
+    )['total_price'] or 0
+
+    return render(request, 'preorder_cart.html', {
+        'preorder_items': preorder_items,
+        'total_price': total_price,
+    })
+
+
+@login_required(login_url='login')
+def update_preorder_cart_item(request, preorder_item_id, action):
+    preorder_item = get_object_or_404(PreOrderItem, id=preorder_item_id, user=request.user)
+    
+    if action == 'increase':
+        if preorder_item.preorder_product.preorder_slots_remaining() > preorder_item.quantity:
+            preorder_item.quantity += 1
+            preorder_item.save()
+            messages.success(request, f"Increased {preorder_item.preorder_product.name} quantity.")
+        else:
+            messages.warning(request, "No more pre-order slots available.")
+    elif action == 'decrease':
+        if preorder_item.quantity > 1:
+            preorder_item.quantity -= 1
+            preorder_item.save()
+            messages.success(request, f"Decreased {preorder_item.preorder_product.name} quantity.")
+        else:
+            preorder_item.delete()
+            messages.success(request, f"Removed {preorder_item.preorder_product.name} from pre-order cart.")
+    elif action == 'remove':
+        preorder_item.delete()
+        messages.success(request, f"Removed {preorder_item.preorder_product.name} from pre-order cart.")
+    else:
+        messages.error(request, "Invalid action.")
+    
+    return redirect('preorder_cart')
+
+
+@login_required
+def preorder_checkout(request):
+    user = request.user
+    preorder_items = PreOrderItem.objects.filter(user=user).select_related('preorder_product')
+
+    if not preorder_items.exists():
+        messages.warning(request, "Your pre-order cart is empty.")
+        return redirect('preorder_cart')
+
+    total_price = float(sum(item.get_total_price() for item in preorder_items))
+
+    if request.method == 'POST':
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        payment_method = request.POST.get('payment_method')
+
+        if not address or not phone or not payment_method:
+            messages.error(request, "Please fill in all required fields.")
+            return redirect('preorder_checkout')
+
+        request.session['preorder_checkout_address'] = address
+        request.session['preorder_checkout_phone'] = phone
+        request.session['preorder_checkout_payment_method'] = payment_method
+        request.session['preorder_checkout_total_price'] = total_price
+
+        # Create payment order and redirect to SSLCOMMERZ
+        description = ', '.join([f"{item.preorder_product.name} x{item.quantity}" for item in preorder_items])[:250]
+        order = PaymentOrder.objects.create(
+            user=request.user,
+            amount=total_price,
+            description=f"PreOrder: {description}"
+        )
+        return redirect('payments:sslcz_start', order_id=order.id)
+
+    return render(request, 'preorder_checkout.html', {
+        'preorder_items': preorder_items,
+        'total_price': total_price,
+    })
+
+
+@login_required
+def confirm_preorder(request):
+    user = request.user
+    preorder_items = PreOrderItem.objects.filter(user=user).select_related('preorder_product')
+
+    address = request.session.get('preorder_checkout_address')
+    phone = request.session.get('preorder_checkout_phone')
+    total_price = request.session.get('preorder_checkout_total_price')
+    payment_method = request.session.get('preorder_checkout_payment_method')
+
+    if not address or not phone or not total_price or not payment_method:
+        messages.error(request, "Pre-order checkout details are missing. Please restart the process.")
+        return redirect('preorder_checkout')
+
+    if request.method == 'POST':
+        try:
+            with transaction.atomic():
+                preorder = PreOrder.objects.create(
+                    user=user,
+                    total_price=total_price,
+                    address=address,
+                    phone=phone,
+                    payment_method=payment_method
+                )
+
+                for item in preorder_items:
+                    if not item.preorder_product:
+                        raise Exception("Pre-order product not found in cart item.")
+
+                    PreOrderOrderItem.objects.create(
+                        preorder=preorder,
+                        preorder_product=item.preorder_product,
+                        quantity=item.quantity,
+                        price=item.get_total_price(),
+                    )
+                    
+                    # Update preorder count
+                    item.preorder_product.current_preorders += item.quantity
+                    item.preorder_product.save()
+
+                preorder_items.delete()
+
+                # Clear session
+                for key in ['preorder_checkout_address', 'preorder_checkout_phone', 'preorder_checkout_payment_method', 'preorder_checkout_total_price']:
+                    request.session.pop(key, None)
+
+                messages.success(request, f"Pre-order placed successfully! Pre-order ID: {preorder.id}")
+                return redirect('preorder_orders')
+
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+            return redirect('preorder_checkout')
+
+    return render(request, 'preorder_confirm.html', {
+        'preorder_items': preorder_items,
+        'total_price': total_price,
+        'address': address,
+        'phone': phone,
+        'payment_method': payment_method,
+    })
+
+
+@login_required(login_url='login')
+def preorder_orders(request):
+    user = request.user
+    preorders = PreOrder.objects.filter(user=user).prefetch_related('items__preorder_product')
+    return render(request, 'preorder_orders.html', {'preorders': preorders})
+
+
+@login_required(login_url='login')
+def preorder_order_detail(request, preorder_id):
+    preorder = get_object_or_404(PreOrder, id=preorder_id, user=request.user)
+    return render(request, 'preorder_order_details.html', {'preorder': preorder})
+
+
+@login_required
+def cancel_preorder(request, preorder_id):
+    preorder = get_object_or_404(PreOrder, id=preorder_id, user=request.user)
+
+    if preorder.status == 'Pending':
+        # Restore the preorder slots
+        for item in preorder.items.all():
+            item.preorder_product.current_preorders -= item.quantity
+            item.preorder_product.save()
+
+        # Cancel the preorder
+        preorder.status = 'Cancelled'
+        preorder.save()
+        messages.success(request, 'Pre-order cancelled successfully.')
+    else:
+        messages.error(request, 'Only pending pre-orders can be cancelled.')
+
+    return redirect('preorder_orders')

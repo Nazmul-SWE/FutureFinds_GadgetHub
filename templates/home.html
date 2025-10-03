@@ -21,15 +21,17 @@
       <ul
         tabindex="0"
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-        <li><a>Item 1</a></li>
-        <li>
-          <a>Parent</a>
-          <ul class="p-2">
-            <li><a>Submenu 1</a></li>
-            <li><a>Submenu 2</a></li>
-          </ul>
-        </li>
-        <li><a>Item 3</a></li>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'products' %}">Products</a></li>
+        <li><a href="{% url 'preorder_products' %}">Pre-Orders</a></li>
+        <li><a href="{% url 'rental_products' %}">Rentals</a></li>
+        <li><a href="{% url 'flash_sale' %}">Flash Sale</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'cart' %}">Cart</a></li>
+        <li><a href="{% url 'preorder_cart' %}">Pre-Order Cart</a></li>
+        <li><a href="{% url 'orders' %}">Orders</a></li>
+        <li><a href="{% url 'preorder_orders' %}">Pre-Orders</a></li>
+        {% endif %}
       </ul>
     </div>
     <a class="btn btn-ghost text-orange-400 text-5xl font-bold">Future<span class=" text-blue-400 font-bold text-5xl">Finds</span></a>
@@ -37,10 +39,14 @@
 
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal px-1">
-      <li><a href="#category_part" class="text-gray-200 text-xl font-bold">Category</a></li>
-       <li><a href="{% url "orders" %}" class="text-gray-200 text-xl font-bold">Orders</a></li>
-        <li><a href="{% url 'rental_products' %}" class="text-gray-200 text-xl font-bold">Rent</a></li>
-        <li><a href="{% url 'flash_sale' %}" class="text-gray-200 text-xl font-bold">Flash Sale</a></li>
+      <li><a href="{% url 'products' %}" class="text-gray-200 text-xl font-bold">Products</a></li>
+      <li><a href="{% url 'preorder_products' %}" class="text-gray-200 text-xl font-bold">Pre-Orders</a></li>
+      <li><a href="{% url 'rental_products' %}" class="text-gray-200 text-xl font-bold">Rent</a></li>
+      <li><a href="{% url 'flash_sale' %}" class="text-gray-200 text-xl font-bold">Flash Sale</a></li>
+      {% if user.is_authenticated %}
+      <li><a href="{% url "orders" %}" class="text-gray-200 text-xl font-bold">Orders</a></li>
+      <li><a href="{% url 'preorder_orders' %}" class="text-gray-200 text-xl font-bold">My Pre-Orders</a></li>
+      {% endif %}
       <li><a href="#footer_part" class="text-gray-200 text-xl font-bold">Contact</a></li>
     </ul>
   </div>
