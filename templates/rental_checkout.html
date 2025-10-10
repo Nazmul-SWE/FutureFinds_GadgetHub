@@ -8,38 +8,125 @@
 </head>
 <body class="bg-gray-100">
 
-<!-- Navbar -->
-<nav class="bg-slate-950">
-  <div class="navbar shadow-sm w-5/6 mx-auto py-7">
-    <div class="navbar-start">
-      <a class="btn btn-ghost text-orange-400 text-5xl font-bold">
-        Future<span class="text-blue-400 font-bold text-5xl">Finds</span>
-      </a>
-    </div>
+ {% load static %}
+  <!-- Nav bar Start-->
+<header class="bg-slate-950 sticky top-0 z-50">
 
-    <div class="navbar-center hidden lg:flex">
-      <ul class="menu menu-horizontal px-1">
-        <li><a href="{% url 'home' %}" class="text-gray-200 text-xl font-bold">Home</a></li>
-        <li><a href="{% url 'rental_products' %}" class="text-gray-200 text-xl font-bold">Rent</a></li>
-        <li><a href="{% url 'orders' %}" class="text-gray-200 text-xl font-bold">Orders</a></li>
-        <li><a href="#footer_part" class="text-gray-200 text-xl font-bold">Contact</a></li>
+
+  <div class="container mx-auto flex justify-between items-center py-4 px-4 lg:px-8">
+    
+    <!-- Left Section: Logo -->
+    <a href="{% url 'home' %}" class="flex items-center">
+      <span class="text-orange-400 text-4xl font-bold">Future</span>
+      <span class="text-blue-400 text-4xl font-bold ml-1">Finds</span>
+    </a>
+
+    <!-- Hamburger Menu (Mobile) -->
+    <button id="hamburger" class="lg:hidden text-white focus:outline-none">
+      <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+    </button>
+
+    <!-- Center Navigation Menu -->
+    <nav id="mobileMenu" class="hidden lg:flex md:flex-grow justify-center">
+      <ul class="flex flex-col lg:flex-row lg:space-x-6 text-white font-semibold">
+        <li><a href="{% url 'products' %}" class="hover:text-orange-400 py-2 block">Products</a></li>
+        <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400 py-2 block">Pre-Orders</a></li>
+        <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400 py-2 block">Rent</a></li>
+        <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400 py-2 block">Flash Sale</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'orders' %}" class="hover:text-orange-400 py-2 block">Orders</a></li>
+         
+        {% endif %}
+        <li><a href="#footer_part" class="hover:text-orange-400 py-2 block">Contact</a></li>
+     
       </ul>
-    </div>
+    </nav>
 
-    <div class="navbar-end">
-      <a href="#" class='px-4 py-2 text-xl rounded font-semibold text-gray-200'>Hi, {{ user.username }}</a>
+    <!-- Right Section: User + Buttons -->
+    <div class="hidden lg:flex items-center space-x-4">
       {% if user.is_authenticated %}
-        <button class="btn bg-[#5EBB2B] text-white border-[#4eaa0c] text-xl">
-          <a href="{% url 'logout' %}">Sign out</a>
-        </button>
+        <span class="text-gray-200 text-lg">Hi, {{ user.username }}</span>
+        <a href="{% url 'logout' %}" 
+           class="bg-[#5EBB2B] border border-[#4eaa0c] text-white hover:bg-transparent hover:text-[#5EBB2B] font-semibold px-4 py-2 rounded-full text-lg transition">
+           Sign out
+        </a>
       {% else %}
-        <button class="btn bg-[#FF9900] text-black border-[#e17d00] text-xl">
-          <a href="{% url 'login' %}">Sign in</a>
-        </button>
+        <a href="{% url 'login' %}"
+           class="bg-[#FF9900] border border-[#e17d00] text-black hover:bg-transparent hover:text-[#FF9900] font-semibold px-4 py-2 rounded-full text-lg transition">
+           Sign in
+        </a>
       {% endif %}
     </div>
   </div>
-</nav>
+
+  <!-- Mobile Menu Dropdown -->
+  <div id="mobileDropdown" class="lg:hidden hidden bg-slate-900 text-white px-6 pb-4">
+    <ul class="flex flex-col space-y-3 font-semibold">
+      <li><a href="{% url 'products' %}" class="hover:text-orange-400">Products</a></li>
+      <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
+      <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400">Rent</a></li>
+      <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
+  
+      {% endif %}
+      <li><a href="#footer_part" class="hover:text-orange-400">Contact</a></li>
+  
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'logout' %}" class="bg-[#5EBB2B] text-white px-4 py-2 rounded-full text-center">Sign out</a></li>
+      {% else %}
+        <li><a href="{% url 'login' %}" class="bg-[#FF9900] text-black px-4 py-2 rounded-full text-center">Sign in</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <!-- Simple Toggle Script -->
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileDropdown = document.getElementById('mobileDropdown');
+
+    hamburger.addEventListener('click', () => {
+      mobileDropdown.classList.toggle('hidden');
+    });
+  </script>
+
+
+
+
+  <!-- Mobile Menu Dropdown -->
+  <div id="mobileDropdown" class="lg:hidden hidden bg-slate-900 text-white px-6 pb-4">
+    <ul class="flex flex-col space-y-3 font-semibold">
+      <li><a href="{% url 'products' %}" class="hover:text-orange-400">Products</a></li>
+      <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
+      <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400">Rent</a></li>
+      <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
+        <li><a href="{% url 'preorder_orders' %}" class="hover:text-orange-400">My Pre-Orders</a></li>
+      {% endif %}
+      <li><a href="#footer_part" class="hover:text-orange-400">Contact</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'logout' %}" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Sign out</a></li>
+      {% else %}
+        <li><a href="{% url 'login' %}" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Sign in</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <!-- Simple Toggle Script -->
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileDropdown = document.getElementById('mobileDropdown');
+
+    hamburger.addEventListener('click', () => {
+      mobileDropdown.classList.toggle('hidden');
+    });
+  </script>
+</header>
+  <!-- Nav bar End-->
 
 <!-- Rental Checkout -->
 <main class="container mx-auto my-16">
