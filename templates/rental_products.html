@@ -161,17 +161,92 @@
     </div>
 </div>
 
-<!--  Footer copied from home.html -->
-<footer id="footer_part" class="bg-slate-950">
-  <footer class="footer text-base-content border-base-300 border-t px-10 py-4">
-    <aside class="grid-flow-col items-center">
-      <p class="text-xl text-white">
-        Future Finds Ltd.<br />
-        Providing reliable tech since 2025
-      </p>
-    </aside>
-  </footer>
+<!-- Footer Section -->
+<footer class="bg-slate-950 text-white text-sm mt-10">
+    {% load static %}
+  <div class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8">
+      <!-- Shop Menu -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Shop</h3>
+        <ul class="space-y-2">
+          <li><a href="/product/products/phone" class="hover:text-orange-400">Mobile</a></li>
+          <li><a href="#" class="hover:text-orange-400">Laptop</a></li>
+          <li><a href="#" class="hover:text-orange-400">Drone</a></li>
+          <li><a href="#" class="hover:text-orange-400">Accessories</a></li>
+        </ul>
+      </div>
+
+      <!-- Pages -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Pages</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-orange-400">Shop</a></li>
+          <li><a href="#" class="hover:text-orange-400">Product</a></li>
+          <li><a href="#" class="hover:text-orange-400">Checkout</a></li>
+          <li><a href="#" class="hover:text-orange-400">404</a></li>
+        </ul>
+      </div>
+
+      <!-- Account -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Account</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-orange-400">Cart</a></li>
+          <li><a href="#" class="hover:text-orange-400">Register</a></li>
+          <li><a href="#" class="hover:text-orange-400">Login</a></li>
+        </ul>
+      </div>
+
+      <!-- Social Media -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+            <img src="{% static 'images/icons/facebook.svg' %}" class="h-4" alt=""> Facebook</a></li>
+          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+            <img src="{% static 'images/icons/twitter.svg' %}" class="h-4" alt=""> Twitter</a></li>
+          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+            <img src="{% static 'images/icons/instagram.svg' %}" class="h-4" alt=""> Instagram</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-span-1 sm:col-span-2 lg:col-span-2">
+        <h3 class="text-lg font-semibold mb-4">Contact</h3>
+        <p class="mb-2">123 Gulshan Ave, Dhaka, Bangladesh</p>
+        <p class="mb-2">Phone: +880 1234 567 890</p>
+        <a href="mailto:info@yourstore.com" class="underline text-orange-400">futurefinds@.com</a>
+        <!-- <div class="mt-4">
+          <img src="{% static '' %}" alt="Logo" class="h-10">
+        </div>-->
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-gray-700 py-6">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center gap-4">
+      <p class="text-sm">&copy; 2025 Your Store. All rights reserved.</p>
+      <ul class="flex flex-wrap justify-center gap-4">
+        <li><a href="#" class="hover:text-orange-400">Privacy Policy</a></li>
+        <li><a href="#" class="hover:text-orange-400">Terms</a></li>
+        <li><a href="#" class="hover:text-orange-400">FAQ</a></li>
+      </ul>
+      <!-- Payment Methods -->
+      <div class="flex items-center justify-center gap-3">
+        <img src="{% static 'images/sslcommerz.png'%}" alt="SSLCommerz" class="h-6">
+        <img src="{% static 'images/visa_11378344.png' %}" alt="Visa" class="h-6">
+        <img src="{% static 'images/card_16174534.png' %}" alt="MasterCard" class="h-6">
+        <img src="{% static 'images/unnamed.webp' %}" alt="bKash" class="h-6">
+      </div>
+    </div>
+  </div>
 </footer>
+
+<script src="node_modules/swiper/swiper-bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="assets/js/script.js"></script>
 
 </body>
 </html>

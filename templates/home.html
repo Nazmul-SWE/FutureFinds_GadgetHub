@@ -154,45 +154,64 @@
 
     <!-- Slide 1 -->
     <div id="slide1" class="carousel-item relative w-full">
-      <img src="{% static 'images/banner1.png' %}" class="w-full object-cover" alt="Banner 1">
-      <!-- Overlay content -->
-      <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black bg-opacity-30">
-        <h2 class="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-4">Discover Future Gadgets</h2>
-        <p class="text-white mb-5 text-sm sm:text-base md:text-lg px-4">Shop the latest tech and accessories with exclusive offers</p>
-        <a href="/shop/"
-           class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 py-2 sm:px-6 sm:py-3 rounded-full transition">
+      <img src="{% static 'images/Flash_sell1.png' %}" class="w-full object-cover" alt="Banner 1">
+      <!-- Overlay -->
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black bg-opacity-30 px-4">
+        <h2 class="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-4"></h2>
+        <p class="text-white mb-5 text-sm sm:text-base md:text-lg"></p>
+
+        <a href="{% url 'flash_sale' %}"
+           class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-bold py-2 px-8 rounded-full w-full sm:w-auto text-center transition text-2xl">
           Shop Now
         </a>
       </div>
-      <!-- Navigation arrows -->
-      <div class="absolute flex justify-between transform -translate-y-1/2 left-4 right-4 top-1/2">
-        <a href="#slide2" class="btn btn-circle bg-gray-800 bg-opacity-50 hover:bg-orange-500 border-none text-white">❮</a>
-        <a href="#slide2" class="btn btn-circle bg-gray-800 bg-opacity-50 hover:bg-orange-500 border-none text-white">❯</a>
+      <!-- Arrows -->
+      <div class="absolute flex justify-between items-center left-2 right-2 top-1/2 -translate-y-1/2">
+        <button onclick="showSlide(2)" class="btn btn-circle bg-gray-800 bg-opacity-50 hover:bg-orange-500 border-none text-white">❮</button>
+        <button onclick="showSlide(2)" class="btn btn-circle bg-gray-800 bg-opacity-50 hover:bg-orange-500 border-none text-white">❯</button>
       </div>
     </div>
 
     <!-- Slide 2 -->
-    <div id="slide2" class="carousel-item relative w-full">
-      <img src="{% static 'images/bannerr2.png' %}" class="w-full object-cover" alt="Banner 2">
-      <!-- Overlay content -->
-      <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black bg-opacity-30">
-        <h2 class="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-4">Your Next Device Awaits</h2>
-        <p class="text-white mb-5 text-sm sm:text-base md:text-lg px-4">Explore premium gadgets built for the future</p>
+  <div id="slide2" class="carousel-item relative w-full">
+      <img src="{% static 'images/banner101.png' %}" class="w-full object-cover" alt="Banner 2">
+      <!-- Overlay -->
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black bg-opacity-30 px-4">
+        <h2 class="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-4"></h2>
+        <p class="text-white mb-5 text-sm sm:text-base md:text-lg"></p>
         <a href="/shop/"
-           class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 py-2 sm:px-6 sm:py-3 rounded-full transition">
+           class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-bold py-2 px-8 rounded-full w-full sm:w-auto text-center transition text-2xl">
           Explore Now
         </a>
       </div>
-      <!-- Navigation arrows -->
-      <div class="absolute flex justify-between transform -translate-y-1/2 left-4 right-4 top-1/2">
-        <a href="#slide1" class="btn btn-circle bg-gray-800 bg-opacity-50 hover:bg-orange-500 border-none text-white">❮</a>
-        <a href="#slide1" class="btn btn-circle bg-gray-800 bg-opacity-50 hover:bg-orange-500 border-none text-white">❯</a>
+      <!-- Arrows -->
+      <div class="absolute flex justify-between items-center left-2 right-2 top-1/2 -translate-y-1/2">
+        <button onclick="showSlide(1)" class="btn btn-circle bg-gray-800 bg-opacity-50 hover:bg-orange-500 border-none text-white">❮</button>
+        <button onclick="showSlide(1)" class="btn btn-circle bg-gray-800 bg-opacity-50 hover:bg-orange-500 border-none text-white">❯</button>
       </div>
     </div>
 
   </div>
 </div>
+
+<!-- JS to switch slides -->
+<script>
+  function showSlide(num) {
+    const slides = document.querySelectorAll('.carousel-item');
+    slides.forEach(slide => slide.classList.add('hidden'));
+    document.getElementById('slide' + num).classList.remove('hidden');
+  }
+
+
+</script>
+
+  <style>
+  html {
+    scroll-behavior: smooth;
+  }
+</style>
 <!-- Banner Section End -->
+
 
 
 </header>
@@ -202,45 +221,46 @@
 {% load static %}
 
 <main class="mb-16">
-  <!-- Category Start -->
-  <section id="category_part" class="container mx-auto px-4">
-    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center my-12 text-gray-800">
-       Categories
-    </h1>
+ <!-- Category Start -->
+<section id="category_part" class="container mx-auto px-4">
+  <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center my-12 text-gray-800">
+    Categories
+  </h1>
 
-    <div class="flex flex-wrap -mx-4">
-      {% for i in categories %}
-      <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-        <div class="bg-white p-4 rounded-2xl shadow-lg hover:shadow-2xl transition-transform hover:-translate-y-1 duration-300">
-          <!-- Category Image -->
-          <div class="overflow-hidden rounded-lg mb-4 flex items-center justify-center bg-gray-50 h-56">
-            {% if i.category_image %}
-              <img src="{{ i.category_image.url }}"
-                   alt="{{ i.name }}"
-                   class="max-h-52 w-auto object-contain transition-transform duration-500 hover:scale-105">
-            {% else %}
-              <img src="{% static 'images/no-image.png' %}"
-                   alt="No Image"
-                   class="max-h-52 w-auto object-contain">
-            {% endif %}
-          </div>
+  <div class="flex flex-wrap justify-center -mx-3">
+    {% for i in categories %}
+    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-3 mb-8">
+      <div class="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition-transform hover:-translate-y-1 duration-300">
+        <!-- Category Image -->
+        <div class="overflow-hidden rounded-lg mb-3 flex items-center justify-center bg-gray-50 h-44">
+          {% if i.category_image %}
+            <img src="{{ i.category_image.url }}"
+                 alt="{{ i.name }}"
+                 class="max-h-40 w-auto object-contain transition-transform duration-500 hover:scale-105">
+          {% else %}
+            <img src="{% static 'images/no-image.png' %}"
+                 alt="No Image"
+                 class="max-h-40 w-auto object-contain">
+          {% endif %}
+        </div>
 
-          <!-- Category Name -->
-          <h2 class="text-xl font-semibold text-center text-gray-800 mb-4">{{ i.name }}</h2>
+        <!-- Category Name -->
+        <h2 class="text-lg font-semibold text-center text-gray-800 mb-3">{{ i.name }}</h2>
 
-          <!-- Button -->
-          <div class="flex justify-center">
-            <a href="{% url 'category_products' i.slug %}"
-               class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-5 rounded-full w-full sm:w-auto text-center transition">
-              View Products
-            </a>
-          </div>
+        <!-- Button -->
+        <div class="flex justify-center">
+          <a href="{% url 'category_products' i.slug %}"
+             class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-4 rounded-full w-full sm:w-auto text-center transition">
+            View Products
+          </a>
         </div>
       </div>
-      {% endfor %}
     </div>
-  </section>
-  <!-- Category End -->
+    {% endfor %}
+  </div>
+</section>
+<!-- Category End -->
+
 </main>
 
 
@@ -250,14 +270,15 @@
   <div class="container mx-auto px-4">
     <div class="flex flex-col items-center text-center max-w-2xl mx-auto">
       <h2 class="text-2xl md:text-3xl font-bold mb-4">
-        <span class="text-orange-500">get ৳50 discount</span> on your first order
+        <span class="text-orange-500">Get ৳50 discount</span> on your first order
       </h2>
       <form class="flex flex-col sm:flex-row gap-3 w-full mt-4">
         <input type="email" placeholder="Enter your email"
           class="w-full flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500" />
         <button type="submit"
           class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-full transition">
-          Subscribe
+             <a href="{% url 'products' %}" class="hover:text-orange-400">Submit</a>
+
         </button>
       </form>
     </div>
@@ -273,7 +294,7 @@
       <div>
         <h3 class="text-lg font-semibold mb-4">Shop</h3>
         <ul class="space-y-2">
-          <li><a href="#" class="hover:text-orange-400">Mobile</a></li>
+          <li><a href="/product/products/phone" class="hover:text-orange-400">Mobile</a></li>
           <li><a href="#" class="hover:text-orange-400">Laptop</a></li>
           <li><a href="#" class="hover:text-orange-400">Drone</a></li>
           <li><a href="#" class="hover:text-orange-400">Accessories</a></li>
@@ -319,7 +340,7 @@
         <h3 class="text-lg font-semibold mb-4">Contact</h3>
         <p class="mb-2">123 Gulshan Ave, Dhaka, Bangladesh</p>
         <p class="mb-2">Phone: +880 1234 567 890</p>
-        <a href="mailto:info@yourstore.com" class="underline text-orange-400">info@yourstore.com</a>
+        <a href="mailto:info@yourstore.com" class="underline text-orange-400">futurefinds@.com</a>
         <!-- <div class="mt-4">
           <img src="{% static '' %}" alt="Logo" class="h-10">
         </div>-->
@@ -338,10 +359,10 @@
       </ul>
       <!-- Payment Methods -->
       <div class="flex items-center justify-center gap-3">
-        <img src="{% static 'images/payments/visa.svg'%}" alt="SSLCommerz" class="h-6">
-        <img src="{% static 'images/payments/visa.svg' %}" alt="Visa" class="h-6">
-        <img src="{% static 'images/payments/mastercard.svg' %}" alt="MasterCard" class="h-6">
-        <img src="{% static 'images/payments/bkash.svg' %}" alt="bKash" class="h-6">
+        <img src="{% static 'images/sslcommerz.png'%}" alt="SSLCommerz" class="h-6">
+        <img src="{% static 'images/visa_11378344.png' %}" alt="Visa" class="h-6">
+        <img src="{% static 'images/card_16174534.png' %}" alt="MasterCard" class="h-6">
+        <img src="{% static 'images/unnamed.webp' %}" alt="bKash" class="h-6">
       </div>
     </div>
   </div>
