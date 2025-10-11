@@ -10,12 +10,12 @@
 <body class="bg-gray-100">
 
 <!-- Navbar -->
-<!-- Nav bar Start-->
+  <!-- Nav bar Start-->
 <header class="bg-slate-950 sticky top-0 z-50">
 
 
   <div class="container mx-auto flex justify-between items-center py-4 px-4 lg:px-8">
-    
+
     <!-- Left Section: Logo -->
     <a href="{% url 'home' %}" class="flex items-center">
       <span class="text-orange-400 text-4xl font-bold">Future</span>
@@ -39,10 +39,10 @@
         <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400 py-2 block">Flash Sale</a></li>
         {% if user.is_authenticated %}
           <li><a href="{% url 'orders' %}" class="hover:text-orange-400 py-2 block">Orders</a></li>
-         
+
         {% endif %}
         <li><a href="#footer_part" class="hover:text-orange-400 py-2 block">Contact</a></li>
-     
+
       </ul>
     </nav>
 
@@ -50,7 +50,7 @@
     <div class="hidden lg:flex items-center space-x-4">
       {% if user.is_authenticated %}
         <span class="text-gray-200 text-lg">Hi, {{ user.username }}</span>
-        <a href="{% url 'logout' %}" 
+        <a href="{% url 'logout' %}"
            class="bg-[#5EBB2B] border border-[#4eaa0c] text-white hover:bg-transparent hover:text-[#5EBB2B] font-semibold px-4 py-2 rounded-full text-lg transition">
            Sign out
         </a>
@@ -64,7 +64,35 @@
   </div>
 
   <!-- Mobile Menu Dropdown -->
-  <!-- (Removed duplicate dropdown and script) -->
+  <div id="mobileDropdown" class="lg:hidden hidden bg-slate-900 text-white px-6 pb-4">
+    <ul class="flex flex-col space-y-3 font-semibold">
+      <li><a href="{% url 'products' %}" class="hover:text-orange-400">Products</a></li>
+      <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
+      <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400">Rent</a></li>
+      <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
+
+      {% endif %}
+      <li><a href="#footer_part" class="hover:text-orange-400">Contact</a></li>
+
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'logout' %}" class="bg-[#5EBB2B] text-white px-4 py-2 rounded-full text-center">Sign out</a></li>
+      {% else %}
+        <li><a href="{% url 'login' %}" class="bg-[#FF9900] text-black px-4 py-2 rounded-full text-center">Sign in</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <!-- Simple Toggle Script -->
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileDropdown = document.getElementById('mobileDropdown');
+
+    hamburger.addEventListener('click', () => {
+      mobileDropdown.classList.toggle('hidden');
+    });
+  </script>
 
 
 
@@ -100,32 +128,119 @@
   </script>
 </header>
   <!-- Nav bar End-->
+
+
 <!-- Flash Sale Products -->
-<div class="container mx-auto mt-10 mb-10">
-    <h2 class="text-3xl font-bold text-center mb-6">Flash Sale Products</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {% for sale in flash_sale_products %}
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            {% if sale.image %}
-                <img src="{{ sale.image.url }}" class="w-full h-48 object-cover">
-            {% else %}
-                <img src="{% static 'images/default.png' %}" class="w-full h-48 object-cover">
-            {% endif %}
-            <div class="p-4">
-                <h3 class="text-lg font-semibold">{{ sale.name }}</h3>
-                <p class="text-gray-600"><del>৳ {{ sale.original_price }}</del> → ৳ {{ sale.get_sale_price }}</p>
-                <div class="mt-4 flex space-x-2">
-                    <a href="{% url 'flash_sale_detail' sale.pk %}" class="flex-1 text-center bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">View Details</a>
-                    <a href="{% url 'flash_sale_checkout' sale.pk %}" class="flex-1 text-center bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600">Buy Now</a>
-                </div>
-            </div>
+<section id="flash_sale_products" class="container mx-auto px-4">
+  <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center my-12 text-gray-800">
+    Flash Sale Products
+  </h1>
+
+  <div class="flex flex-wrap justify-center -mx-3">
+    {% for sale in flash_sale_products %}
+    <div class="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-3 mb-8">
+      <div class="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition-transform hover:-translate-y-1 duration-300 flex flex-col">
+
+        <!-- Product Image -->
+        <div class="overflow-hidden rounded-lg mb-3 bg-gray-50 h-56 flex items-center justify-center">
+          {% if sale.image %}
+            <img src="{{ sale.image.url }}"
+                 alt="{{ sale.name }}"
+                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+          {% else %}
+            <img src="{% static 'images/default.png' %}"
+                 alt="No Image"
+                 class="w-full h-full object-cover">
+          {% endif %}
         </div>
-        {% empty %}
-        <p class="text-center col-span-4">No flash sale products available.</p>
-        {% endfor %}
+
+        <!-- Product Name -->
+        <h2 class="text-lg font-semibold text-center text-gray-800 mb-2">
+          <a href="{% url 'flash_sale_detail' sale.pk %}" class="hover:text-orange-500 transition">
+            {{ sale.name }}
+          </a>
+        </h2>
+
+        <!-- Flash Sale Price -->
+        <p class="text-gray-600 text-center mb-3">
+          <del>৳ {{ sale.original_price }}</del>
+          <span class="font-bold text-red-600">৳ {{ sale.get_sale_price }}</span>
+        </p>
+
+        <!-- Discount Info -->
+        <p class="text-gray-600 text-center mb-3">
+          {% if sale.discount_type == 'percent' %}
+            Discount: {{ sale.discount_value }}%
+          {% else %}
+            Discount: ৳ {{ sale.discount_value }}
+          {% endif %}
+        </p>
+
+        <!-- Countdown Timer -->
+        <div class="flex justify-center space-x-2 text-center text-white mb-3">
+          <div class="bg-gray-700 rounded-lg px-2 py-1">
+            <span id="days-{{ sale.pk }}" class="text-xl font-mono">0</span> Days
+          </div>
+          <div class="bg-gray-700 rounded-lg px-2 py-1">
+            <span id="hours-{{ sale.pk }}" class="text-xl font-mono">00</span> Hrs
+          </div>
+          <div class="bg-gray-700 rounded-lg px-2 py-1">
+            <span id="minutes-{{ sale.pk }}" class="text-xl font-mono">00</span> Min
+          </div>
+          <div class="bg-gray-700 rounded-lg px-2 py-1">
+            <span id="seconds-{{ sale.pk }}" class="text-xl font-mono">00</span> Sec
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-center space-x-2 mt-auto">
+          <a href="{% url 'flash_sale_detail' sale.pk %}"
+             class="bg-blue-500 border border-transparent hover:bg-transparent hover:border-blue-500 text-white hover:text-blue-500 font-semibold py-2 px-4 rounded-full w-full sm:w-auto text-center transition">
+            View Details
+          </a>
+          <a href="{% url 'flash_sale_checkout' sale.pk %}"
+             class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-4 rounded-full w-full sm:w-auto text-center transition">
+            Buy Now
+          </a>
+        </div>
+
+      </div>
     </div>
-</div>
-<!-- Footer -->
+
+    <!-- Countdown Timer Script -->
+    <script>
+      const endTime{{ sale.pk }} = new Date("{{ sale.end_time|date:'c' }}").getTime();
+      const timer{{ sale.pk }} = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = endTime{{ sale.pk }} - now;
+
+        if(distance <= 0){
+          clearInterval(timer{{ sale.pk }});
+          document.getElementById("days-{{ sale.pk }}").innerText = "0";
+          document.getElementById("hours-{{ sale.pk }}").innerText = "00";
+          document.getElementById("minutes-{{ sale.pk }}").innerText = "00";
+          document.getElementById("seconds-{{ sale.pk }}").innerText = "00";
+          return;
+        }
+
+        const days = Math.floor(distance / (1000*60*60*24));
+        const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+        const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
+        const seconds = Math.floor((distance % (1000*60)) / 1000);
+
+        document.getElementById("days-{{ sale.pk }}").innerText = days;
+        document.getElementById("hours-{{ sale.pk }}").innerText = hours.toString().padStart(2,'0');
+        document.getElementById("minutes-{{ sale.pk }}").innerText = minutes.toString().padStart(2,'0');
+        document.getElementById("seconds-{{ sale.pk }}").innerText = seconds.toString().padStart(2,'0');
+      }, 1000);
+    </script>
+
+    {% endfor %}
+  </div>
+</section>
+
+
+<!-- Footer Section -->
 <footer class="bg-slate-950 text-white text-sm mt-10">
     {% load static %}
   <div class="container mx-auto px-4 py-12">
@@ -207,6 +322,10 @@
     </div>
   </div>
 </footer>
+
+<script src="node_modules/swiper/swiper-bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="assets/js/script.js"></script>
 
 </body>
 </html>

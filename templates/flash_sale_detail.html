@@ -13,7 +13,7 @@
 
 
   <div class="container mx-auto flex justify-between items-center py-4 px-4 lg:px-8">
-    
+
     <!-- Left Section: Logo -->
     <a href="{% url 'home' %}" class="flex items-center">
       <span class="text-orange-400 text-4xl font-bold">Future</span>
@@ -37,10 +37,10 @@
         <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400 py-2 block">Flash Sale</a></li>
         {% if user.is_authenticated %}
           <li><a href="{% url 'orders' %}" class="hover:text-orange-400 py-2 block">Orders</a></li>
-         
+
         {% endif %}
         <li><a href="#footer_part" class="hover:text-orange-400 py-2 block">Contact</a></li>
-     
+
       </ul>
     </nav>
 
@@ -48,7 +48,7 @@
     <div class="hidden lg:flex items-center space-x-4">
       {% if user.is_authenticated %}
         <span class="text-gray-200 text-lg">Hi, {{ user.username }}</span>
-        <a href="{% url 'logout' %}" 
+        <a href="{% url 'logout' %}"
            class="bg-[#5EBB2B] border border-[#4eaa0c] text-white hover:bg-transparent hover:text-[#5EBB2B] font-semibold px-4 py-2 rounded-full text-lg transition">
            Sign out
         </a>
@@ -70,10 +70,10 @@
       <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
       {% if user.is_authenticated %}
         <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
-  
+
       {% endif %}
       <li><a href="#footer_part" class="hover:text-orange-400">Contact</a></li>
-  
+
       {% if user.is_authenticated %}
         <li><a href="{% url 'logout' %}" class="bg-[#5EBB2B] text-white px-4 py-2 rounded-full text-center">Sign out</a></li>
       {% else %}
@@ -96,31 +96,135 @@
 
 
   <!-- Mobile Menu Dropdown -->
-  <!-- (Removed duplicate dropdown and script block to fix variable redeclaration error) -->
+  <div id="mobileDropdown" class="lg:hidden hidden bg-slate-900 text-white px-6 pb-4">
+    <ul class="flex flex-col space-y-3 font-semibold">
+      <li><a href="{% url 'products' %}" class="hover:text-orange-400">Products</a></li>
+      <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
+      <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400">Rent</a></li>
+      <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
+        <li><a href="{% url 'preorder_orders' %}" class="hover:text-orange-400">My Pre-Orders</a></li>
+      {% endif %}
+      <li><a href="#footer_part" class="hover:text-orange-400">Contact</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'logout' %}" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Sign out</a></li>
+      {% else %}
+        <li><a href="{% url 'login' %}" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Sign in</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <!-- Simple Toggle Script -->
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileDropdown = document.getElementById('mobileDropdown');
+
+    hamburger.addEventListener('click', () => {
+      mobileDropdown.classList.toggle('hidden');
+    });
+  </script>
 </header>
   <!-- Nav bar End-->
-<div class="container mx-auto my-16">
-  <div class="bg-white shadow-lg rounded-xl p-8 w-5/6 mx-auto">
-    <h2 class="text-3xl font-bold mb-6">{{ product.name }}</h2>
 
-    <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-10">
-      {% if product.image %}
-        <img src="{{ product.image.url }}" class="w-72 h-72 object-cover rounded-xl">
-      {% endif %}
-      <div>
-        <p><strong>Original Price:</strong> <del>৳ {{ product.original_price }}</del></p>
-        <p><strong>Sale Price:</strong> ৳ {{ product.get_sale_price }}</p>
-        <p><strong>Discount:</strong> {% if product.discount_type == 'percent' %}{{ product.discount_value }}%{% else %}৳ {{ product.discount_value }}{% endif %}</p>
-        <p><strong>Flash Sale Ends:</strong> {{ product.end_time|date:"M d, Y H:i" }}</p>
+<!--flash sale detail section-->
+{% load static %}
 
-        <a href="{% url 'flash_sale_checkout' product.pk %}" class="mt-6 block w-full text-center bg-green-600 text-white py-3 rounded-lg hover:bg-green-700">Buy Now</a>
-        <a href="{% url 'flash_sale' %}" class="mt-2 inline-block bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300">← Back</a>
+<main class="container mx-auto my-16 px-4">
+  <div class="bg-white shadow-2xl rounded-2xl p-8 md:p-12 w-full md:w-5/6 lg:w-3/4 mx-auto transition-transform duration-300 hover:-translate-y-1">
+
+    <!-- Product Title -->
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-8 text-center pb-4">
+      {{ product.name }}
+    </h2>
+
+    <!-- Product Info Section -->
+    <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+
+      <!-- Product Image -->
+      <div class="w-full md:w-1/2 flex justify-center">
+        {% if product.image %}
+          <img src="{{ product.image.url }}"
+               alt="{{ product.name }}"
+               class="w-80 h-80 object-cover rounded-2xl shadow-md hover:scale-105 transition-transform duration-500">
+        {% else %}
+          <img src="{% static 'images/default.png' %}"
+               alt="No Image"
+               class="w-80 h-80 object-cover rounded-2xl shadow-md">
+        {% endif %}
+      </div>
+
+      <!-- Product Details -->
+      <div class="w-full md:w-1/2 text-gray-700 space-y-4">
+        <p>
+          <span class="font-semibold text-gray-900">Original Price:</span>
+          <span class="line-through">৳ {{ product.original_price }}</span>
+        </p>
+        <p>
+          <span class="font-semibold text-gray-900">Flash Sale Price:</span>
+          <span class="text-orange-500 font-bold">৳ {{ product.get_sale_price }}</span>
+        </p>
+        <p>
+          <span class="font-semibold text-gray-900">Discount:</span>
+          {% if product.discount_type == 'percent' %}
+            {{ product.discount_value }}%
+          {% else %}
+            ৳ {{ product.discount_value }}
+          {% endif %}
+        </p>
+        <p>
+          <span class="font-semibold text-gray-900">Description:</span>
+          {{ product.description|default:"No description available." }}
+        </p>
+        <p>
+          <span class="font-semibold text-gray-900">Flash Sale Ends In:</span>
+          <span id="countdown" class="font-bold text-red-600"></span>
+        </p>
       </div>
     </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-12 flex flex-col sm:flex-row justify-center items-center gap-4">
+      <a href="{% url 'flash_sale_checkout' product.pk %}"
+         class="w-full sm:w-auto text-center bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all duration-300">
+         Proceed to Checkout
+      </a>
+
+      <a href="{% url 'flash_sale' %}"
+         class="w-full sm:w-auto text-center bg-gray-200 text-gray-800 font-medium py-3 px-8 rounded-full hover:bg-gray-300 transition-all duration-300">
+        ← Back to Flash Sales
+      </a>
+    </div>
   </div>
-</div>
-<!-- Footer -->
- <footer class="bg-slate-950 text-white text-sm mt-10">
+</main>
+
+<!-- Countdown Timer Script -->
+<script>
+  const endTime = new Date("{{ product.end_time|date:'c' }}").getTime();
+  const countdownEl = document.getElementById("countdown");
+
+  const timer = setInterval(function() {
+    const now = new Date().getTime();
+    const distance = endTime - now;
+
+    if (distance <= 0) {
+      clearInterval(timer);
+      countdownEl.innerHTML = "Sale Ended";
+      countdownEl.classList.replace("text-red-600", "text-gray-500");
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }, 1000);
+</script>
+
+<!-- Footer Section -->
+<footer class="bg-slate-950 text-white text-sm mt-10">
     {% load static %}
   <div class="container mx-auto px-4 py-12">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8">
@@ -201,5 +305,9 @@
     </div>
   </div>
 </footer>
+
+<script src="node_modules/swiper/swiper-bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="assets/js/script.js"></script>
 </body>
 </html>
