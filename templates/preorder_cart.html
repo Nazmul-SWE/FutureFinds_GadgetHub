@@ -1,115 +1,334 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Home page</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <title>Pre-Order Cart</title>
+   <script src="https://cdn.tailwindcss.com"></script>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">    
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="node_modules/swiper/swiper-bundle.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
 </head>
+<body class=" bg-gray-100">
 
-<body class="bg-gray-100">
 
-  <!-- Navigation section Start-->
-<nav  class="bg-slate-950"  >
-    <!-- Navigation section Start-->
-<div class="navbar shadow-sm w-5/6 mx-auto py-7">
 
-  <div class="navbar-start">
-    <div class="dropdown">
-      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
-      </div>
-      <ul
-        tabindex="0"
-        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-        <li><a href="{% url 'home' %}">Home</a></li>
-        <li><a href="{% url 'products' %}">Products</a></li>
-        <li><a href="{% url 'preorder_products' %}">Pre-Orders</a></li>
-        <li><a href="{% url 'rental_products' %}">Rentals</a></li>
-        <li><a href="{% url 'flash_sale' %}">Flash Sale</a></li>
+
+
+
+  {% load static %}
+  <!-- Nav bar Start-->
+<header class="bg-slate-950 sticky top-0 z-50">
+
+
+  <div class="container mx-auto flex justify-between items-center py-4 px-4 lg:px-8">
+    
+    <!-- Left Section: Logo -->
+    <a href="{% url 'home' %}" class="flex items-center">
+      <span class="text-orange-400 text-4xl font-bold">Future</span>
+      <span class="text-blue-400 text-4xl font-bold ml-1">Finds</span>
+    </a>
+
+    <!-- Hamburger Menu (Mobile) -->
+    <button id="hamburger" class="lg:hidden text-white focus:outline-none">
+      <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+    </button>
+
+    <!-- Center Navigation Menu -->
+    <nav id="mobileMenu" class="hidden lg:flex md:flex-grow justify-center">
+      <ul class="flex flex-col lg:flex-row lg:space-x-6 text-white font-semibold">
+        <li><a href="{% url 'products' %}" class="hover:text-orange-400 py-2 block">Products</a></li>
+        <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400 py-2 block">Pre-Orders</a></li>
+        <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400 py-2 block">Rent</a></li>
+        <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400 py-2 block">Flash Sale</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'orders' %}" class="hover:text-orange-400 py-2 block">Orders</a></li>
+         
+        {% endif %}
+        <li><a href="#footer_part" class="hover:text-orange-400 py-2 block">Contact</a></li>
+     
       </ul>
+    </nav>
+
+    <!-- Right Section: User + Buttons -->
+    <div class="hidden lg:flex items-center space-x-4">
+      {% if user.is_authenticated %}
+        <span class="text-gray-200 text-lg">Hi, {{ user.username }}</span>
+        <a href="{% url 'logout' %}" 
+           class="bg-[#5EBB2B] border border-[#4eaa0c] text-white hover:bg-transparent hover:text-[#5EBB2B] font-semibold px-4 py-2 rounded-full text-lg transition">
+           Sign out
+        </a>
+      {% else %}
+        <a href="{% url 'login' %}"
+           class="bg-[#FF9900] border border-[#e17d00] text-black hover:bg-transparent hover:text-[#FF9900] font-semibold px-4 py-2 rounded-full text-lg transition">
+           Sign in
+        </a>
+      {% endif %}
     </div>
-    <a href="{% url 'home' %}"class="btn btn-ghost text-orange-400 text-5xl font-bold">Future<span class=" text-blue-400 font-bold text-5xl">Finds</span></a>
   </div>
 
-  <div class="navbar-center hidden lg:flex">
-    <ul class="menu menu-horizontal px-1 text-white text-lg">
-      <li><a href="{% url 'home' %}">Home</a></li>
-      <li><a href="{% url 'products' %}">Products</a></li>
-      <li><a href="{% url 'preorder_products' %}">Pre-Orders</a></li>
-      <li><a href="{% url 'rental_products' %}">Rentals</a></li>
-      <li><a href="{% url 'flash_sale' %}">Flash Sale</a></li>
-       <!--<li><a href="{% url 'preorder_cart' %}" class="text-orange-400">Pre-Order Cart</a></li> -->
+  <!-- Mobile Menu Dropdown -->
+  <div id="mobileDropdown" class="lg:hidden hidden bg-slate-900 text-white px-6 pb-4">
+    <ul class="flex flex-col space-y-3 font-semibold">
+      <li><a href="{% url 'products' %}" class="hover:text-orange-400">Products</a></li>
+      <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
+      <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400">Rent</a></li>
+      <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
+  
+      {% endif %}
+      <li><a href="#footer_part" class="hover:text-orange-400">Contact</a></li>
+  
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'logout' %}" class="bg-[#5EBB2B] text-white px-4 py-2 rounded-full text-center">Sign out</a></li>
+      {% else %}
+        <li><a href="{% url 'login' %}" class="bg-[#FF9900] text-black px-4 py-2 rounded-full text-center">Sign in</a></li>
+      {% endif %}
     </ul>
   </div>
 
-  <div class="navbar-end rounded">
-{% if user.is_authenticated %}
-  <!-- Show Sign up (logout) if logged in -->
-  <button class="btn bg-[#5EBB2B] text-white border-[#4eaa0c] text-xl">
-    <a href="{% url 'logout' %}">Sign up</a>
-  </button>
-{% else %}
-  <!-- Show Sign in if not logged in -->
-  <button class="btn bg-[#FF9900] text-black border-[#e17d00] text-xl">
-    <a href="{% url 'login' %}">Sign in</a>
-  </button>
-{% endif %}
+  <!-- Simple Toggle Script -->
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileDropdown = document.getElementById('mobileDropdown');
+
+    hamburger.addEventListener('click', () => {
+      mobileDropdown.classList.toggle('hidden');
+    });
+  </script>
+
+
+
+
+  <!-- Mobile Menu Dropdown -->
+  <div id="mobileDropdown" class="lg:hidden hidden bg-slate-900 text-white px-6 pb-4">
+    <ul class="flex flex-col space-y-3 font-semibold">
+      <li><a href="{% url 'products' %}" class="hover:text-orange-400">Products</a></li>
+      <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
+      <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400">Rent</a></li>
+      <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
+        <li><a href="{% url 'preorder_orders' %}" class="hover:text-orange-400">My Pre-Orders</a></li>
+      {% endif %}
+      <li><a href="#footer_part" class="hover:text-orange-400">Contact</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'logout' %}" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Sign out</a></li>
+      {% else %}
+        <li><a href="{% url 'login' %}" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Sign in</a></li>
+      {% endif %}
+    </ul>
   </div>
 
-</div>
-<!-- Navigation section End-->
-</nav>
+  <!-- Simple Toggle Script -->
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileDropdown = document.getElementById('mobileDropdown');
 
-<!-- Navigation section End-->
+    hamburger.addEventListener('click', () => {
+      mobileDropdown.classList.toggle('hidden');
+    });
+  </script>
+</header>
+  <!-- Nav bar End-->
 
-    <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6">Your Pre-Order Cart</h1>
 
-        {% if preorder_items %}
-        <div class="grid grid-cols-1 gap-4">
-            {% for item in preorder_items %}
-            <div class="card bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
-                <div class="flex items-center">
-                    {% if item.preorder_product.image %}
-                    <img src="{{ item.preorder_product.image.url }}" alt="{{ item.preorder_product.name }}" class="w-16 h-16 object-cover rounded-md mr-4">
-                    {% endif %}
-                    <div>
-                        <h2 class="text-lg font-semibold">{{ item.preorder_product.name }}</h2>
-                        <div class="badge badge-primary badge-sm">PRE-ORDER</div>
-                        <p class="text-gray-600">Price: {{ item.preorder_product.price }} BDT</p>
-                        <p class="text-gray-600">Quantity: {{ item.quantity }}</p>
-                        <p class="text-gray-600">Total: {{ item.get_total_price }} BDT</p>
-                        <p class="text-sm text-blue-600">Expected Release: {{ item.preorder_product.expected_release_date }}</p>
-                    </div>
-                </div>
-                <div class="flex space-x-2">
-                    <a href="{% url 'update_preorder_cart_item' item.id 'increase' %}" class="btn btn-sm btn-primary">+</a>
-                    <a href="{% url 'update_preorder_cart_item' item.id 'decrease' %}" class="btn btn-sm btn-secondary">-</a>
-                    <a href="{% url 'update_preorder_cart_item' item.id 'remove' %}" class="btn btn-sm btn-error">Remove</a>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
 
-        <div class="mt-6 p-4 bg-white shadow-md rounded-lg">
-            <h2 class="text-xl font-bold">Total Price: {{ total_price }} BDT</h2>
-            <p class="text-sm text-gray-600 mt-2">
-                * Pre-order payment will be processed now. Products will be shipped on their release dates.
+
+
+
+<!-- Pre-Order Cart -->
+<main class="container mx-auto my-16 px-4">
+  <div class="bg-white shadow-2xl rounded-2xl p-8 md:p-12 w-full md:w-5/6 lg:w-3/4 mx-auto transition-transform duration-300 hover:-translate-y-1">
+    
+    <!-- Page Title -->
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-10 text-center pb-4">
+       Your Pre-Order Cart
+    </h1>
+
+    {% if preorder_items %}
+    <!-- Cart Items -->
+    <div class="space-y-6">
+      {% for item in preorder_items %}
+      <div class="flex flex-col md:flex-row justify-between items-center bg-gray-50 rounded-xl p-5 shadow-sm hover:shadow-lg transition-all duration-300">
+
+        <!-- Product Info -->
+        <div class="flex items-center w-full md:w-3/4">
+          {% if item.preorder_product.image %}
+          <img src="{{ item.preorder_product.image.url }}" 
+               alt="{{ item.preorder_product.name }}" 
+               class="w-24 h-24 md:w-28 md:h-28 object-cover rounded-xl shadow-md mr-5 hover:scale-105 transition-transform duration-300">
+          {% endif %}
+
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              {{ item.preorder_product.name }}
+              <span class="bg-orange-100 text-orange-700 px-2 py-0.5 text-xs font-semibold rounded-full">
+                PRE-ORDER
+              </span>
+            </h2>
+            <p class="text-gray-600 text-sm"><strong>Price:</strong> {{ item.preorder_product.price }} BDT</p>
+            <p class="text-gray-600 text-sm"><strong>Quantity:</strong> {{ item.quantity }}</p>
+            <p class="text-gray-800 font-semibold mt-1">
+              Total: <span class="text-green-600">{{ item.get_total_price }} BDT</span>
             </p>
-            <div class="mt-4">
-                <a href="{% url 'preorder_checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
-            </div>
+            <p class="text-sm text-blue-600 mt-1">Expected Release: {{ item.preorder_product.expected_release_date }}</p>
+          </div>
         </div>
-        {% else %}
-        <div class="text-center">
-            <p class="text-gray-600">Your pre-order cart is empty.</p>
-            <a href="{% url 'preorder_products' %}" class="btn btn-primary mt-4">Browse Pre-Orders</a>
+
+        <!-- Action Buttons -->
+        <div class="flex space-x-2 mt-4 md:mt-0">
+          <a href="{% url 'update_preorder_cart_item' item.id 'increase' %}"
+             class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-xl text-2xl transition">
+             +
+          </a>
+          <a href="{% url 'update_preorder_cart_item' item.id 'decrease' %}"
+             class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-xl text-2xl transition">
+             -
+          </a>
+          <a href="{% url 'update_preorder_cart_item' item.id 'remove' %}"
+             class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-xl text-xl transition">
+             Remove
+          </a>
         </div>
-        {% endif %}
+      </div>
+      {% endfor %}
     </div>
 
-</body>
+    <!-- Total & Checkout Section -->
+    <div class="mt-10 text-center bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl p-6 shadow-md">
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">
+        Total Price: <span class="text-orange-600">{{ total_price }} BDT</span>
+      </h2>
+      <p class="text-sm text-gray-600 mb-6">
+         Pre-order payment will be processed now. Products will be shipped on their release dates.
+      </p>
 
+      <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+      
+
+        <a href="{% url 'preorder_products' %}"
+           class="w-full sm:w-auto text-center bg-gray-200 text-gray-800 font-medium py-3 px-8 rounded-full hover:bg-gray-300 transition-all duration-300">
+           ← Continue Shopping
+        </a>
+         <a href="{% url 'preorder_checkout' %}"
+           class="w-full sm:w-auto text-center bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:from-orange-600 hover:to-orange-700 transform hover:scale-105 transition-all duration-300">
+           Proceed to Checkout
+        </a>
+      </div>
+    </div>
+
+    {% else %}
+    <!-- Empty Cart -->
+    <div class="text-center py-16">
+      <h2 class="text-2xl font-semibold text-gray-700 mb-3">Your Pre-Order Cart is Empty</h2>
+      <p class="text-gray-500 mb-6">You haven’t added any pre-order products yet.</p>
+      <a href="{% url 'preorder_products' %}"
+         class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-8 rounded-full shadow-md transition">
+         Browse Pre-Orders
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</main>
+
+
+<!-- Footer Section -->
+<footer class="bg-slate-950 text-white text-sm mt-10">
+    {% load static %}
+  <div class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8">
+      <!-- Shop Menu -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Shop</h3>
+        <ul class="space-y-2">
+          <li><a href="/product/products/phone" class="hover:text-orange-400">Mobile</a></li>
+          <li><a href="#" class="hover:text-orange-400">Laptop</a></li>
+          <li><a href="#" class="hover:text-orange-400">Drone</a></li>
+          <li><a href="#" class="hover:text-orange-400">Accessories</a></li>
+        </ul>
+      </div>
+
+      <!-- Pages -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Pages</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-orange-400">Shop</a></li>
+          <li><a href="#" class="hover:text-orange-400">Product</a></li>
+          <li><a href="#" class="hover:text-orange-400">Checkout</a></li>
+          <li><a href="#" class="hover:text-orange-400">404</a></li>
+        </ul>
+      </div>
+
+      <!-- Account -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Account</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-orange-400">Cart</a></li>
+          <li><a href="#" class="hover:text-orange-400">Register</a></li>
+          <li><a href="#" class="hover:text-orange-400">Login</a></li>
+        </ul>
+      </div>
+
+      <!-- Social Media -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+            <img src="{% static 'images/icons/facebook.svg' %}" class="h-4" alt=""> Facebook</a></li>
+          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+            <img src="{% static 'images/icons/twitter.svg' %}" class="h-4" alt=""> Twitter</a></li>
+          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+            <img src="{% static 'images/icons/instagram.svg' %}" class="h-4" alt=""> Instagram</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-span-1 sm:col-span-2 lg:col-span-2">
+        <h3 class="text-lg font-semibold mb-4">Contact</h3>
+        <p class="mb-2">123 Gulshan Ave, Dhaka, Bangladesh</p>
+        <p class="mb-2">Phone: +880 1234 567 890</p>
+        <a href="mailto:info@yourstore.com" class="underline text-orange-400">futurefinds@.com</a>
+        <!-- <div class="mt-4">
+          <img src="{% static '' %}" alt="Logo" class="h-10">
+        </div>-->
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-gray-700 py-6">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center gap-4">
+      <p class="text-sm">&copy; 2025 Your Store. All rights reserved.</p>
+      <ul class="flex flex-wrap justify-center gap-4">
+        <li><a href="#" class="hover:text-orange-400">Privacy Policy</a></li>
+        <li><a href="#" class="hover:text-orange-400">Terms</a></li>
+        <li><a href="#" class="hover:text-orange-400">FAQ</a></li>
+      </ul>
+      <!-- Payment Methods -->
+      <div class="flex items-center justify-center gap-3">
+        <img src="{% static 'images/sslcommerz.png'%}" alt="SSLCommerz" class="h-6">
+        <img src="{% static 'images/visa_11378344.png' %}" alt="Visa" class="h-6">
+        <img src="{% static 'images/card_16174534.png' %}" alt="MasterCard" class="h-6">
+        <img src="{% static 'images/unnamed.webp' %}" alt="bKash" class="h-6">
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="node_modules/swiper/swiper-bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="assets/js/script.js"></script>
+
+</body>
 </html>
