@@ -1,96 +1,213 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Flash Sale Products</title>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-{% load static %}
 
-<!-- Navbar (copy from your home.html if needed) -->
-<nav class="bg-slate-950">
-  <div class="navbar shadow-sm w-5/6 mx-auto py-7">
-    <div class="navbar-start">
-      <a class="btn btn-ghost text-orange-400 text-5xl font-bold">
-        Future<span class=" text-blue-400 font-bold text-5xl">Finds</span>
-      </a>
-    </div>
-    <div class="navbar-center hidden lg:flex">
-      <ul class="menu menu-horizontal px-1">
-        <li><a href="{% url 'home' %}" class="text-gray-200 text-xl font-bold">Home</a></li>
-        <li><a href="{% url 'orders' %}" class="text-gray-200 text-xl font-bold">Orders</a></li>
-        <li><a href="{% url 'rental_products' %}" class="text-gray-200 text-xl font-bold">Rent</a></li>
-        <li><a href="{% url 'flash_sale' %}" class="text-gray-200 text-xl font-bold">Flash Sale</a></li>
-        <li><a href="#footer_part" class="text-gray-200 text-xl font-bold">Contact</a></li>
+<!-- Navbar -->
+<!-- Nav bar Start-->
+<header class="bg-slate-950 sticky top-0 z-50">
+
+
+  <div class="container mx-auto flex justify-between items-center py-4 px-4 lg:px-8">
+    
+    <!-- Left Section: Logo -->
+    <a href="{% url 'home' %}" class="flex items-center">
+      <span class="text-orange-400 text-4xl font-bold">Future</span>
+      <span class="text-blue-400 text-4xl font-bold ml-1">Finds</span>
+    </a>
+
+    <!-- Hamburger Menu (Mobile) -->
+    <button id="hamburger" class="lg:hidden text-white focus:outline-none">
+      <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+    </button>
+
+    <!-- Center Navigation Menu -->
+    <nav id="mobileMenu" class="hidden lg:flex md:flex-grow justify-center">
+      <ul class="flex flex-col lg:flex-row lg:space-x-6 text-white font-semibold">
+        <li><a href="{% url 'products' %}" class="hover:text-orange-400 py-2 block">Products</a></li>
+        <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400 py-2 block">Pre-Orders</a></li>
+        <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400 py-2 block">Rent</a></li>
+        <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400 py-2 block">Flash Sale</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'orders' %}" class="hover:text-orange-400 py-2 block">Orders</a></li>
+         
+        {% endif %}
+        <li><a href="#footer_part" class="hover:text-orange-400 py-2 block">Contact</a></li>
+     
       </ul>
-    </div>
-    <div class="navbar-end rounded">
-      <a href="#" class='px-4 py-2 text-xl rounded font-semibold text-gray-200'>Hi, {{ user.username }}</a>
+    </nav>
+
+    <!-- Right Section: User + Buttons -->
+    <div class="hidden lg:flex items-center space-x-4">
       {% if user.is_authenticated %}
-        <button class="btn bg-[#5EBB2B] text-white border-[#4eaa0c] text-xl">
-          <a href="{% url 'logout' %}">Sign out</a>
-        </button>
+        <span class="text-gray-200 text-lg">Hi, {{ user.username }}</span>
+        <a href="{% url 'logout' %}" 
+           class="bg-[#5EBB2B] border border-[#4eaa0c] text-white hover:bg-transparent hover:text-[#5EBB2B] font-semibold px-4 py-2 rounded-full text-lg transition">
+           Sign out
+        </a>
       {% else %}
-        <button class="btn bg-[#FF9900] text-black border-[#e17d00] text-xl">
-          <a href="{% url 'login' %}">Sign in</a>
-        </button>
+        <a href="{% url 'login' %}"
+           class="bg-[#FF9900] border border-[#e17d00] text-black hover:bg-transparent hover:text-[#FF9900] font-semibold px-4 py-2 rounded-full text-lg transition">
+           Sign in
+        </a>
       {% endif %}
     </div>
   </div>
-</nav>
 
-<!-- Flash Sale Products Section -->
+  <!-- Mobile Menu Dropdown -->
+  <!-- (Removed duplicate dropdown and script) -->
+
+
+
+
+  <!-- Mobile Menu Dropdown -->
+  <div id="mobileDropdown" class="lg:hidden hidden bg-slate-900 text-white px-6 pb-4">
+    <ul class="flex flex-col space-y-3 font-semibold">
+      <li><a href="{% url 'products' %}" class="hover:text-orange-400">Products</a></li>
+      <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
+      <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400">Rent</a></li>
+      <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
+        <li><a href="{% url 'preorder_orders' %}" class="hover:text-orange-400">My Pre-Orders</a></li>
+      {% endif %}
+      <li><a href="#footer_part" class="hover:text-orange-400">Contact</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'logout' %}" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Sign out</a></li>
+      {% else %}
+        <li><a href="{% url 'login' %}" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Sign in</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <!-- Simple Toggle Script -->
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileDropdown = document.getElementById('mobileDropdown');
+
+    hamburger.addEventListener('click', () => {
+      mobileDropdown.classList.toggle('hidden');
+    });
+  </script>
+</header>
+  <!-- Nav bar End-->
+<!-- Flash Sale Products -->
 <div class="container mx-auto mt-10 mb-10">
-    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Flash Sale Products</h2>
+    <h2 class="text-3xl font-bold text-center mb-6">Flash Sale Products</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {% for sale in flash_sale_products %}
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             {% if sale.image %}
-                <img src="{{ sale.image.url }}" alt="{{ sale.name }}" class="w-full h-48 object-cover">
+                <img src="{{ sale.image.url }}" class="w-full h-48 object-cover">
             {% else %}
-                <img src="{% static 'images/default.png' %}" alt="No Image" class="w-full h-48 object-cover">
+                <img src="{% static 'images/default.png' %}" class="w-full h-48 object-cover">
             {% endif %}
             <div class="p-4">
-                <h3 class="text-lg font-semibold text-gray-800">{{ sale.name }}</h3>
-                <p class="text-gray-600 mt-2"><strong>Original Price:</strong> <del>৳ {{ sale.original_price }}</del></p>
-                <p class="text-gray-600"><strong>Sale Price:</strong> ৳ {{ sale.get_sale_price }}</p>
-                <p class="text-gray-600">
-                    <strong>Discount:</strong>
-                    {% if sale.discount_type == 'percent' %}
-                        {{ sale.discount_value }}%
-                    {% else %}
-                        ৳ {{ sale.discount_value }}
-                    {% endif %}
-                </p>
-                <div class="mt-4">
-                    <a href="{% url 'flash_sale_detail' sale.pk %}"
-   class="block text-center bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition duration-300">
-    Buy Now
-</a>
-
-
+                <h3 class="text-lg font-semibold">{{ sale.name }}</h3>
+                <p class="text-gray-600"><del>৳ {{ sale.original_price }}</del> → ৳ {{ sale.get_sale_price }}</p>
+                <div class="mt-4 flex space-x-2">
+                    <a href="{% url 'flash_sale_detail' sale.pk %}" class="flex-1 text-center bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">View Details</a>
+                    <a href="{% url 'flash_sale_checkout' sale.pk %}" class="flex-1 text-center bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600">Buy Now</a>
                 </div>
             </div>
         </div>
         {% empty %}
-        <p class="text-gray-600 mt-6 col-span-4 text-center">No flash sale products available right now.</p>
+        <p class="text-center col-span-4">No flash sale products available.</p>
         {% endfor %}
     </div>
 </div>
-
 <!-- Footer -->
-<footer id="footer_part" class="bg-slate-950">
-  <footer class="footer text-base-content border-base-300 border-t px-10 py-4">
-    <aside class="grid-flow-col items-center">
-      <p class="text-xl text-white">
-        Future Finds Ltd.<br />
-        Providing reliable tech since 2025
-      </p>
-    </aside>
-  </footer>
+<footer class="bg-slate-950 text-white text-sm mt-10">
+    {% load static %}
+  <div class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8">
+      <!-- Shop Menu -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Shop</h3>
+        <ul class="space-y-2">
+          <li><a href="/product/products/phone" class="hover:text-orange-400">Mobile</a></li>
+          <li><a href="#" class="hover:text-orange-400">Laptop</a></li>
+          <li><a href="#" class="hover:text-orange-400">Drone</a></li>
+          <li><a href="#" class="hover:text-orange-400">Accessories</a></li>
+        </ul>
+      </div>
+
+      <!-- Pages -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Pages</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-orange-400">Shop</a></li>
+          <li><a href="#" class="hover:text-orange-400">Product</a></li>
+          <li><a href="#" class="hover:text-orange-400">Checkout</a></li>
+          <li><a href="#" class="hover:text-orange-400">404</a></li>
+        </ul>
+      </div>
+
+      <!-- Account -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Account</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-orange-400">Cart</a></li>
+          <li><a href="#" class="hover:text-orange-400">Register</a></li>
+          <li><a href="#" class="hover:text-orange-400">Login</a></li>
+        </ul>
+      </div>
+
+      <!-- Social Media -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+            <img src="{% static 'images/icons/facebook.svg' %}" class="h-4" alt=""> Facebook</a></li>
+          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+            <img src="{% static 'images/icons/twitter.svg' %}" class="h-4" alt=""> Twitter</a></li>
+          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+            <img src="{% static 'images/icons/instagram.svg' %}" class="h-4" alt=""> Instagram</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-span-1 sm:col-span-2 lg:col-span-2">
+        <h3 class="text-lg font-semibold mb-4">Contact</h3>
+        <p class="mb-2">123 Gulshan Ave, Dhaka, Bangladesh</p>
+        <p class="mb-2">Phone: +880 1234 567 890</p>
+        <a href="mailto:info@yourstore.com" class="underline text-orange-400">futurefinds@.com</a>
+        <!-- <div class="mt-4">
+          <img src="{% static '' %}" alt="Logo" class="h-10">
+        </div>-->
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-gray-700 py-6">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center gap-4">
+      <p class="text-sm">&copy; 2025 Your Store. All rights reserved.</p>
+      <ul class="flex flex-wrap justify-center gap-4">
+        <li><a href="#" class="hover:text-orange-400">Privacy Policy</a></li>
+        <li><a href="#" class="hover:text-orange-400">Terms</a></li>
+        <li><a href="#" class="hover:text-orange-400">FAQ</a></li>
+      </ul>
+      <!-- Payment Methods -->
+      <div class="flex items-center justify-center gap-3">
+        <img src="{% static 'images/sslcommerz.png'%}" alt="SSLCommerz" class="h-6">
+        <img src="{% static 'images/visa_11378344.png' %}" alt="Visa" class="h-6">
+        <img src="{% static 'images/card_16174534.png' %}" alt="MasterCard" class="h-6">
+        <img src="{% static 'images/unnamed.webp' %}" alt="bKash" class="h-6">
+      </div>
+    </div>
+  </div>
 </footer>
 
 </body>
+</html>
 </html>

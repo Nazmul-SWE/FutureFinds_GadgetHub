@@ -1,75 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <title>Flash Sale Checkout</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Flash Sale Checkout</title>
 </head>
 <body class="bg-gray-100">
-{% load static %}
+  <!-- Navigation section Start-->
+<nav  class="bg-slate-950"  >
+    <!-- Navigation section Start-->
+<div class="navbar shadow-sm w-5/6 mx-auto py-7">
 
-<!-- Navbar -->
-<nav class="bg-slate-950">
-  <div class="navbar shadow-sm w-5/6 mx-auto py-7">
-    <div class="navbar-start">
-      <a href="{% url 'home' %}" class="btn btn-ghost text-orange-400 text-5xl font-bold">
-        Future<span class="text-blue-400 font-bold text-5xl">Finds</span>
-      </a>
+  <div class="navbar-start">
+    <div class="dropdown">
+      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
+      </div>
+      <ul
+        tabindex="0"
+        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'products' %}">Products</a></li>
+        <li><a href="{% url 'preorder_products' %}">Pre-Orders</a></li>
+        <li><a href="{% url 'rental_products' %}">Rentals</a></li>
+        <li><a href="{% url 'flash_sale' %}">Flash Sale</a></li>
+      </ul>
     </div>
-    <div class="navbar-end">
-      {% if user.is_authenticated %}
-        <button class="btn bg-[#5EBB2B] text-white border-[#4eaa0c] text-xl">
-          <a href="{% url 'logout' %}">Sign out</a>
-        </button>
-      {% else %}
-        <button class="btn bg-[#FF9900] text-black border-[#e17d00] text-xl">
-          <a href="{% url 'login' %}">Sign in</a>
-        </button>
-      {% endif %}
-    </div>
+    <a href="{% url 'home' %}"class="btn btn-ghost text-orange-400 text-5xl font-bold">Future<span class=" text-blue-400 font-bold text-5xl">Finds</span></a>
   </div>
+
+  <div class="navbar-center hidden lg:flex">
+    <ul class="menu menu-horizontal px-1 text-white text-lg">
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'products' %}">Products</a></li>
+      <li><a href="{% url 'preorder_products' %}">Pre-Orders</a></li>
+      <li><a href="{% url 'rental_products' %}">Rentals</a></li>
+      <li><a href="{% url 'flash_sale' %}">Flash Sale</a></li>
+      <!-- <li><a href="{% url 'preorder_cart' %}">Pre-Order Cart</a></li> -->
+    </ul>
+  </div>
+
+  <div class="navbar-end rounded">
+{% if user.is_authenticated %}
+  <!-- Show Sign up (logout) if logged in -->
+  <button class="btn bg-[#5EBB2B] text-white border-[#4eaa0c] text-xl">
+    <a href="{% url 'logout' %}">Sign up</a>
+  </button>
+{% else %}
+  <!-- Show Sign in if not logged in -->
+  <button class="btn bg-[#FF9900] text-black border-[#e17d00] text-xl">
+    <a href="{% url 'login' %}">Sign in</a>
+  </button>
+{% endif %}
+  </div>
+
+</div>
+<!-- Navigation section End-->
 </nav>
 
-<!-- Checkout Section -->
-<div class="container mx-auto p-6">
-  <h1 class="text-3xl font-bold mb-6">Flash Sale Checkout</h1>
+<!-- Navigation section End-->
 
-  <!-- Order Summary -->
-  <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+  <div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">Flash Sale Checkout</h1>
+
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
     <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
-    <ul class="mb-4">
-      {% for item in cart_items %}
-      <li class="flex justify-between border-b py-2">
-        <span>{{ item.product.name }} (x{{ item.quantity }})</span>
-        <span>{{ item.get_total_price }} BDT</span>
-      </li>
-      {% endfor %}
-    </ul>
-    <div class="flex justify-between font-bold text-lg">
-      <span>Total:</span>
-      <span>{{ total_price }} BDT</span>
+    <div class="flex justify-between border-b py-2">
+        <div>
+            <span class="font-medium">{{ product.name }}</span>
+            <div class="badge badge-primary badge-sm ml-2">FLASH SALE</div>
+            <span class="text-sm text-gray-600 block">Qty: 1 | Discounted Price: {{ product.get_sale_price }} BDT</span>
+        </div>
+        <span class="font-semibold">{{ total_price }} BDT</span>
+    </div>
+    <div class="flex justify-between font-bold text-lg border-t pt-2 mt-2">
+        <span>Total:</span>
+        <span>{{ total_price }} BDT</span>
+    </div>
+</div>
+
+    <form method="POST" class="bg-white shadow-md rounded-lg p-6">
+        {% csrf_token %}
+        <h2 class="text-xl font-semibold mb-4">Shipping Details</h2>
+
+        <div class="mb-4">
+            <label for="address" class="block text-gray-700 font-medium mb-2">Shipping Address</label>
+            <textarea id="address" name="address" rows="3" class="textarea textarea-bordered w-full" required placeholder="Enter your complete shipping address"></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label for="phone" class="block text-gray-700 font-medium mb-2">Phone Number</label>
+            <input type="text" id="phone" name="phone" class="input input-bordered w-full" required placeholder="Enter your phone number">
+        </div>
+
+        <!-- Hidden payment method (SSLCommerz) -->
+        <input type="hidden" name="payment_method" value="SSLCommerz">
+
+        <div class="mt-6">
+            <button type="submit" class="btn btn-primary w-full">Proceed to Payment</button>
+        </div>
+    </form>
+</div>
+<!-- Footer-->
+ <footer class="bg-slate-950 text-white text-sm mt-10">
+    {% load static %}
+  <div class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8">
+      <!-- Shop Menu -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Shop</h3>
+        <ul class="space-y-2">
+          <li><a href="/product/products/phone" class="hover:text-orange-400">Mobile</a></li>
+          <li><a href="#" class="hover:text-orange-400">Laptop</a></li>
+          <li><a href="#" class="hover:text-orange-400">Drone</a></li>
+          <li><a href="#" class="hover:text-orange-400">Accessories</a></li>
+        </ul>
+      </div>
+
+      <!-- Pages -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Pages</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-orange-400">Shop</a></li>
+          <li><a href="#" class="hover:text-orange-400">Product</a></li>
+          <li><a href="#" class="hover:text-orange-400">Checkout</a></li>
+          <li><a href="#" class="hover:text-orange-400">404</a></li>
+        </ul>
+      </div>
+
+      <!-- Account -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Account</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-orange-400">Cart</a></li>
+          <li><a href="#" class="hover:text-orange-400">Register</a></li>
+          <li><a href="#" class="hover:text-orange-400">Login</a></li>
+        </ul>
+      </div>
+
+      <!-- Social Media -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+            <img src="{% static 'images/icons/facebook.svg' %}" class="h-4" alt=""> Facebook</a></li>
+          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+            <img src="{% static 'images/icons/twitter.svg' %}" class="h-4" alt=""> Twitter</a></li>
+          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+            <img src="{% static 'images/icons/instagram.svg' %}" class="h-4" alt=""> Instagram</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-span-1 sm:col-span-2 lg:col-span-2">
+        <h3 class="text-lg font-semibold mb-4">Contact</h3>
+        <p class="mb-2">123 Gulshan Ave, Dhaka, Bangladesh</p>
+        <p class="mb-2">Phone: +880 1234 567 890</p>
+        <a href="mailto:info@yourstore.com" class="underline text-orange-400">futurefinds@.com</a>
+        <!-- <div class="mt-4">
+          <img src="{% static '' %}" alt="Logo" class="h-10">
+        </div>-->
+      </div>
     </div>
   </div>
 
-  <!-- Shipping Form -->
-  <form method="POST" class="bg-white shadow-md rounded-lg p-6">
-    {% csrf_token %}
-    <h2 class="text-xl font-semibold mb-4">Shipping Details</h2>
-    <div class="mb-4">
-      <label for="address" class="block text-gray-700 font-medium mb-2">Address</label>
-      <textarea id="address" name="address" rows="3" class="textarea textarea-bordered w-full" required></textarea>
+  <!-- Bottom Bar -->
+  <div class="border-t border-gray-700 py-6">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center gap-4">
+      <p class="text-sm">&copy; 2025 Your Store. All rights reserved.</p>
+      <ul class="flex flex-wrap justify-center gap-4">
+        <li><a href="#" class="hover:text-orange-400">Privacy Policy</a></li>
+        <li><a href="#" class="hover:text-orange-400">Terms</a></li>
+        <li><a href="#" class="hover:text-orange-400">FAQ</a></li>
+      </ul>
+      <!-- Payment Methods -->
+      <div class="flex items-center justify-center gap-3">
+        <img src="{% static 'images/sslcommerz.png'%}" alt="SSLCommerz" class="h-6">
+        <img src="{% static 'images/visa_11378344.png' %}" alt="Visa" class="h-6">
+        <img src="{% static 'images/card_16174534.png' %}" alt="MasterCard" class="h-6">
+        <img src="{% static 'images/unnamed.webp' %}" alt="bKash" class="h-6">
+      </div>
     </div>
-    <div class="mb-4">
-      <label for="phone" class="block text-gray-700 font-medium mb-2">Phone</label>
-      <input type="text" id="phone" name="phone" class="input input-bordered w-full" required>
-    </div>
-    <div class="mt-6">
-      <button type="submit" class="btn btn-primary w-full">Confirm Order</button>
-    </div>
-  </form>
-</div>
-
+  </div>
+</footer>
 </body>
 </html>

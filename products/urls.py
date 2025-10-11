@@ -26,12 +26,14 @@ urlpatterns = [
     path('rental-confirm/<int:pk>/', views.rental_confirm, name='rental_confirm'),
     path('rental-orders/', views.rental_orders, name='rental_orders'),
     path('cancel-rental-order/<int:order_id>/', views.cancel_rental_order, name='cancel_rental_order'),
+    # Flash Sale URLs
     path('flash-sale/', views.flash_sale, name='flash_sale'),
     path('flash-sale/purchase/<int:pk>/', views.purchase_flash_sale, name='purchase_flash_sale'),
     path("flash-sale/<int:pk>/", views.flash_sale_detail, name="flash_sale_detail"),
     path("checkout/<int:pk>/", views.checkout, name="checkout"),
     path('flash-sale/<int:pk>/checkout/', views.flash_sale_checkout, name='flash_sale_checkout'),
-
+    path('product/flash-sale/<int:pk>/', views.flash_sale_detail, name='flash_sale_detail'),
+    path('flash-sale/', views.flash_sale_list, name='flash_sale'),
     # Pre-order URLs
     path('preorder-products/', views.preorder_products, name='preorder_products'),
     path('preorder-products/<int:pk>/', views.preorder_product_detail, name='preorder_product_detail'),

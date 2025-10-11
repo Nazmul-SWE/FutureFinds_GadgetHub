@@ -448,6 +448,41 @@ def flash_sale_checkout(request, pk):
         "total_price": product.get_sale_price(),
     })
 
+def flash_sale(request):
+    flash_sale_products = FlashSaleProduct.objects.all()
+    return render(request, "flash_sale.html", {"flash_sale_products": flash_sale_products})
+
+
+def flash_sale_list(request):
+    products = FlashSaleProduct.objects.all()
+    return render(request, 'flash_sale.html', {'products': products})
+
+def flash_sale_checkout(request, pk):
+    product = get_object_or_404(FlashSaleProduct, pk=pk)
+    return render(request, 'checkout.html', {'product': product})
+
+def flash_sale_checkout(request, pk):
+    # Get the product
+    product = get_object_or_404(FlashSaleProduct, pk=pk)
+    
+    # Calculate total price
+    total_price = product.get_sale_price  # or .discounted_price
+    
+    if request.method == "POST":
+        address = request.POST.get("address")
+        phone = request.POST.get("phone")
+        # Normally, save order here
+        return render(request, "flash_sale_confirm.html", {
+            "product": product,
+            "address": address,
+            "phone": phone,
+            "total_price": total_price
+        })
+    
+    return render(request, "flash_sale_checkout.html", {
+        "product": product,
+        "total_price": total_price
+    })
 
 # Pre-order views
 def preorder_products(request):
