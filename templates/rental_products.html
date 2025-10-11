@@ -128,38 +128,63 @@
 </header>
   <!-- Nav bar End-->
 
-<!--  Rental Products Section -->
-<div class="container mx-auto mt-10 mb-10">
-    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Rental Products</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {% for product in products %}
+{% load static %}
 
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <img src="{{ product.image.url }}" alt="{{ product.title }}" class="w-full h-48 object-cover">
-            <div class="p-4">
-                <h3 class="text-lg font-semibold text-gray-800">
-                    <a href="{% url 'rental_product_detail' product.id %}" class="hover:underline">
-                        {{ product.title }}
-                    </a>
-                </h3>
-              
 
-                <p class="text-gray-600"><strong>Price per day:</strong> BDT {{ product.rent_price_per_day }}</p>
-                {% if product.available %}
-                <div class="mt-4">
-                    <a href="{% url 'rental_product_detail' product.id %}"
-                       class="block text-center bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300">
-                        Rent Now
-                    </a>
-                </div>
-                {% else %}
-                <p class="text-red-500 mt-4 text-center">Out of Stock</p>
-                {% endif %}
-            </div>
+<!-- Rental Products Section -->
+<section id="rental_products" class="container mx-auto px-4">
+  <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center my-12 text-gray-800">
+    Rental Products
+  </h1>
+
+  <div class="flex flex-wrap justify-center -mx-3">
+    {% for product in products %}
+    <div class="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-3 mb-8">
+      <div class="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition-transform hover:-translate-y-1 duration-300">
+        
+        <!-- Product Image -->
+        <div class="overflow-hidden rounded-lg mb-3 bg-gray-50 h-56 flex items-center justify-center">
+          {% if product.image %}
+            <img src="{{ product.image.url }}"
+                 alt="{{ product.title }}"
+                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+          {% else %}
+            <img src="{% static 'images/no-image.png' %}"
+                 alt="No Image"
+                 class="w-full h-full object-cover">
+          {% endif %}
         </div>
-        {% endfor %}
+
+        <!-- Product Name -->
+        <h2 class="text-lg font-semibold text-center text-gray-800 mb-2">
+          <a href="{% url 'rental_product_detail' product.id %}" class="hover:text-orange-500 transition">
+            {{ product.title }}
+          </a>
+        </h2>
+
+        <!-- Rent Price -->
+        <p class="text-gray-600 text-center mb-3">
+          <strong>Price/Day:</strong> BDT {{ product.rent_price_per_day }}
+        </p>
+
+        <!-- Availability Button -->
+        <div class="flex justify-center">
+          {% if product.available %}
+            <a href="{% url 'rental_product_detail' product.id %}"
+               class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-5 rounded-full w-full sm:w-auto text-center transition">
+              Rent Now
+            </a>
+          {% else %}
+            <p class="text-red-500 font-medium mt-2 text-center">Out of Stock</p>
+          {% endif %}
+        </div>
+      </div>
     </div>
-</div>
+    {% endfor %}
+  </div>
+</section>
+
+
 
 <!-- Footer Section -->
 <footer class="bg-slate-950 text-white text-sm mt-10">

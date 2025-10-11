@@ -129,31 +129,46 @@
   <!-- Nav bar End-->
 
 <!-- Confirm Rental -->
-<main class="container mx-auto my-16">
-  <div class="bg-white shadow-md rounded-lg p-6 w-5/6 mx-auto">
-    <h2 class="text-xl font-semibold mb-4">Confirm Your Rental</h2>
+<main class="container mx-auto my-16 px-4">
+  <div class="bg-white shadow-2xl rounded-2xl p-8 md:p-12 w-full md:w-5/6 lg:w-3/4 mx-auto transition-transform duration-300 hover:-translate-y-1">
+    
+    <!-- Header -->
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-8 text-center  pb-4">
+       Confirm Your Rental
+    </h2>
 
-    <ul class="mb-4">
-      <li><strong>Product:</strong> {{ product.title }}</li>
-      <li><strong>Start Date:</strong> {{ rental_start_date }}</li>
-      <li><strong>End Date:</strong> {{ rental_end_date }}</li>
-      <li><strong>Total Price:</strong> {{ total_price }} BDT</li>
-    </ul>
+    <!-- Rental Summary -->
+    <div class="bg-gray-50 rounded-xl shadow-inner p-6 md:p-8 mb-8">
+      <ul class="text-gray-700 space-y-3 text-lg">
+        <li><strong class="text-gray-900"> Product:</strong> {{ product.title }}</li>
+        <li><strong class="text-gray-900">Start Date:</strong> {{ rental_start_date }}</li>
+        <li><strong class="text-gray-900">End Date:</strong> {{ rental_end_date }}</li>
+        <li><strong class="text-gray-900">Total Price:</strong> 
+          <span class="text-orange-600 font-semibold">{{ total_price }} BDT</span>
+        </li>
+      </ul>
+    </div>
 
-    <form method="post" class="mt-6">
+    <!-- Confirmation Form -->
+    <form method="post" class="space-y-6">
       {% csrf_token %}
-      <button type="submit" class="btn btn-primary w-full">Proceed to Payment</button>
+
+      <button type="submit"
+              class="w-full text-xl text-center bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-3 px-10 rounded-full shadow-md hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all duration-300">
+         Proceed to Payment
+      </button>
     </form>
 
-
-    <div class="mt-6 text-center">
+    <!-- Back Button -->
+    <div class="mt-8 text-center">
       <a href="{% url 'rental_checkout' product.id %}"
-         class="text-blue-600 font-medium hover:underline hover:text-blue-700 transition">
+         class="inline-block text-gray-700 font-medium px-6 py-3 rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-300">
         ← Go Back
       </a>
     </div>
   </div>
 </main>
+
 
 <!-- Footer Section -->
 <footer class="bg-slate-950 text-white text-sm mt-10">
