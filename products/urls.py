@@ -6,8 +6,11 @@ urlpatterns = [
     path('products/<slug:category_slug>/', views.category_products, name='category_products'),  # Category wise products
 
     # Product-related
-    #path('products/', views.products_list, name='products_list'),
-    #path('products/<int:pk>/', views.product_detail, name='product_detail'),
+    path('products/', views.product_list, name='product_list'),
+    path('products/<int:pk>/', views.product_detail, name='product_detail'),
+    path('product/<int:id>/', views.product_detail, name='product_detail'),
+    path('product/<int:id>/checkout/', views.checkout, name='checkout'),
+    path('checkout/<int:pk>/', views.checkout, name='checkout'),
 
     # Cart-related
     path('cart/', views.cart, name='cart'),

@@ -23,6 +23,18 @@ def category_products(request, category_slug):
     products = Product.objects.filter(category=category)
     return render(request, 'products.html', {'products': products})
 
+def product_detail(request, id):
+    product = get_object_or_404(Product, id=id)
+    return render(request, 'product_detail.html', {'product': product})
+
+def checkout(request, id):
+    product = get_object_or_404(Product, id=id)
+    return render(request, 'checkout.html', {'product': product})
+
+def product_list(request):
+    products = Product.objects.all()
+    return render(request, 'product_list.html', {'products': products})
+
 def SignUp(request):
     if request.method == 'POST':
         username = request.POST.get('username')
