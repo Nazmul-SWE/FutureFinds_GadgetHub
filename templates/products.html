@@ -129,47 +129,65 @@
   <!-- Nav bar End-->
 
 </header>
-<!--product section-->
-<main class="mb-15">
-  <section class="w-4/5 mx-auto">
-    <h1 class="mx-auto justify-center text-center font text-6xl font-bold my-12">Products</h1>
+<!-- Product Section -->
+<main class="mb-16">
+  <section class="container mx-auto px-4">
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center my-12 text-gray-800">
+      Our Products
+    </h1>
     {% load static %}
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 p-4">
+    <!-- Product Grid -->
+    <div class="flex flex-wrap justify-center -mx-3">
       {% for i in products %}
-      <div class="card bg-white shadow-md hover:shadow-xl transition-transform duration-300 hover:-translate-y-1 rounded-2xl overflow-hidden flex flex-col">
+      <div class="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/5 px-3 mb-8">
+        <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-transform hover:-translate-y-1 duration-300 flex flex-col h-full">
 
-        <!-- Product Image -->
-        <figure class="p-4 bg-gray-50 flex items-center justify-center h-56">
-          {% if i.image %}
-            <img src="{{ i.image.url }}" alt="{{ i.name }}" class="max-h-48 w-auto object-contain transition-transform duration-300 hover:scale-105" />
-          {% else %}
-            <img src="{% static 'images/no-image.png' %}" alt="No Image" class="max-h-48 w-auto object-contain" />
-          {% endif %}
-        </figure>
+          <!-- Product Image -->
+          <div class="overflow-hidden rounded-lg mb-3 bg-gray-50 h-56 flex items-center justify-center">
+  {% if i.image %}
+    <img 
+      src="{{ i.image.url }}" 
+      alt="{{ i.name }}" 
+      class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+    >
+  {% else %}
+    <img 
+      src="{% static 'images/no-image.png' %}" 
+      alt="No Image" 
+      class="w-full h-full object-cover"
+    >
+  {% endif %}
+</div>
 
-        <!-- Product Info -->
-        <div class="card-body flex flex-col text-center">
-          <h2 class="text-lg font-semibold text-gray-800 mb-1">{{ i.name }}</h2>
-          <p class="text-gray-600 mb-3 font-medium">৳ {{ i.price }}</p>
 
-          <!-- Buttons -->
-          <div class="mt-auto flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-2">
-            <a href="{% url 'product_detail' i.id %}"
-               class="bg-blue-500 text-white hover:bg-transparent hover:text-blue-500 border border-blue-500 font-semibold py-2 px-4 rounded-full transition text-center">
-              View Details
-            </a>
-            <a href="{% url 'checkout' i.id %}"
-               class="bg-orange-500 text-white hover:bg-transparent hover:text-orange-500 border border-orange-500 font-semibold py-2 px-4 rounded-full transition text-center">
-              Buy Now
-            </a>
+          <!-- Product Info -->
+          <div class="flex flex-col flex-grow text-center px-3 pb-4">
+            <h2 class="text-lg font-semibold text-gray-800 mb-1 hover:text-blue-500 transition">
+              {{ i.name }}
+            </h2>
+            <p class="text-gray-600 mb-3 font-medium">৳ {{ i.price }}</p>
+
+            <!-- Action Buttons -->
+            <div class="mt-auto flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-2">
+              <a href="{% url 'product_detail' i.id %}"
+                 class="bg-blue-500 border border-transparent hover:bg-transparent hover:border-blue-500 text-white hover:text-blue-500 font-semibold py-2 px-5 rounded-full text-center transition w-full sm:w-auto">
+                View Details
+              </a>
+              <a href="{% url 'checkout' i.id %}"
+                 class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-5 rounded-full text-center transition w-full sm:w-auto">
+                Buy Now
+              </a>
+            </div>
           </div>
+
         </div>
       </div>
       {% endfor %}
     </div>
   </section>
 </main>
+
 
 
 <!-- Footer Section -->
