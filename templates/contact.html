@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Contact Us - FutureFinds</title>
+</head>
+<body class="bg-gray-100">
+  <!-- Navigation section Start-->
+<nav  class="bg-slate-950"  >
+   <!-- Nav bar Start-->
+<header class="bg-slate-950 sticky top-0 z-50">
+
+  <div class="container mx-auto flex justify-between items-center py-4 px-4 lg:px-8">
+
+    <!-- Left Section: Logo -->
+    <a href="{% url 'home' %}" class="flex items-center">
+      <span class="text-orange-400 text-4xl font-bold">Future</span>
+      <span class="text-blue-400 text-4xl font-bold ml-1">Finds</span>
+    </a>
+
+    <!-- Hamburger Menu (Mobile) -->
+    <button id="hamburger" class="lg:hidden text-white focus:outline-none">
+      <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+    </button>
+
+    <!-- Center Navigation Menu -->
+    <nav id="mobileMenu" class="hidden lg:flex md:flex-grow justify-center">
+      <ul class="flex flex-col lg:flex-row lg:space-x-6 text-white font-semibold">
+        <li><a href="{% url 'products' %}" class="hover:text-orange-400 py-2 block">Products</a></li>
+        <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400 py-2 block">Pre-Orders</a></li>
+        <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400 py-2 block">Rent</a></li>
+        <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400 py-2 block">Flash Sale</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'orders' %}" class="hover:text-orange-400 py-2 block">Orders</a></li>
+        {% endif %}
+        <li><a href="{% url 'contact' %}" class="hover:text-orange-400 py-2 block">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Right Section: User + Buttons -->
+    <div class="hidden lg:flex items-center space-x-4">
+      <!-- Cart Button -->
+      <a href="{% url 'cart' %}" class="relative text-white hover:text-orange-400 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+        </svg>
+        <span class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+          {% if user.is_authenticated %}
+            {{ user.cartitem_set.count|default:0 }}
+          {% else %}
+            0
+          {% endif %}
+        </span>
+      </a>
+      
+      {% if user.is_authenticated %}
+        <span class="text-gray-200 text-lg">Hi, {{ user.username }}</span>
+        <a href="{% url 'logout' %}"
+           class="bg-[#5EBB2B] border border-[#4eaa0c] text-white hover:bg-transparent hover:text-[#5EBB2B] font-semibold px-4 py-2 rounded-full text-lg transition">
+           Sign out
+        </a>
+      {% else %}
+        <a href="{% url 'login' %}"
+           class="bg-[#FF9900] border border-[#e17d00] text-black hover:bg-transparent hover:text-[#FF9900] font-semibold px-4 py-2 rounded-full text-lg transition">
+           Sign in
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Mobile Menu Dropdown -->
+  <div id="mobileDropdown" class="lg:hidden hidden bg-slate-900 text-white px-6 pb-4">
+    <ul class="flex flex-col space-y-3 font-semibold">
+      <li><a href="{% url 'products' %}" class="hover:text-orange-400">Products</a></li>
+      <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
+      <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400">Rent</a></li>
+      <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
+      <li><a href="{% url 'cart' %}" class="hover:text-orange-400 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+        </svg>
+        Cart
+        <span class="ml-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+          {% if user.is_authenticated %}
+            {{ user.cartitem_set.count|default:0 }}
+          {% else %}
+            0
+          {% endif %}
+        </span>
+      </a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
+      {% endif %}
+      <li><a href="{% url 'contact' %}" class="hover:text-orange-400">Contact</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'logout' %}" class="bg-[#5EBB2B] text-white px-4 py-2 rounded-full text-center">Sign out</a></li>
+      {% else %}
+        <li><a href="{% url 'login' %}" class="bg-[#FF9900] text-black px-4 py-2 rounded-full text-center">Sign in</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <!-- Simple Toggle Script -->
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileDropdown = document.getElementById('mobileDropdown');
+
+    hamburger.addEventListener('click', () => {
+      mobileDropdown.classList.toggle('hidden');
+    });
+  </script>
+</header>
+  <!-- Nav bar End-->
+</nav>
+
+<!-- Navigation section End-->
+
+<!-- Contact Section -->
+{% load static %}
+<main class="container mx-auto my-16 px-4">
+  <div class="max-w-6xl mx-auto">
+    <!-- Page Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
+        Get in Touch
+      </h1>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Have questions about our products, services, or need support? We're here to help!
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <!-- Contact Form -->
+      <div class="bg-white shadow-2xl rounded-2xl p-8 md:p-10">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+        
+        <form method="POST" class="space-y-6">
+          {% csrf_token %}
+          
+          <!-- Name -->
+          <div>
+            <label for="name" class="block text-gray-700 font-medium mb-2">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              required
+              placeholder="Enter your full name">
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              required
+              placeholder="Enter your email address">
+          </div>
+
+          <!-- Phone -->
+          <div>
+            <label for="phone" class="block text-gray-700 font-medium mb-2">Phone Number</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              placeholder="Enter your phone number">
+          </div>
+
+          <!-- Subject -->
+          <div>
+            <label for="subject" class="block text-gray-700 font-medium mb-2">Subject</label>
+            <select
+              id="subject"
+              name="subject"
+              class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              required>
+              <option value="">Select a subject</option>
+              <option value="general">General Inquiry</option>
+              <option value="product">Product Information</option>
+              <option value="order">Order Support</option>
+              <option value="technical">Technical Support</option>
+              <option value="feedback">Feedback</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <!-- Message -->
+          <div>
+            <label for="message" class="block text-gray-700 font-medium mb-2">Message</label>
+            <textarea
+              id="message"
+              name="message"
+              rows="5"
+              class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              required
+              placeholder="Tell us how we can help you..."></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold py-4 text-xl px-8 rounded-full shadow-md hover:from-orange-600 hover:to-orange-700 transform hover:scale-105 transition-all duration-300">
+            Send Message
+          </button>
+        </form>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="space-y-8">
+        <!-- Contact Details -->
+        <div class="bg-white shadow-2xl rounded-2xl p-8 md:p-10">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
+          
+          <div class="space-y-6">
+            <!-- Address -->
+            <div class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-900">Address</h3>
+                <p class="text-gray-600">123 Gulshan Avenue<br>Dhaka 1212, Bangladesh</p>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-900">Phone</h3>
+                <p class="text-gray-600">+880 1695354697</p>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-900">Email</h3>
+                <p class="text-gray-600">info@futurefinds.com</p>
+              </div>
+            </div>
+
+            <!-- Business Hours -->
+            <div class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-900">Business Hours</h3>
+                <p class="text-gray-600">
+                  Monday - Friday: 9:00 AM - 6:00 PM<br>
+                  Saturday: 10:00 AM - 4:00 PM<br>
+                  Sunday: Closed
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="bg-white shadow-2xl rounded-2xl p-8 md:p-10">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Quick Links</h2>
+          
+          <div class="space-y-4">
+            <a href="{% url 'products' %}" class="flex items-center space-x-3 text-gray-600 hover:text-orange-500 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+              <span>Browse Products</span>
+            </a>
+            
+            <a href="{% url 'flash_sale' %}" class="flex items-center space-x-3 text-gray-600 hover:text-orange-500 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+              <span>Flash Sales</span>
+            </a>
+            
+            <a href="{% url 'rental_products' %}" class="flex items-center space-x-3 text-gray-600 hover:text-orange-500 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+              <span>Rental Products</span>
+            </a>
+            
+            {% if user.is_authenticated %}
+            <a href="{% url 'orders' %}" class="flex items-center space-x-3 text-gray-600 hover:text-orange-500 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+              <span>My Orders</span>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer Section -->
+<footer class="bg-slate-950 text-white text-sm mt-20">
+    {% load static %}
+  <div class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8">
+       <!-- Shop Menu -->
+       <div>
+         <h3 class="text-lg font-semibold mb-4">Shop</h3>
+         <ul class="space-y-2">
+           <li><a href="{% url 'category_products' 'phone' %}" class="hover:text-orange-400">Mobile</a></li>
+           <li><a href="{% url 'category_products' 'laptop' %}" class="hover:text-orange-400">Laptop</a></li>
+           <li><a href="{% url 'category_products' 'drone' %}" class="hover:text-orange-400">Drone</a></li>
+           <li><a href="{% url 'category_products' 'accessories' %}" class="hover:text-orange-400">Accessories</a></li>
+         </ul>
+       </div>
+
+       <!-- Pages -->
+       <div>
+         <h3 class="text-lg font-semibold mb-4">Pages</h3>
+         <ul class="space-y-2">
+           <li><a href="{% url 'products' %}" class="hover:text-orange-400">Shop</a></li>
+           <li><a href="{% url 'products' %}" class="hover:text-orange-400">Product</a></li>
+           <li><a href="{% url 'cart' %}" class="hover:text-orange-400">Checkout</a></li>
+           <li><a href="{% url 'contact' %}" class="hover:text-orange-400">Contact</a></li>
+         </ul>
+       </div>
+
+       <!-- Account -->
+       <div>
+         <h3 class="text-lg font-semibold mb-4">Account</h3>
+         <ul class="space-y-2">
+           <li><a href="{% url 'cart' %}" class="hover:text-orange-400">Cart</a></li>
+           <li><a href="{% url 'signup' %}" class="hover:text-orange-400">Register</a></li>
+           <li><a href="{% url 'login' %}" class="hover:text-orange-400">Login</a></li>
+         </ul>
+       </div>
+
+       <!-- Social Media -->
+       <div>
+         <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
+         <ul class="space-y-3">
+           <li><a href="https://facebook.com/futurefinds" target="_blank" class="flex items-center gap-2 hover:text-orange-400">
+             <img src="{% static 'images/icons/facebook.svg' %}" class="h-4" alt=""> Facebook</a></li>
+           <li><a href="https://twitter.com/futurefinds" target="_blank" class="flex items-center gap-2 hover:text-orange-400">
+             <img src="{% static 'images/icons/twitter.svg' %}" class="h-4" alt=""> Twitter</a></li>
+           <li><a href="https://instagram.com/futurefinds" target="_blank" class="flex items-center gap-2 hover:text-orange-400">
+             <img src="{% static 'images/icons/instagram.svg' %}" class="h-4" alt=""> Instagram</a></li>
+         </ul>
+       </div>
+
+      <!-- Contact Info -->
+      <div class="col-span-1 sm:col-span-2 lg:col-span-2">
+        <h3 class="text-lg font-semibold mb-4">Contact</h3>
+        <p class="mb-2">123 Gulshan Ave, Dhaka, Bangladesh</p>
+        <p class="mb-2">Phone: +880 1695354697</p>
+        <a href="mailto:info@futurefinds.com" class="underline text-orange-400">info@futurefinds.com</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-gray-700 py-6">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center gap-4">
+      <p class="text-sm">&copy; 2025 FutureFinds. All rights reserved.</p>
+       <ul class="flex flex-wrap justify-center gap-4">
+         <li><a href="{% url 'contact' %}" class="hover:text-orange-400">Privacy Policy</a></li>
+         <li><a href="{% url 'contact' %}" class="hover:text-orange-400">Terms</a></li>
+         <li><a href="{% url 'contact' %}" class="hover:text-orange-400">FAQ</a></li>
+       </ul>
+      <!-- Payment Methods -->
+      <div class="flex items-center justify-center gap-3">
+        <img src="{% static 'images/sslcommerz.png'%}" alt="SSLCommerz" class="h-6">
+        <img src="{% static 'images/visa_11378344.png' %}" alt="Visa" class="h-6">
+        <img src="{% static 'images/card_16174534.png' %}" alt="MasterCard" class="h-6">
+        <img src="{% static 'images/unnamed.webp' %}" alt="bKash" class="h-6">
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="node_modules/swiper/swiper-bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script src="assets/js/script.js"></script>
+</body>
+</html>

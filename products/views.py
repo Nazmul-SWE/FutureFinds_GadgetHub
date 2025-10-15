@@ -9,6 +9,7 @@ from django.db.models import Sum, F
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from payments.models import Order as PaymentOrder
+from django.utils import timezone
 import datetime
 def home(request):
     categories = Category.objects.all()
@@ -280,8 +281,12 @@ def confirm_order(request):
 def orders(request):
     user = request.user
     orders = Order.objects.filter(user=user).prefetch_related('items__product')
+    flash_sale_orders = FlashSaleOrder.objects.filter(user=user)
 
-    return render(request, 'orders.html', {'orders': orders})
+    return render(request, 'orders.html', {
+        'orders': orders,
+        'flash_sale_orders': flash_sale_orders
+    })
 
 
 @login_required(login_url='login')
@@ -469,27 +474,40 @@ def flash_sale_list(request):
     products = FlashSaleProduct.objects.all()
     return render(request, 'flash_sale.html', {'products': products})
 
-def flash_sale_checkout(request, pk):
-    product = get_object_or_404(FlashSaleProduct, pk=pk)
-    return render(request, 'checkout.html', {'product': product})
-
+@login_required(login_url='login')
 def flash_sale_checkout(request, pk):
     # Get the product
     product = get_object_or_404(FlashSaleProduct, pk=pk)
     
     # Calculate total price
-    total_price = product.get_sale_price  # or .discounted_price
+    total_price = product.get_sale_price()
     
     if request.method == "POST":
         address = request.POST.get("address")
         phone = request.POST.get("phone")
-        # Normally, save order here
-        return render(request, "flash_sale_confirm.html", {
-            "product": product,
-            "address": address,
-            "phone": phone,
-            "total_price": total_price
-        })
+        
+        if not address or not phone:
+            messages.error(request, "Please fill in all required fields.")
+            return render(request, "flash_sale_checkout.html", {
+                "product": product,
+                "total_price": total_price
+            })
+        
+        # Store flash sale order details in session for payment processing
+        request.session['flash_sale_product_id'] = product.id
+        request.session['flash_sale_address'] = address
+        request.session['flash_sale_phone'] = phone
+        request.session['flash_sale_total_price'] = float(total_price)
+        request.session['flash_sale_quantity'] = 1
+        
+        # Create payment order and redirect to SSLCommerz
+        description = f"Flash Sale: {product.name}"
+        order = PaymentOrder.objects.create(
+            user=request.user,
+            amount=total_price,
+            description=description
+        )
+        return redirect('payments:sslcz_start', order_id=order.id)
     
     return render(request, "flash_sale_checkout.html", {
         "product": product,
@@ -715,3 +733,21 @@ def cancel_preorder(request, preorder_id):
         messages.error(request, 'Only pending pre-orders can be cancelled.')
 
     return redirect('preorder_orders')
+
+
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        
+        # Here you can add logic to save the contact form data to database
+        # or send an email notification
+        
+        # For now, we'll just show a success message
+        messages.success(request, 'Thank you for your message! We will get back to you soon.')
+        return redirect('contact')
+    
+    return render(request, 'contact.html')

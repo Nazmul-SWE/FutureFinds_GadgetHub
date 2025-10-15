@@ -41,13 +41,28 @@
           <li><a href="{% url 'orders' %}" class="hover:text-orange-400 py-2 block">Orders</a></li>
          
         {% endif %}
-        <li><a href="#footer_part" class="hover:text-orange-400 py-2 block">Contact</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:text-orange-400 py-2 block">Contact</a></li>
      
       </ul>
     </nav>
 
     <!-- Right Section: User + Buttons -->
     <div class="hidden lg:flex items-center space-x-4">
+      <!-- Cart Button -->
+      <a href="{% url 'cart' %}" class="relative text-white hover:text-orange-400 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+        </svg>
+        <span class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+          {% if user.is_authenticated %}
+            {{ user.cartitem_set.count|default:0 }}
+          {% else %}
+            0
+          {% endif %}
+        </span>
+      </a>
+      
+
       {% if user.is_authenticated %}
         <span class="text-gray-200 text-lg">Hi, {{ user.username }}</span>
         <a href="{% url 'logout' %}" 
@@ -70,11 +85,25 @@
       <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
       <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400">Rent</a></li>
       <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
+      <li><a href="{% url 'cart' %}" class="hover:text-orange-400 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+        </svg>
+        Cart
+        <span class="ml-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+          {% if user.is_authenticated %}
+            {{ user.cartitem_set.count|default:0 }}
+          {% else %}
+            0
+          {% endif %}
+        </span>
+      </a></li>
+
       {% if user.is_authenticated %}
         <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
   
       {% endif %}
-      <li><a href="#footer_part" class="hover:text-orange-400">Contact</a></li>
+      <li><a href="{% url 'contact' %}" class="hover:text-orange-400">Contact</a></li>
   
       {% if user.is_authenticated %}
         <li><a href="{% url 'logout' %}" class="bg-[#5EBB2B] text-white px-4 py-2 rounded-full text-center">Sign out</a></li>
@@ -104,11 +133,25 @@
       <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
       <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400">Rent</a></li>
       <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
+      <li><a href="{% url 'cart' %}" class="hover:text-orange-400 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+        </svg>
+        Cart
+        <span class="ml-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+          {% if user.is_authenticated %}
+            {{ user.cartitem_set.count|default:0 }}
+          {% else %}
+            0
+          {% endif %}
+        </span>
+      </a></li>
+
       {% if user.is_authenticated %}
         <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
         <li><a href="{% url 'preorder_orders' %}" class="hover:text-orange-400">My Pre-Orders</a></li>
       {% endif %}
-      <li><a href="#footer_part" class="hover:text-orange-400">Contact</a></li>
+      <li><a href="{% url 'contact' %}" class="hover:text-orange-400">Contact</a></li>
       {% if user.is_authenticated %}
         <li><a href="{% url 'logout' %}" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Sign out</a></li>
       {% else %}
@@ -290,10 +333,10 @@
       <div>
         <h3 class="text-lg font-semibold mb-4">Shop</h3>
         <ul class="space-y-2">
-          <li><a href="/product/products/phone" class="hover:text-orange-400">Mobile</a></li>
-          <li><a href="#" class="hover:text-orange-400">Laptop</a></li>
-          <li><a href="#" class="hover:text-orange-400">Drone</a></li>
-          <li><a href="#" class="hover:text-orange-400">Accessories</a></li>
+          <li><a href="{% url 'category_products' 'phone' %}" class="hover:text-orange-400">Mobile</a></li>
+          <li><a href="{% url 'category_products' 'laptop' %}" class="hover:text-orange-400">Laptop</a></li>
+          <li><a href="{% url 'category_products' 'drone' %}" class="hover:text-orange-400">Drone</a></li>
+          <li><a href="{% url 'category_products' 'accessories' %}" class="hover:text-orange-400">Accessories</a></li>
         </ul>
       </div>
 
@@ -301,10 +344,10 @@
       <div>
         <h3 class="text-lg font-semibold mb-4">Pages</h3>
         <ul class="space-y-2">
-          <li><a href="#" class="hover:text-orange-400">Shop</a></li>
-          <li><a href="#" class="hover:text-orange-400">Product</a></li>
-          <li><a href="#" class="hover:text-orange-400">Checkout</a></li>
-          <li><a href="#" class="hover:text-orange-400">404</a></li>
+          <li><a href="{% url 'products' %}" class="hover:text-orange-400">Shop</a></li>
+          <li><a href="{% url 'products' %}" class="hover:text-orange-400">Product</a></li>
+          <li><a href="{% url 'cart' %}" class="hover:text-orange-400">Checkout</a></li>
+          <li><a href="{% url 'contact' %}" class="hover:text-orange-400">Contact</a></li>
         </ul>
       </div>
 
@@ -312,9 +355,9 @@
       <div>
         <h3 class="text-lg font-semibold mb-4">Account</h3>
         <ul class="space-y-2">
-          <li><a href="#" class="hover:text-orange-400">Cart</a></li>
-          <li><a href="#" class="hover:text-orange-400">Register</a></li>
-          <li><a href="#" class="hover:text-orange-400">Login</a></li>
+          <li><a href="{% url 'cart' %}" class="hover:text-orange-400">Cart</a></li>
+          <li><a href="{% url 'signup' %}" class="hover:text-orange-400">Register</a></li>
+          <li><a href="{% url 'login' %}" class="hover:text-orange-400">Login</a></li>
         </ul>
       </div>
 
@@ -322,11 +365,11 @@
       <div>
         <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
         <ul class="space-y-3">
-          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+          <li><a href="https://facebook.com/futurefinds" target="_blank" class="flex items-center gap-2 hover:text-orange-400">
             <img src="{% static 'images/icons/facebook.svg' %}" class="h-4" alt=""> Facebook</a></li>
-          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+          <li><a href="https://twitter.com/futurefinds" target="_blank" class="flex items-center gap-2 hover:text-orange-400">
             <img src="{% static 'images/icons/twitter.svg' %}" class="h-4" alt=""> Twitter</a></li>
-          <li><a href="#" class="flex items-center gap-2 hover:text-orange-400">
+          <li><a href="https://instagram.com/futurefinds" target="_blank" class="flex items-center gap-2 hover:text-orange-400">
             <img src="{% static 'images/icons/instagram.svg' %}" class="h-4" alt=""> Instagram</a></li>
         </ul>
       </div>
@@ -349,9 +392,9 @@
     <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center gap-4">
       <p class="text-sm">&copy; 2025 Your Store. All rights reserved.</p>
       <ul class="flex flex-wrap justify-center gap-4">
-        <li><a href="#" class="hover:text-orange-400">Privacy Policy</a></li>
-        <li><a href="#" class="hover:text-orange-400">Terms</a></li>
-        <li><a href="#" class="hover:text-orange-400">FAQ</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:text-orange-400">Privacy Policy</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:text-orange-400">Terms</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:text-orange-400">FAQ</a></li>
       </ul>
       <!-- Payment Methods -->
       <div class="flex items-center justify-center gap-3">

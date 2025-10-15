@@ -176,6 +176,9 @@ def sslcz_success(request):
         # Check if this is a rental order (has rental data in session)
         rental_product_id = request.session.get('rental_product_id')
         
+        # Check if this is a flash sale order (has flash sale data in session)
+        flash_sale_product_id = request.session.get('flash_sale_product_id')
+        
         if preorder_checkout_address:
             # This is a pre-order
             from products.models import PreOrder, PreOrderOrderItem, PreOrderItem
@@ -249,6 +252,37 @@ def sslcz_success(request):
                         
             except Exception as e:
                 print(f"Error creating rental order: {str(e)}")
+        elif flash_sale_product_id:
+            # This is a flash sale order
+            from products.models import FlashSaleProduct, FlashSaleOrder
+            
+            try:
+                # Get flash sale product and order details from session
+                product = FlashSaleProduct.objects.get(id=flash_sale_product_id)
+                user_obj = User.objects.get(id=order.user_id)
+                address = request.session.get('flash_sale_address', '')
+                phone = request.session.get('flash_sale_phone', '')
+                quantity = request.session.get('flash_sale_quantity', 1)
+                total_price = request.session.get('flash_sale_total_price', 0)
+                
+                # Create flash sale order
+                flash_sale_order = FlashSaleOrder.objects.create(
+                    user=user_obj,
+                    product=product,
+                    quantity=quantity,
+                    price=product.get_sale_price(),
+                    total_price=total_price,
+                    address=address,
+                    phone=phone,
+                    status='Confirmed'
+                )
+                
+                # Clear flash sale session data
+                for key in ['flash_sale_product_id', 'flash_sale_address', 'flash_sale_phone', 'flash_sale_total_price', 'flash_sale_quantity']:
+                    request.session.pop(key, None)
+                    
+            except Exception as e:
+                print(f"Error creating flash sale order: {str(e)}")
         else:
             # This is a regular product order
             from products.models import Order as ProductOrder, OrderItem
@@ -292,15 +326,17 @@ def sslcz_success(request):
             for key in ['checkout_address', 'checkout_phone', 'checkout_payment_method', 'checkout_total_price']:
                 request.session.pop(key, None)
     
-    # Check if this was a rental order or pre-order to redirect appropriately
+    # Check if this was a rental order, pre-order, or flash sale to redirect appropriately
     is_rental = 'rental_product_id' in request.session
     is_preorder = 'preorder_checkout_address' in request.session
+    is_flash_sale = 'flash_sale_product_id' in request.session
     
     return render(request, 'payments/success.html', {
         'order': order, 
         'tx': tx,
         'is_rental': is_rental,
-        'is_preorder': is_preorder
+        'is_preorder': is_preorder,
+        'is_flash_sale': is_flash_sale
     })
 
 

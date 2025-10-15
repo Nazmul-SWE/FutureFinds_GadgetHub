@@ -1,16 +1,16 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Flash Sale Products</title>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <title>Flash Sale Order Confirmation</title>
 </head>
 <body class="bg-gray-100">
-
-<!-- Navbar -->
-  <!-- Nav bar Start-->
+  <!-- Navigation section Start-->
+<nav  class="bg-slate-950"  >
+   <!-- Nav bar Start-->
 <header class="bg-slate-950 sticky top-0 z-50">
 
 
@@ -171,117 +171,125 @@
   </script>
 </header>
   <!-- Nav bar End-->
+</nav>
 
+<!-- Navigation section End-->
+<!--confirmation section-->
+  {% load static %}
 
-<!-- Flash Sale Products -->
-<section id="flash_sale_products" class="container mx-auto px-4">
-  <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center my-12 text-gray-800">
-    Flash Sale Products
-  </h1>
+<main class="container mx-auto my-16 px-4">
+  <div class="bg-white shadow-2xl rounded-2xl p-8 md:p-12 w-full md:w-5/6 lg:w-3/4 mx-auto transition-transform duration-300 hover:-translate-y-1">
 
-  <div class="flex flex-wrap justify-center -mx-3">
-    {% for sale in flash_sale_products %}
-    <div class="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-3 mb-8">
-      <div class="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition-transform hover:-translate-y-1 duration-300 flex flex-col">
-
-        <!-- Product Image -->
-        <div class="overflow-hidden rounded-lg mb-3 bg-gray-50 h-56 flex items-center justify-center">
-          {% if sale.image %}
-            <img src="{{ sale.image.url }}"
-                 alt="{{ sale.name }}"
-                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-          {% else %}
-            <img src="{% static 'images/default.png' %}"
-                 alt="No Image"
-                 class="w-full h-full object-cover">
-          {% endif %}
-        </div>
-
-        <!-- Product Name -->
-        <h2 class="text-lg font-semibold text-center text-gray-800 mb-2">
-          <a href="{% url 'flash_sale_detail' sale.pk %}" class="hover:text-orange-500 transition">
-            {{ sale.name }}
-          </a>
-        </h2>
-
-        <!-- Flash Sale Price -->
-        <p class="text-gray-600 text-center mb-3">
-          <del>৳ {{ sale.original_price }}</del>
-          <span class="font-bold text-red-600">৳ {{ sale.get_sale_price }}</span>
-        </p>
-
-        <!-- Discount Info -->
-        <p class="text-gray-600 text-center mb-3">
-          {% if sale.discount_type == 'percent' %}
-            Discount: {{ sale.discount_value }}%
-          {% else %}
-            Discount: ৳ {{ sale.discount_value }}
-          {% endif %}
-        </p>
-
-        <!-- Countdown Timer -->
-        <div class="flex justify-center space-x-2 text-center text-white mb-3">
-          <div class="bg-gray-700 rounded-lg px-2 py-1">
-            <span id="days-{{ sale.pk }}" class="text-xl font-mono">0</span> Days
-          </div>
-          <div class="bg-gray-700 rounded-lg px-2 py-1">
-            <span id="hours-{{ sale.pk }}" class="text-xl font-mono">00</span> Hrs
-          </div>
-          <div class="bg-gray-700 rounded-lg px-2 py-1">
-            <span id="minutes-{{ sale.pk }}" class="text-xl font-mono">00</span> Min
-          </div>
-          <div class="bg-gray-700 rounded-lg px-2 py-1">
-            <span id="seconds-{{ sale.pk }}" class="text-xl font-mono">00</span> Sec
-          </div>
-        </div>
-
-        <!-- Buttons -->
-        <div class="flex justify-center space-x-2 mt-auto">
-          <a href="{% url 'flash_sale_detail' sale.pk %}"
-             class="bg-blue-500 border border-transparent hover:bg-transparent hover:border-blue-500 text-white hover:text-blue-500 font-semibold py-2 px-4 rounded-full w-full sm:w-auto text-center transition">
-            View Details
-          </a>
-          <a href="{% url 'flash_sale_checkout' sale.pk %}"
-             class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-4 rounded-full w-full sm:w-auto text-center transition">
-            Buy Now
-          </a>
-        </div>
-
+    <!-- Success Icon -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+        <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
       </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
+        Flash Sale Order Confirmed!
+      </h1>
+      <p class="text-lg text-gray-600">
+        Thank you for your purchase. Your order has been successfully placed.
+      </p>
     </div>
 
-    <!-- Countdown Timer Script -->
-    <script>
-      const endTime{{ sale.pk }} = new Date("{{ sale.end_time|date:'c' }}").getTime();
-      const timer{{ sale.pk }} = setInterval(function() {
-        const now = new Date().getTime();
-        const distance = endTime{{ sale.pk }} - now;
+    <!-- Order Summary -->
+    <section class="bg-gray-50 rounded-xl p-6 md:p-8 shadow-inner mb-10">
+      <h2 class="text-2xl font-semibold mb-6 text-gray-800 text-center sm:text-left">
+        Order Summary
+      </h2>
 
-        if(distance <= 0){
-          clearInterval(timer{{ sale.pk }});
-          document.getElementById("days-{{ sale.pk }}").innerText = "0";
-          document.getElementById("hours-{{ sale.pk }}").innerText = "00";
-          document.getElementById("minutes-{{ sale.pk }}").innerText = "00";
-          document.getElementById("seconds-{{ sale.pk }}").innerText = "00";
-          return;
-        }
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-gray-200 pb-4 mb-4">
+        <div>
+          <p class="text-lg font-semibold text-gray-900">{{ product.name }}</p>
+          <div class="inline-block mt-2 bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-medium">
+             FLASH SALE
+          </div>
+          <p class="text-sm text-gray-600 mt-2">
+            Quantity: 1 | Discounted Price:
+            <span class="font-semibold text-orange-500">{{ total_price }} BDT</span>
+          </p>
+        </div>
+        <p class="text-xl font-bold text-gray-900 mt-4 sm:mt-0">
+          {{ total_price }} BDT
+        </p>
+      </div>
 
-        const days = Math.floor(distance / (1000*60*60*24));
-        const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
-        const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
-        const seconds = Math.floor((distance % (1000*60)) / 1000);
+      <div class="flex justify-between font-bold text-lg border-t border-gray-200 pt-3 text-gray-800">
+        <span>Total:</span>
+        <span>{{ total_price }} BDT</span>
+      </div>
+    </section>
 
-        document.getElementById("days-{{ sale.pk }}").innerText = days;
-        document.getElementById("hours-{{ sale.pk }}").innerText = hours.toString().padStart(2,'0');
-        document.getElementById("minutes-{{ sale.pk }}").innerText = minutes.toString().padStart(2,'0');
-        document.getElementById("seconds-{{ sale.pk }}").innerText = seconds.toString().padStart(2,'0');
-      }, 1000);
-    </script>
+    <!-- Shipping Details -->
+    <section class="bg-blue-50 rounded-xl p-6 md:p-8 shadow-inner mb-10">
+      <h2 class="text-2xl font-semibold mb-6 text-gray-800 text-center sm:text-left">
+        Shipping Details
+      </h2>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-gray-700 font-medium mb-1">Shipping Address</label>
+          <p class="text-gray-900 bg-white p-3 rounded-lg border">{{ address }}</p>
+        </div>
+        
+        <div>
+          <label class="block text-gray-700 font-medium mb-1">Phone Number</label>
+          <p class="text-gray-900 bg-white p-3 rounded-lg border">{{ phone }}</p>
+        </div>
+      </div>
+    </section>
 
-    {% endfor %}
+    <!-- Next Steps -->
+    <section class="bg-green-50 rounded-xl p-6 md:p-8 shadow-inner mb-10">
+      <h2 class="text-2xl font-semibold mb-6 text-gray-800 text-center sm:text-left">
+        What's Next?
+      </h2>
+      
+      <div class="space-y-4">
+        <div class="flex items-start space-x-3">
+          <div class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+          <div>
+            <h3 class="font-semibold text-gray-900">Order Processing</h3>
+            <p class="text-gray-600">We'll process your flash sale order within 24 hours.</p>
+          </div>
+        </div>
+        
+        <div class="flex items-start space-x-3">
+          <div class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+          <div>
+            <h3 class="font-semibold text-gray-900">Shipping</h3>
+            <p class="text-gray-600">Your item will be shipped within 2-3 business days.</p>
+          </div>
+        </div>
+        
+        <div class="flex items-start space-x-3">
+          <div class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+          <div>
+            <h3 class="font-semibold text-gray-900">Delivery</h3>
+            <p class="text-gray-600">You'll receive your flash sale item within 5-7 business days.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-4 pt-4">
+
+      <a href="{% url 'flash_sale' %}"
+         class="w-full sm:w-auto text-center bg-gray-200 text-gray-800 font-medium py-4 text-xl px-8 rounded-full hover:bg-gray-300 transition-all duration-300">
+        ← Back to Flash Sales
+      </a>
+
+      <a href="{% url 'orders' %}"
+         class="w-full sm:w-auto text-center bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-4 text-xl px-8 rounded-full shadow-md hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all duration-300">
+         View My Orders
+      </a>
+    </div>
   </div>
-</section>
-
+</main>
 
 <!-- Footer Section -->
 <footer class="bg-slate-950 text-white text-sm mt-10">
@@ -369,7 +377,5 @@
 <script src="node_modules/swiper/swiper-bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="assets/js/script.js"></script>
-
 </body>
-</html>
 </html>

@@ -48,4 +48,7 @@ urlpatterns = [
     path('preorder-orders/', views.preorder_orders, name='preorder_orders'),
     path('preorder-orders/<int:preorder_id>/', views.preorder_order_detail, name='preorder_order_detail'),
     path('preorder/<int:preorder_id>/cancel/', views.cancel_preorder, name='cancel_preorder'),
+    
+    # Contact
+    path('contact/', views.contact, name='contact'),
 ]
