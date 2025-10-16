@@ -155,12 +155,10 @@ class FlashSaleProduct(models.Model):
 
     def get_sale_price(self):
         if self.discount_type == 'percent':
-            return self.original_price * (1 - self.discount_value / 100)
+            sale_price = self.original_price * (1 - self.discount_value / 100)
         else:  # fixed
-            return self.original_price - self.discount_value
-
-    def __str__(self):
-        return self.name
+            sale_price = self.original_price - self.discount_value
+        return int(sale_price)
 
 
 class PreOrderProduct(models.Model):

@@ -206,8 +206,8 @@
 
         <!-- Flash Sale Price -->
         <p class="text-gray-600 text-center mb-3">
-          <del>৳ {{ sale.original_price }}</del>
-          <span class="font-bold text-red-600">৳ {{ sale.get_sale_price }}</span>
+          <del>৳ {{ sale.original_price|floatformat:0}}</del>
+          <span class="font-bold text-red-600">৳ {{ sale.get_sale_price|floatformat:0  }}</span>
         </p>
 
         <!-- Discount Info -->

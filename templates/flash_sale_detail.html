@@ -201,11 +201,11 @@
       <div class="w-full md:w-1/2 text-gray-700 space-y-4">
         <p>
           <span class="font-semibold text-gray-900">Original Price:</span>
-          <span class="line-through">৳ {{ product.original_price }}</span>
+          <span class="line-through">৳ {{ product.original_price|floatformat:0 }}</span>
         </p>
         <p>
           <span class="font-semibold text-gray-900">Flash Sale Price:</span>
-          <span class="text-orange-500 font-bold">৳ {{ product.get_sale_price }}</span>
+          <span class="text-orange-500 font-bold">৳ {{ product.get_sale_price|floatformat:0 }}</span>
         </p>
         <p>
           <span class="font-semibold text-gray-900">Discount:</span>
