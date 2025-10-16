@@ -179,6 +179,9 @@ def sslcz_success(request):
         # Check if this is a flash sale order (has flash sale data in session)
         flash_sale_product_id = request.session.get('flash_sale_product_id')
         
+        # Check if this is a single product order (has single product data in session)
+        single_product_data = request.session.get('single_product_checkout')
+        
         if preorder_checkout_address:
             # This is a pre-order
             from products.models import PreOrder, PreOrderOrderItem, PreOrderItem
@@ -283,6 +286,47 @@ def sslcz_success(request):
                     
             except Exception as e:
                 print(f"Error creating flash sale order: {str(e)}")
+        elif single_product_data:
+            # This is a single product order
+            from products.models import Order as ProductOrder, OrderItem, Product
+            
+            try:
+                # Get product and order details from session
+                product_id = single_product_data.get('product_id')
+                product = Product.objects.get(id=product_id)
+                user_obj = User.objects.get(id=order.user_id)
+                address = single_product_data.get('address', '')
+                phone = single_product_data.get('phone', '')
+                
+                # Create order in products app
+                product_order = ProductOrder.objects.create(
+                    user=user_obj,
+                    total_price=order.amount,
+                    address=address,
+                    phone=phone,
+                    payment_method='SSLCommerz',
+                    status='Confirmed'
+                )
+                
+                # Create order item
+                OrderItem.objects.create(
+                    order=product_order,
+                    product=product,
+                    quantity=1,
+                    price=order.amount,
+                )
+                
+                # Update stock
+                product.stock -= 1
+                if product.stock <= 0:
+                    product.is_available = False
+                product.save()
+                
+                # Clear single product session data
+                request.session.pop('single_product_checkout', None)
+                
+            except Exception as e:
+                print(f"Error creating single product order: {str(e)}")
         else:
             # This is a regular product order
             from products.models import Order as ProductOrder, OrderItem

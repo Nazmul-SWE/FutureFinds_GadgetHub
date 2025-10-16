@@ -205,7 +205,7 @@
         <div class="mt-6 p-4 bg-white shadow-md rounded-lg">
             <h2 class="text-xl font-bold">Total Price: {{ total_price }} BDT</h2>
             <div class="mt-4">
-                <a href="{% url 'checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
+                <a href="{% url 'cart_checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
             </div>
         </div>
         {% else %}

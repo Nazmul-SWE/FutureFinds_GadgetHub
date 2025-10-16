@@ -137,6 +137,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+# Authentication settings
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+
 # SSLCOMMERZ credentials
 SSLCOMMERZ_STORE_ID = 'futur68c9b4390b77b'
 SSLCOMMERZ_STORE_PASS = 'futur68c9b4390b77b@ssl'

@@ -30,6 +30,35 @@ def product_detail(request, id):
 
 def checkout(request, id):
     product = get_object_or_404(Product, id=id)
+    
+    if request.method == 'POST':
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        payment_method = request.POST.get('payment_method')
+        
+        if not address or not phone or not payment_method:
+            messages.error(request, "Please fill in all required fields.")
+            return render(request, 'checkout.html', {'product': product})
+        
+        # Store checkout data in session
+        request.session['single_product_checkout'] = {
+            'product_id': product.id,
+            'product_name': product.name,
+            'product_price': float(product.price),
+            'address': address,
+            'phone': phone,
+            'payment_method': payment_method,
+        }
+        
+        # Create a payment order and redirect to SSLCOMMERZ
+        description = f"{product.name} x1"
+        order = PaymentOrder.objects.create(
+            user=request.user,
+            amount=float(product.price),
+            description=description
+        )
+        return redirect('payments:sslcz_start', order_id=order.id)
+    
     return render(request, 'checkout.html', {'product': product})
 
 def product_list(request):
@@ -80,7 +109,7 @@ def login(request):
             # Authentication failed, display an error message
             messages.error(request, 'Invalid username or password.')
             return redirect('login')
-    return render(request, 'login.html')
+    return render(request, 'Login.html')
 
 
 @login_required
@@ -168,7 +197,7 @@ def update_cart_item(request, cart_item_id, action):
         messages.error(request, "Invalid action.")
     return redirect('cart')
 @login_required
-def checkout(request):
+def cart_checkout(request):
     user = request.user
     cart_items = CartItem.objects.filter(user=user).select_related('product')
 
@@ -185,7 +214,7 @@ def checkout(request):
 
         if not address or not phone or not payment_method:
             messages.error(request, "Please fill in all required fields.")
-            return redirect('checkout')
+            return redirect('cart_checkout')
 
         request.session['checkout_address'] = address
         request.session['checkout_phone'] = phone
@@ -214,16 +243,59 @@ def checkout(request):
 @login_required
 def confirm_order(request):
     user = request.user
-    cart_items = CartItem.objects.filter(user=user).select_related('product')
+    
+    # Check if this is a single product order or cart order
+    single_product_data = request.session.get('single_product_checkout')
+    
+    if single_product_data:
+        # Handle single product order
+        address = single_product_data.get('address')
+        phone = single_product_data.get('phone')
+        total_price = single_product_data.get('product_price')
+        payment_method = single_product_data.get('payment_method')
+        product_id = single_product_data.get('product_id')
+        product_name = single_product_data.get('product_name')
+        
+        if not address or not phone or not total_price or not payment_method or not product_id:
+            messages.error(request, "Checkout details are missing. Please restart the process.")
+            return redirect('product_checkout', id=product_id)
+        
+        # Get the product
+        try:
+            product = Product.objects.get(id=product_id)
+        except Product.DoesNotExist:
+            messages.error(request, "Product not found.")
+            return redirect('home')
+            
+        context = {
+            'single_product': True,
+            'product': product,
+            'address': address,
+            'phone': phone,
+            'total_price': total_price,
+            'payment_method': payment_method,
+        }
+        
+    else:
+        # Handle cart-based order
+        cart_items = CartItem.objects.filter(user=user).select_related('product')
+        address = request.session.get('checkout_address')
+        phone = request.session.get('checkout_phone')
+        total_price = request.session.get('checkout_total_price')
+        payment_method = request.session.get('checkout_payment_method')
 
-    address = request.session.get('checkout_address')
-    phone = request.session.get('checkout_phone')
-    total_price = request.session.get('checkout_total_price')
-    payment_method = request.session.get('checkout_payment_method')
-
-    if not address or not phone or not total_price or not payment_method:
-        messages.error(request, "Checkout details are missing. Please restart the process.")
-        return redirect('checkout')
+        if not address or not phone or not total_price or not payment_method:
+            messages.error(request, "Checkout details are missing. Please restart the process.")
+            return redirect('cart_checkout')
+            
+        context = {
+            'single_product': False,
+            'cart_items': cart_items,
+            'address': address,
+            'phone': phone,
+            'total_price': total_price,
+            'payment_method': payment_method,
+        }
 
     if request.method == 'POST':
         try:
@@ -236,26 +308,48 @@ def confirm_order(request):
                     payment_method=payment_method
                 )
 
-                for item in cart_items:
-                    if not item.product:
-                        raise Exception("Product not found in cart item.")
-
+                if single_product_data:
+                    # Handle single product order
+                    product = Product.objects.get(id=product_id)
+                    
                     OrderItem.objects.create(
                         order=order,
-                        product=item.product,
-                        quantity=item.quantity,
-                        price=item.get_total_price(),
+                        product=product,
+                        quantity=1,
+                        price=total_price,
                     )
-                    item.product.stock -= item.quantity
-                    if item.product.stock <= 0:
-                        item.product.is_available = False
-                    item.product.save()
+                    
+                    # Update product stock
+                    product.stock -= 1
+                    if product.stock <= 0:
+                        product.is_available = False
+                    product.save()
+                    
+                    # Clear single product session data
+                    request.session.pop('single_product_checkout', None)
+                    
+                else:
+                    # Handle cart-based order
+                    for item in cart_items:
+                        if not item.product:
+                            raise Exception("Product not found in cart item.")
 
-                cart_items.delete()
+                        OrderItem.objects.create(
+                            order=order,
+                            product=item.product,
+                            quantity=item.quantity,
+                            price=item.get_total_price(),
+                        )
+                        item.product.stock -= item.quantity
+                        if item.product.stock <= 0:
+                            item.product.is_available = False
+                        item.product.save()
 
-                # Clear session
-                for key in ['checkout_address', 'checkout_phone', 'checkout_payment_method', 'checkout_total_price']:
-                    request.session.pop(key, None)
+                    cart_items.delete()
+
+                    # Clear cart session data
+                    for key in ['checkout_address', 'checkout_phone', 'checkout_payment_method', 'checkout_total_price']:
+                        request.session.pop(key, None)
 
                 messages.success(request, f"Order placed successfully! Order ID: {order.id}")
                 print(f"Order ID: {order.id}")
@@ -264,17 +358,16 @@ def confirm_order(request):
         except Exception as e:
             messages.error(request, f"An error occurred: {str(e)}")
             print(f"Error: {str(e)}")
-            return redirect('checkout')
+            if single_product_data:
+                return redirect('product_checkout', id=product_id)
+            else:
+                return redirect('cart_checkout')
 
-    return render(request, 'confirm_order.html', {
-        'cart_items': cart_items,
-        'total_price': total_price,
-        'address': address,
-        'phone': phone,
-        'payment_method': payment_method,
-    })
+    return render(request, 'confirm_order.html', context)
 
 
+def thanks(request):
+    return render(request, 'thanks.html')
 
 
 @login_required(login_url='login')

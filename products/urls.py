@@ -9,8 +9,8 @@ urlpatterns = [
     path('products/', views.product_list, name='product_list'),
     path('products/<int:pk>/', views.product_detail, name='product_detail'),
     path('product/<int:id>/', views.product_detail, name='product_detail'),
-    path('product/<int:id>/checkout/', views.checkout, name='checkout'),
-    path('checkout/<int:pk>/', views.checkout, name='checkout'),
+    path('product/<int:id>/checkout/', views.checkout, name='product_checkout'),
+    path('cart/checkout/', views.cart_checkout, name='cart_checkout'),
 
     # Cart-related
     path('cart/', views.cart, name='cart'),
@@ -21,6 +21,7 @@ urlpatterns = [
     path('orders/', views.orders, name='orders'),
     path('orders/<int:order_id>/', views.order_detail, name='order_detail'),
     path('order/<int:order_id>/cancel/', views.cancel_order, name='cancel_order'),
+    path('confirm-order/', views.confirm_order, name='confirm_order'),
 
     # Rental-related
     path('rental-products/', views.rental_products, name='rental_products'),
@@ -33,7 +34,6 @@ urlpatterns = [
     path('flash-sale/', views.flash_sale, name='flash_sale'),
     path('flash-sale/purchase/<int:pk>/', views.purchase_flash_sale, name='purchase_flash_sale'),
     path("flash-sale/<int:pk>/", views.flash_sale_detail, name="flash_sale_detail"),
-    path("checkout/<int:pk>/", views.checkout, name="checkout"),
     path('flash-sale/<int:pk>/checkout/', views.flash_sale_checkout, name='flash_sale_checkout'),
     path('product/flash-sale/<int:pk>/', views.flash_sale_detail, name='flash_sale_detail'),
     path('flash-sale/', views.flash_sale_list, name='flash_sale'),
@@ -51,4 +51,7 @@ urlpatterns = [
     
     # Contact
     path('contact/', views.contact, name='contact'),
+    
+    # Thanks page
+    path('thanks/', views.thanks, name='thanks'),
 ]
