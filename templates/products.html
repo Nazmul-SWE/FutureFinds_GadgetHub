@@ -213,9 +213,9 @@
 
             <!-- Action Buttons -->
             <div class="mt-auto flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-2">
-              <a href="{% url 'product_detail' i.id %}"
+              <a href="{% url 'add_to_cart' i.id %}"
                  class="bg-blue-500 border border-transparent hover:bg-transparent hover:border-blue-500 text-white hover:text-blue-500 font-semibold py-2 px-5 rounded-full text-center transition w-full sm:w-auto">
-                View Details
+                Add to Cart
               </a>
               <a href="{% url 'product_checkout' i.id %}"
                  class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-5 rounded-full text-center transition w-full sm:w-auto">

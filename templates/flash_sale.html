@@ -237,9 +237,9 @@
 
         <!-- Buttons -->
         <div class="flex justify-center space-x-2 mt-auto">
-          <a href="{% url 'flash_sale_detail' sale.pk %}"
+          <a href="{% url 'add_to_cart' sale.pk %}"
              class="bg-blue-500 border border-transparent hover:bg-transparent hover:border-blue-500 text-white hover:text-blue-500 font-semibold py-2 px-4 rounded-full w-full sm:w-auto text-center transition">
-            View Details
+            Add to Cart
           </a>
           <a href="{% url 'flash_sale_checkout' sale.pk %}"
              class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-4 rounded-full w-full sm:w-auto text-center transition">

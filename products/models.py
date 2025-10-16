@@ -26,15 +26,43 @@ class Product(models.Model):
         return self.name
 
 class CartItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    PRODUCT_TYPE_CHOICES = [
+        ('regular', 'Regular Product'),
+        ('preorder', 'Pre-order Product'),
+        ('flash_sale', 'Flash Sale Product'),
+    ]
+    
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
+    preorder_product = models.ForeignKey('PreOrderProduct', on_delete=models.CASCADE, blank=True, null=True)
+    flash_sale_product = models.ForeignKey('FlashSaleProduct', on_delete=models.CASCADE, blank=True, null=True)
+    product_type = models.CharField(
+        choices=PRODUCT_TYPE_CHOICES, 
+        default='regular', 
+        max_length=20
+    )
     quantity = models.PositiveIntegerField(default=1)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='carts')
 
+    class Meta:
+        unique_together = ('user', 'product_type', 'product', 'preorder_product', 'flash_sale_product')
+
     def __str__(self):
-        return f"{self.quantity} of {self.product.name}"
+        if self.product_type == 'regular' and self.product:
+            return f"{self.quantity} of {self.product.name}"
+        elif self.product_type == 'preorder' and self.preorder_product:
+            return f"{self.quantity} of {self.preorder_product.name}"
+        elif self.product_type == 'flash_sale' and self.flash_sale_product:
+            return f"{self.quantity} of {self.flash_sale_product.name}"
+        return f"{self.quantity} of unknown product"
 
     def get_total_price(self):
-        return self.quantity * self.product.price
+        if self.product_type == 'regular' and self.product:
+            return self.quantity * self.product.price
+        elif self.product_type == 'preorder' and self.preorder_product:
+            return self.quantity * self.preorder_product.price
+        elif self.product_type == 'flash_sale' and self.flash_sale_product:
+            return self.quantity * self.flash_sale_product.get_sale_price()
+        return 0
 
 
 class Order(models.Model):

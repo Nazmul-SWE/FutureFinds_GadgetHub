@@ -142,7 +142,12 @@ def add_to_cart(request, product_id):
     user = request.user
 
     # Check if the product is already in the cart
-    cart_item, created = CartItem.objects.get_or_create(user=user, product=product)
+    cart_item, created = CartItem.objects.get_or_create(
+        user=user, 
+        product=product, 
+        product_type='regular',
+        defaults={'quantity': 1}
+    )
 
     if not created:
         # If the item already exists, increase the quantity

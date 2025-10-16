@@ -24,9 +24,10 @@
 
         <!-- Buttons -->
         <div class="flex justify-center space-x-2 mt-auto">
-          <a href="{% url 'product_detail' product.pk %}"
-             class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full transition">
-             View Details
+          <a href="{% url 'add_to_cart' product.pk %}"
+             class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full transition"
+             style="display: block !important; visibility: visible !important; background-color: #3b82f6 !important;">
+             🛒 ADD TO CART
           </a>
           <a href="{% url 'product_checkout' product.pk %}"
              class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-full transition">

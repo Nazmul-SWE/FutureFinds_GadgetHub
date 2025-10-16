@@ -180,32 +180,88 @@
     <div class="bg-white shadow-md rounded-lg p-6">
         <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
         
-        <!-- Product Details -->
-        <div class="flex items-center space-x-4 mb-4 p-4 bg-gray-50 rounded-lg">
-            {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-16 h-16 object-cover rounded">
-            {% endif %}
-            <div class="flex-1">
-                <h3 class="font-semibold text-lg">{{ product.name }}</h3>
-                <p class="text-gray-600 text-sm">{{ product.description|truncatewords:15 }}</p>
-                <p class="text-sm text-gray-500">Quantity: 1</p>
+        {% if cart_items %}
+            <!-- Cart Items -->
+            {% for item in cart_items %}
+            <div class="flex items-center space-x-4 mb-4 p-4 bg-gray-50 rounded-lg">
+                {% if item.product_type == 'regular' and item.product.image %}
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-16 h-16 object-cover rounded">
+                {% elif item.product_type == 'preorder' and item.preorder_product.image %}
+                    <img src="{{ item.preorder_product.image.url }}" alt="{{ item.preorder_product.name }}" class="w-16 h-16 object-cover rounded">
+                {% elif item.product_type == 'flash_sale' and item.flash_sale_product.image %}
+                    <img src="{{ item.flash_sale_product.image.url }}" alt="{{ item.flash_sale_product.name }}" class="w-16 h-16 object-cover rounded">
+                {% else %}
+                    <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                        <span class="text-gray-400 text-xs">No Image</span>
+                    </div>
+                {% endif %}
+                
+                <div class="flex-1">
+                    {% if item.product_type == 'regular' %}
+                        <h3 class="font-semibold text-lg">{{ item.product.name }}</h3>
+                        <p class="text-gray-600 text-sm">{{ item.product.description|truncatewords:15 }}</p>
+                    {% elif item.product_type == 'preorder' %}
+                        <h3 class="font-semibold text-lg">{{ item.preorder_product.name }}</h3>
+                        <p class="text-gray-600 text-sm">{{ item.preorder_product.description|truncatewords:15 }}</p>
+                    {% elif item.product_type == 'flash_sale' %}
+                        <h3 class="font-semibold text-lg">{{ item.flash_sale_product.name }}</h3>
+                        <p class="text-gray-600 text-sm">Flash Sale Product</p>
+                    {% endif %}
+                    <p class="text-sm text-gray-500">Quantity: {{ item.quantity }}</p>
+                </div>
+                
+                <div class="text-right">
+                    <p class="font-semibold text-lg">{{ item.get_total_price }} BDT</p>
+                    {% if item.product_type == 'regular' %}
+                        <p class="text-sm text-gray-500">{{ item.product.price }} BDT each</p>
+                    {% elif item.product_type == 'preorder' %}
+                        <p class="text-sm text-gray-500">{{ item.preorder_product.price }} BDT each</p>
+                    {% elif item.product_type == 'flash_sale' %}
+                        <p class="text-sm text-gray-500">{{ item.flash_sale_product.get_sale_price }} BDT each</p>
+                    {% endif %}
+                </div>
             </div>
-            <div class="text-right">
-                <p class="font-semibold text-lg">{{ product.price }} BDT</p>
+            {% endfor %}
+            
+            <!-- Order Total -->
+            <div class="border-t pt-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-lg font-semibold">Subtotal:</span>
+                    <span class="text-lg font-semibold">{{ total_price }} BDT</span>
+                </div>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-lg font-semibold">Total:</span>
+                    <span class="text-xl font-bold text-blue-600">{{ total_price }} BDT</span>
+                </div>
             </div>
-        </div>
-        
-        <!-- Order Total -->
-        <div class="border-t pt-4">
-            <div class="flex justify-between items-center">
-                <span class="text-lg font-semibold">Subtotal:</span>
-                <span class="text-lg font-semibold">{{ product.price }} BDT</span>
+        {% else %}
+            <!-- Single Product (fallback for backward compatibility) -->
+            <div class="flex items-center space-x-4 mb-4 p-4 bg-gray-50 rounded-lg">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-16 h-16 object-cover rounded">
+                {% endif %}
+                <div class="flex-1">
+                    <h3 class="font-semibold text-lg">{{ product.name }}</h3>
+                    <p class="text-gray-600 text-sm">{{ product.description|truncatewords:15 }}</p>
+                    <p class="text-sm text-gray-500">Quantity: 1</p>
+                </div>
+                <div class="text-right">
+                    <p class="font-semibold text-lg">{{ product.price }} BDT</p>
+                </div>
             </div>
-            <div class="flex justify-between items-center mt-2">
-                <span class="text-lg font-semibold">Total:</span>
-                <span class="text-xl font-bold text-blue-600">{{ product.price }} BDT</span>
+            
+            <!-- Order Total -->
+            <div class="border-t pt-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-lg font-semibold">Subtotal:</span>
+                    <span class="text-lg font-semibold">{{ product.price }} BDT</span>
+                </div>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-lg font-semibold">Total:</span>
+                    <span class="text-xl font-bold text-blue-600">{{ product.price }} BDT</span>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 
     <form method="POST" class="mt-6 bg-white shadow-md rounded-lg p-6">
