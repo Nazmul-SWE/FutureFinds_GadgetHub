@@ -1,29 +1,21 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pre-Order Products</title>
-     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
-   <script src="https://cdn.tailwindcss.com"></script>
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">    
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="node_modules/swiper/swiper-bundle.css">
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <title>Pre-Order Product Details</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
 <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
 <body class=" bg-gray-100">
+<header>
+ {% load static %}
   <!-- Nav bar Start-->
 <header class="bg-slate-950 sticky top-0 z-50">
 
 
   <div class="container mx-auto flex justify-between items-center py-4 px-4 lg:px-8">
-    
+
     <!-- Left Section: Logo -->
     <a href="{% url 'home' %}" class="flex items-center">
       <span class="text-orange-400 text-4xl font-bold">Future</span>
@@ -47,23 +39,23 @@
         <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400 py-2 block">Flash Sale</a></li>
         {% if user.is_authenticated %}
           <li><a href="{% url 'orders' %}" class="hover:text-orange-400 py-2 block">Orders</a></li>
-         
+          <li><a href="{% url 'preorder_orders' %}" class="hover:text-orange-400 py-2 block">My Pre-Orders</a></li>
         {% endif %}
         <li><a href="{% url 'contact' %}" class="hover:text-orange-400 py-2 block">Contact</a></li>
-     
+
       </ul>
     </nav>
 
     <!-- Right Section: User + Buttons -->
     <div class="hidden lg:flex items-center space-x-4">
       <!-- Cart Button -->
-      <a href="{% url 'cart' %}" class="relative text-white hover:text-orange-400 transition-colors">
+      <a href="{% url 'preorder_cart' %}" class="relative text-white hover:text-orange-400 transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
         </svg>
         <span class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
           {% if user.is_authenticated %}
-            {{ user.cartitem_set.count|default:0 }}
+            {{ user.preorderitem_set.count|default:0 }}
           {% else %}
             0
           {% endif %}
@@ -73,7 +65,7 @@
 
       {% if user.is_authenticated %}
         <span class="text-gray-200 text-lg">Hi, {{ user.username }}</span>
-        <a href="{% url 'logout' %}" 
+        <a href="{% url 'logout' %}"
            class="bg-[#5EBB2B] border border-[#4eaa0c] text-white hover:bg-transparent hover:text-[#5EBB2B] font-semibold px-4 py-2 rounded-full text-lg transition">
            Sign out
         </a>
@@ -93,14 +85,14 @@
       <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
       <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400">Rent</a></li>
       <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
-      <li><a href="{% url 'cart' %}" class="hover:text-orange-400 flex items-center">
+      <li><a href="{% url 'preorder_cart' %}" class="hover:text-orange-400 flex items-center">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
         </svg>
-        Cart
+        Pre-Order Cart
         <span class="ml-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
           {% if user.is_authenticated %}
-            {{ user.cartitem_set.count|default:0 }}
+            {{ user.preorderitem_set.count|default:0 }}
           {% else %}
             0
           {% endif %}
@@ -109,10 +101,10 @@
 
       {% if user.is_authenticated %}
         <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
-  
+        <li><a href="{% url 'preorder_orders' %}" class="hover:text-orange-400">My Pre-Orders</a></li>
       {% endif %}
       <li><a href="{% url 'contact' %}" class="hover:text-orange-400">Contact</a></li>
-  
+
       {% if user.is_authenticated %}
         <li><a href="{% url 'logout' %}" class="bg-[#5EBB2B] text-white px-4 py-2 rounded-full text-center">Sign out</a></li>
       {% else %}
@@ -131,143 +123,116 @@
     });
   </script>
 
-
-
-
-  <!-- Mobile Menu Dropdown -->
-  <div id="mobileDropdown" class="lg:hidden hidden bg-slate-900 text-white px-6 pb-4">
-    <ul class="flex flex-col space-y-3 font-semibold">
-      <li><a href="{% url 'products' %}" class="hover:text-orange-400">Products</a></li>
-      <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
-      <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400">Rent</a></li>
-      <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400">Flash Sale</a></li>
-      <li><a href="{% url 'cart' %}" class="hover:text-orange-400 flex items-center">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
-        </svg>
-        Cart
-        <span class="ml-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
-          {% if user.is_authenticated %}
-            {{ user.cartitem_set.count|default:0 }}
-          {% else %}
-            0
-          {% endif %}
-        </span>
-      </a></li>
-
-      {% if user.is_authenticated %}
-        <li><a href="{% url 'orders' %}" class="hover:text-orange-400">Orders</a></li>
-        <li><a href="{% url 'preorder_orders' %}" class="hover:text-orange-400">My Pre-Orders</a></li>
-      {% endif %}
-      <li><a href="{% url 'contact' %}" class="hover:text-orange-400">Contact</a></li>
-      {% if user.is_authenticated %}
-        <li><a href="{% url 'logout' %}" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Sign out</a></li>
-      {% else %}
-        <li><a href="{% url 'login' %}" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Sign in</a></li>
-      {% endif %}
-    </ul>
-  </div>
-
-  <!-- Simple Toggle Script -->
-  <script>
-    const hamburger = document.getElementById('hamburger');
-    const mobileDropdown = document.getElementById('mobileDropdown');
-
-    hamburger.addEventListener('click', () => {
-      mobileDropdown.classList.toggle('hidden');
-    });
-  </script>
 </header>
   <!-- Nav bar End-->
+<main class="container mx-auto my-16 px-4">
+  <div class="bg-white shadow-2xl rounded-2xl p-8 md:p-12 w-full md:w-5/6 lg:w-3/4 mx-auto transition-transform duration-300 hover:-translate-y-1">
 
-<main class="mb-20">
-  <section id="preorder_products" class="container mx-auto px-4">
-    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center my-12 text-gray-800">
-      Pre-Order Products
-    </h1>
-    <p class="text-center text-gray-600 mb-8">
-      Get the latest products before they're officially released!
-    </p>
+    <!-- Product Title -->
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-8 text-center pb-4">
+      {{ product.name }}
+    </h2>
 
-    {% load static %}
-    <div class="flex flex-wrap justify-center -mx-3">
-      {% for product in preorder_products %}
-      <div class="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-3 mb-8">
-        <a href="{% url 'preorder_product_detail' product.pk %}" class="block">
-          <div class="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition-transform hover:-translate-y-1 duration-300 cursor-pointer">
-          
-          <!-- Product Image -->
-          <div class="overflow-hidden rounded-lg mb-3 bg-gray-50 h-56 flex items-center justify-center">
-            {% if product.image %}
-              <img src="{{ product.image.url }}"
-                   alt="{{ product.name }}"
-                   class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-            {% else %}
-              <img src="{% static 'images/no-image.png' %}"
-                   alt="No Image"
-                   class="w-full h-full object-cover">
-            {% endif %}
-          </div>
-
-          <!-- Product Name -->
-          <h2 class="text-lg font-semibold text-center text-gray-800 mb-2 hover:text-orange-500 transition">
-            {{ product.name }}
-          </h2>
-
-          <!-- Product Description -->
-          <p class="text-sm text-gray-600 text-center mb-2">
-            {{ product.description|truncatewords:15 }}
-          </p>
-
-          <!-- Product Price -->
-          <p class="text-center text-lg font-bold text-green-600 mb-2">
-            {{ product.price }} BDT
-          </p>
-
-          <!-- Expected Release -->
-          <p class="text-sm text-blue-600 text-center">
-            Expected Release: {{ product.expected_release_date }}
-          </p>
-
-          <!-- Slots Remaining -->
-          <p class="text-sm text-orange-600 text-center mb-3">
-            {{ product.preorder_slots_remaining }} slots remaining
-          </p>
-
-          <!-- Buttons -->
-          <div class="flex justify-center">
-            {% if product.is_preorder_available %}
-              <a href="{% url 'add_to_preorder_cart' product.id %}"
-                 class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-5 rounded-full w-full sm:w-auto text-center transition"
-                 onclick="event.stopPropagation();">
-                Pre-Order Now
-              </a>
-            {% else %}
-              <button class="bg-gray-300 text-gray-600 font-semibold py-2 px-5 rounded-full w-full sm:w-auto cursor-not-allowed">
-                Unavailable
-              </button>
-            {% endif %}
-          </div>
-
-          </div>
-        </a>
-      </div>
-      {% empty %}
-      <div class="col-span-full text-center py-12">
-        <h3 class="text-2xl font-semibold text-gray-600 mb-4">
-          No Pre-Orders Available
-        </h3>
-        <p class="text-gray-500 mb-4">
-          Check back soon for exciting new products!
-        </p>
-        <a href="{% url 'products' %}"
-           class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-full transition">
-          Browse Regular Products
-        </a>
-      </div>
-      {% endfor %}
+    <!-- Pre-Order Badge -->
+    <div class="text-center mb-6">
+      <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full text-lg font-semibold shadow-lg">
+        🔮 PRE-ORDER
+      </span>
     </div>
-  </section>
+
+    <!-- Product Info Section -->
+    <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+
+      <!-- Product Image -->
+      <div class="w-full md:w-1/2 flex justify-center">
+        {% if product.image %}
+          <img src="{{ product.image.url }}"
+               alt="{{ product.name }}"
+               class="w-80 h-80 object-cover rounded-2xl shadow-md hover:scale-105 transition-transform duration-500">
+        {% else %}
+          <img src="{% static 'images/no-image.png' %}"
+               alt="No Image"
+               class="w-80 h-80 object-cover rounded-2xl shadow-md">
+        {% endif %}
+      </div>
+
+      <!-- Product Details -->
+      <div class="w-full md:w-1/2 text-gray-700 space-y-4">
+        <p>
+          <span class="font-semibold text-gray-900">Pre-Order Price:</span>
+          <span class="text-2xl font-bold text-green-600">৳ {{ product.price }}</span>
+        </p>
+
+        <p>
+          <span class="font-semibold text-gray-900">Description:</span>
+          {{ product.description|default:"No description available." }}
+        </p>
+
+        <p>
+          <span class="font-semibold text-gray-900">Expected Release Date:</span>
+          <span class="text-blue-600 font-semibold">{{ product.expected_release_date|date:"F d, Y" }}</span>
+        </p>
+
+        <p>
+          <span class="font-semibold text-gray-900">Pre-Order Period:</span>
+          <span class="text-orange-600">{{ product.preorder_start_date|date:"M d, Y" }} - {{ product.preorder_end_date|date:"M d, Y" }}</span>
+        </p>
+
+        <p>
+          <span class="font-semibold text-gray-900">Slots Remaining:</span>
+          <span class="text-red-600 font-bold">{{ product.preorder_slots_remaining }} / {{ product.max_preorder_quantity }}</span>
+        </p>
+
+        <!-- Availability Status -->
+        <div class="mt-4">
+          {% if product.is_preorder_available %}
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+              ✅ Available for Pre-Order
+            </span>
+          {% else %}
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
+              ❌ Pre-Order Unavailable
+            </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-12 flex flex-col sm:flex-row justify-center items-center gap-4">
+      {% if product.is_preorder_available %}
+        <a href="{% url 'add_to_preorder_cart' product.id %}"
+           class="w-full sm:w-auto text-center bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-300">
+           🔮 Pre-Order Now
+        </a>
+      {% else %}
+        <button class="w-full sm:w-auto text-center bg-gray-300 text-gray-600 font-semibold py-3 px-8 rounded-full cursor-not-allowed">
+          Pre-Order Unavailable
+        </button>
+      {% endif %}
+
+      <a href="{% url 'preorder_products' %}"
+         class="w-full sm:w-auto text-center bg-gray-200 text-gray-800 font-medium py-3 px-8 rounded-full hover:bg-gray-300 transition-all duration-300">
+        ← Back to Pre-Orders
+      </a>
+    </div>
+
+    <!-- Important Notice -->
+    <div class="mt-8 bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-blue-700">
+            <strong>Pre-Order Notice:</strong> This is a pre-order item. You will be charged now, and the product will be shipped when it becomes available on the expected release date. Pre-orders are limited and subject to availability.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 
 
@@ -292,8 +257,8 @@
         <h3 class="text-lg font-semibold mb-4">Pages</h3>
         <ul class="space-y-2">
           <li><a href="{% url 'products' %}" class="hover:text-orange-400">Shop</a></li>
-          <li><a href="{% url 'products' %}" class="hover:text-orange-400">Product</a></li>
-          <li><a href="{% url 'cart' %}" class="hover:text-orange-400">Checkout</a></li>
+          <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400">Pre-Orders</a></li>
+          <li><a href="{% url 'preorder_cart' %}" class="hover:text-orange-400">Pre-Order Cart</a></li>
           <li><a href="{% url 'contact' %}" class="hover:text-orange-400">Contact</a></li>
         </ul>
       </div>
@@ -302,7 +267,7 @@
       <div>
         <h3 class="text-lg font-semibold mb-4">Account</h3>
         <ul class="space-y-2">
-          <li><a href="{% url 'cart' %}" class="hover:text-orange-400">Cart</a></li>
+          <li><a href="{% url 'preorder_cart' %}" class="hover:text-orange-400">Pre-Order Cart</a></li>
           <li><a href="{% url 'signup' %}" class="hover:text-orange-400">Register</a></li>
           <li><a href="{% url 'login' %}" class="hover:text-orange-400">Login</a></li>
         </ul>
@@ -327,9 +292,6 @@
         <p class="mb-2">123 Gulshan Ave, Dhaka, Bangladesh</p>
         <p class="mb-2">Phone: +880 1234 567 890</p>
         <a href="mailto:info@yourstore.com" class="underline text-orange-400">futurefinds@.com</a>
-        <!-- <div class="mt-4">
-          <img src="{% static '' %}" alt="Logo" class="h-10">
-        </div>-->
       </div>
     </div>
   </div>
@@ -357,5 +319,6 @@
 <script src="node_modules/swiper/swiper-bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="assets/js/script.js"></script>
+
 </body>
 </html>

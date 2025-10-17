@@ -183,7 +183,8 @@
   <div class="flex flex-wrap justify-center -mx-3">
     {% for product in products %}
     <div class="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-3 mb-8">
-      <div class="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition-transform hover:-translate-y-1 duration-300">
+      <a href="{% url 'rental_product_detail' product.id %}" class="block">
+        <div class="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition-transform hover:-translate-y-1 duration-300 cursor-pointer">
         
         <!-- Product Image -->
         <div class="overflow-hidden rounded-lg mb-3 bg-gray-50 h-56 flex items-center justify-center">
@@ -199,10 +200,8 @@
         </div>
 
         <!-- Product Name -->
-        <h2 class="text-lg font-semibold text-center text-gray-800 mb-2">
-          <a href="{% url 'rental_product_detail' product.id %}" class="hover:text-orange-500 transition">
-            {{ product.title }}
-          </a>
+        <h2 class="text-lg font-semibold text-center text-gray-800 mb-2 hover:text-orange-500 transition">
+          {{ product.title }}
         </h2>
 
         <!-- Rent Price -->
@@ -214,14 +213,16 @@
         <div class="flex justify-center">
           {% if product.available %}
             <a href="{% url 'rental_product_detail' product.id %}"
-               class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-5 rounded-full w-full sm:w-auto text-center transition">
+               class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-5 rounded-full w-full sm:w-auto text-center transition"
+               onclick="event.stopPropagation();">
               Rent Now
             </a>
           {% else %}
             <p class="text-red-500 font-medium mt-2 text-center">Out of Stock</p>
           {% endif %}
         </div>
-      </div>
+        </div>
+      </a>
     </div>
     {% endfor %}
   </div>

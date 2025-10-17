@@ -184,7 +184,8 @@
     <div class="flex flex-wrap justify-center -mx-3">
       {% for i in products %}
       <div class="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/5 px-3 mb-8">
-        <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-transform hover:-translate-y-1 duration-300 flex flex-col h-full">
+        <a href="{% url 'product_detail' i.id %}" class="block">
+          <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-transform hover:-translate-y-1 duration-300 flex flex-col h-full cursor-pointer">
 
           <!-- Product Image -->
           <div class="overflow-hidden rounded-lg mb-3 bg-gray-50 h-56 flex items-center justify-center">
@@ -214,17 +215,20 @@
             <!-- Action Buttons -->
             <div class="mt-auto flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-2">
               <a href="{% url 'add_to_cart' i.id %}"
-                 class="bg-blue-500 border border-transparent hover:bg-transparent hover:border-blue-500 text-white hover:text-blue-500 font-semibold py-2 px-5 rounded-full text-center transition w-full sm:w-auto">
+                 class="bg-blue-500 border border-transparent hover:bg-transparent hover:border-blue-500 text-white hover:text-blue-500 font-semibold py-2 px-5 rounded-full text-center transition w-full sm:w-auto"
+                 onclick="event.stopPropagation();">
                 Add to Cart
               </a>
               <a href="{% url 'product_checkout' i.id %}"
-                 class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-5 rounded-full text-center transition w-full sm:w-auto">
+                 class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-5 rounded-full text-center transition w-full sm:w-auto"
+                 onclick="event.stopPropagation();">
                 Buy Now
               </a>
             </div>
           </div>
 
-        </div>
+          </div>
+        </a>
       </div>
       {% endfor %}
     </div>

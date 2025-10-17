@@ -182,7 +182,8 @@
   <div class="flex flex-wrap justify-center -mx-3">
     {% for sale in flash_sale_products %}
     <div class="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-3 mb-8">
-      <div class="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition-transform hover:-translate-y-1 duration-300 flex flex-col">
+      <a href="{% url 'flash_sale_detail' sale.pk %}" class="block">
+        <div class="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition-transform hover:-translate-y-1 duration-300 flex flex-col cursor-pointer">
 
         <!-- Product Image -->
         <div class="overflow-hidden rounded-lg mb-3 bg-gray-50 h-56 flex items-center justify-center">
@@ -198,10 +199,8 @@
         </div>
 
         <!-- Product Name -->
-        <h2 class="text-lg font-semibold text-center text-gray-800 mb-2">
-          <a href="{% url 'flash_sale_detail' sale.pk %}" class="hover:text-orange-500 transition">
-            {{ sale.name }}
-          </a>
+        <h2 class="text-lg font-semibold text-center text-gray-800 mb-2 hover:text-orange-500 transition">
+          {{ sale.name }}
         </h2>
 
         <!-- Flash Sale Price -->
@@ -238,16 +237,19 @@
         <!-- Buttons -->
         <div class="flex justify-center space-x-2 mt-auto">
           <a href="{% url 'add_to_cart' sale.pk %}"
-             class="bg-blue-500 border border-transparent hover:bg-transparent hover:border-blue-500 text-white hover:text-blue-500 font-semibold py-2 px-4 rounded-full w-full sm:w-auto text-center transition">
+             class="bg-blue-500 border border-transparent hover:bg-transparent hover:border-blue-500 text-white hover:text-blue-500 font-semibold py-2 px-4 rounded-full w-full sm:w-auto text-center transition"
+             onclick="event.stopPropagation();">
             Add to Cart
           </a>
           <a href="{% url 'flash_sale_checkout' sale.pk %}"
-             class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-4 rounded-full w-full sm:w-auto text-center transition">
+             class="bg-orange-500 border border-transparent hover:bg-transparent hover:border-orange-500 text-white hover:text-orange-500 font-semibold py-2 px-4 rounded-full w-full sm:w-auto text-center transition"
+             onclick="event.stopPropagation();">
             Buy Now
           </a>
         </div>
 
-      </div>
+        </div>
+      </a>
     </div>
 
     <!-- Countdown Timer Script -->
