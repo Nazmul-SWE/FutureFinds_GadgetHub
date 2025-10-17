@@ -1,0 +1,235 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Privacy Policy - FutureFinds</title>
+</head>
+<body class="bg-gray-100">
+  <!-- Navigation section Start-->
+<nav  class="bg-slate-950"  >
+   <!-- Nav bar Start-->
+<header class="bg-slate-950 sticky top-0 z-50">
+
+  <div class="container mx-auto flex justify-between items-center py-4 px-4 lg:px-8">
+
+    <!-- Left Section: Logo -->
+    <a href="{% url 'home' %}" class="flex items-center">
+      <span class="text-orange-400 text-4xl font-bold">Future</span>
+      <span class="text-blue-400 text-4xl font-bold ml-1">Finds</span>
+    </a>
+
+    <!-- Hamburger Menu (Mobile) -->
+    <button id="hamburger" class="lg:hidden text-white focus:outline-none">
+      <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+    </button>
+
+    <!-- Center Navigation Menu -->
+    <nav id="mobileMenu" class="hidden lg:flex md:flex-grow justify-center">
+      <ul class="flex flex-col lg:flex-row lg:space-x-6 text-white font-semibold">
+        <li><a href="{% url 'products' %}" class="hover:text-orange-400 py-2 block">Products</a></li>
+        <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400 py-2 block">Pre-Orders</a></li>
+        <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400 py-2 block">Rent</a></li>
+        <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400 py-2 block">Flash Sale</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'orders' %}" class="hover:text-orange-400 py-2 block">Orders</a></li>
+        {% endif %}
+        <li><a href="{% url 'contact' %}" class="hover:text-orange-400 py-2 block">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Right Section: User + Buttons -->
+    <div class="hidden lg:flex items-center space-x-4">
+      <!-- Cart Button -->
+      <a href="{% url 'cart' %}" class="relative text-white hover:text-orange-400 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+        </svg>
+        <span class="absolute -top-2 -right-2 bg-orange-400 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+          0
+        </span>
+      </a>
+
+      <!-- User Authentication -->
+      {% if user.is_authenticated %}
+        <div class="flex items-center space-x-2">
+          <span class="text-white">Welcome, {{ user.username }}</span>
+          <a href="{% url 'logout' %}" class="bg-orange-400 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition-colors">
+            Logout
+          </a>
+        </div>
+      {% else %}
+        <div class="flex items-center space-x-2">
+          <a href="{% url 'login' %}" class="text-white hover:text-orange-400 transition-colors">Login</a>
+          <a href="{% url 'signup' %}" class="bg-orange-400 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition-colors">
+            Sign Up
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</header>
+</nav>
+
+<!-- Main Content -->
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+    <h1 class="text-4xl font-bold text-gray-800 mb-8">Privacy Policy</h1>
+    
+    <div class="prose prose-lg max-w-none">
+      <p class="text-gray-600 mb-6">Last updated: January 2025</p>
+      
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">1. Information We Collect</h2>
+        <p class="text-gray-600 mb-4">
+          We collect information you provide directly to us, such as when you create an account, make a purchase, 
+          or contact us for support. This may include:
+        </p>
+        <ul class="list-disc list-inside text-gray-600 mb-4 space-y-2">
+          <li>Name, email address, and phone number</li>
+          <li>Shipping and billing addresses</li>
+          <li>Payment information (processed securely through our payment partners)</li>
+          <li>Account preferences and settings</li>
+          <li>Communication history with our support team</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">2. How We Use Your Information</h2>
+        <p class="text-gray-600 mb-4">We use the information we collect to:</p>
+        <ul class="list-disc list-inside text-gray-600 mb-4 space-y-2">
+          <li>Process and fulfill your orders</li>
+          <li>Provide customer support and respond to your inquiries</li>
+          <li>Send you important updates about your orders</li>
+          <li>Improve our website and services</li>
+          <li>Comply with legal obligations</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">3. Information Sharing</h2>
+        <p class="text-gray-600 mb-4">
+          We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, 
+          except as described in this policy. We may share your information with:
+        </p>
+        <ul class="list-disc list-inside text-gray-600 mb-4 space-y-2">
+          <li>Payment processors to complete transactions</li>
+          <li>Shipping companies to deliver your orders</li>
+          <li>Service providers who assist us in operating our website</li>
+          <li>Legal authorities when required by law</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">4. Data Security</h2>
+        <p class="text-gray-600 mb-4">
+          We implement appropriate security measures to protect your personal information against unauthorized access, 
+          alteration, disclosure, or destruction. However, no method of transmission over the internet is 100% secure.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">5. Your Rights</h2>
+        <p class="text-gray-600 mb-4">You have the right to:</p>
+        <ul class="list-disc list-inside text-gray-600 mb-4 space-y-2">
+          <li>Access and update your personal information</li>
+          <li>Request deletion of your account and data</li>
+          <li>Opt-out of marketing communications</li>
+          <li>Request a copy of your data</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">6. Contact Us</h2>
+        <p class="text-gray-600 mb-4">
+          If you have any questions about this Privacy Policy, please contact us at:
+        </p>
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <p class="text-gray-600">Email: info@futurefinds.com</p>
+          <p class="text-gray-600">Phone: +880 1695354697</p>
+          <p class="text-gray-600">Address: 174 Gulshan Ave, Dhaka, Bangladesh</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-slate-950 text-white py-12">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <!-- Company Info -->
+      <div>
+        <div class="flex items-center mb-4">
+          <span class="text-orange-400 text-2xl font-bold">Future</span>
+          <span class="text-blue-400 text-2xl font-bold ml-1">Finds</span>
+        </div>
+        <p class="text-gray-300 mb-4">Your trusted partner for the latest gadgets and technology products.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><a href="{% url 'products' %}" class="text-gray-300 hover:text-orange-400 transition-colors">Products</a></li>
+          <li><a href="{% url 'preorder_products' %}" class="text-gray-300 hover:text-orange-400 transition-colors">Pre-Orders</a></li>
+          <li><a href="{% url 'rental_products' %}" class="text-gray-300 hover:text-orange-400 transition-colors">Rent</a></li>
+          <li><a href="{% url 'flash_sale' %}" class="text-gray-300 hover:text-orange-400 transition-colors">Flash Sale</a></li>
+        </ul>
+      </div>
+
+      <!-- Customer Service -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Customer Service</h3>
+        <ul class="space-y-2">
+          <li><a href="{% url 'contact' %}" class="text-gray-300 hover:text-orange-400 transition-colors">Contact Us</a></li>
+          <li><a href="{% url 'faq' %}" class="text-gray-300 hover:text-orange-400 transition-colors">FAQ</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-orange-400 transition-colors">Shipping Info</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-orange-400 transition-colors">Returns</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
+        <div class="space-y-2 text-gray-300">
+          <p>📧 info@futurefinds.com</p>
+          <p>📞 +880 1695354697</p>
+          <p>📍 174 Gulshan Ave<br>Dhaka, Bangladesh</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-gray-700 py-6">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center gap-4">
+      <p class="text-sm">&copy; 2025 FutureFinds. All rights reserved.</p>
+      <ul class="flex flex-wrap justify-center gap-4">
+         <li><a href="{% url 'privacy_policy' %}" class="hover:text-orange-400">Privacy Policy</a></li>
+         <li><a href="{% url 'terms_of_service' %}" class="hover:text-orange-400">Terms</a></li>
+         <li><a href="{% url 'faq' %}" class="hover:text-orange-400">FAQ</a></li>
+      </ul>
+      <!-- Payment Methods -->
+      <div class="flex items-center justify-center gap-3">
+        <img src="{% static 'images/sslcommerz.png'%}" alt="SSLCommerz" class="h-6">
+        <img src="{% static 'images/visa_11378344.png' %}" alt="Visa" class="h-6">
+        <img src="{% static 'images/card_16174534.png' %}" alt="MasterCard" class="h-6">
+        <img src="{% static 'images/unnamed.webp' %}" alt="bKash" class="h-6">
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="node_modules/swiper/swiper-bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script src="assets/js/script.js"></script>
+</body>
+</html>

@@ -849,3 +849,12 @@ def contact(request):
         return redirect('contact')
     
     return render(request, 'contact.html')
+
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')
+
+def terms_of_service(request):
+    return render(request, 'terms_of_service.html')
+
+def faq(request):
+    return render(request, 'faq.html')

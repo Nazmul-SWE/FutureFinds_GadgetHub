@@ -1,0 +1,363 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>FAQ - FutureFinds</title>
+</head>
+<body class="bg-gray-100">
+  <!-- Navigation section Start-->
+<nav  class="bg-slate-950"  >
+   <!-- Nav bar Start-->
+<header class="bg-slate-950 sticky top-0 z-50">
+
+  <div class="container mx-auto flex justify-between items-center py-4 px-4 lg:px-8">
+
+    <!-- Left Section: Logo -->
+    <a href="{% url 'home' %}" class="flex items-center">
+      <span class="text-orange-400 text-4xl font-bold">Future</span>
+      <span class="text-blue-400 text-4xl font-bold ml-1">Finds</span>
+    </a>
+
+    <!-- Hamburger Menu (Mobile) -->
+    <button id="hamburger" class="lg:hidden text-white focus:outline-none">
+      <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+    </button>
+
+    <!-- Center Navigation Menu -->
+    <nav id="mobileMenu" class="hidden lg:flex md:flex-grow justify-center">
+      <ul class="flex flex-col lg:flex-row lg:space-x-6 text-white font-semibold">
+        <li><a href="{% url 'products' %}" class="hover:text-orange-400 py-2 block">Products</a></li>
+        <li><a href="{% url 'preorder_products' %}" class="hover:text-orange-400 py-2 block">Pre-Orders</a></li>
+        <li><a href="{% url 'rental_products' %}" class="hover:text-orange-400 py-2 block">Rent</a></li>
+        <li><a href="{% url 'flash_sale' %}" class="hover:text-orange-400 py-2 block">Flash Sale</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'orders' %}" class="hover:text-orange-400 py-2 block">Orders</a></li>
+        {% endif %}
+        <li><a href="{% url 'contact' %}" class="hover:text-orange-400 py-2 block">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Right Section: User + Buttons -->
+    <div class="hidden lg:flex items-center space-x-4">
+      <!-- Cart Button -->
+      <a href="{% url 'cart' %}" class="relative text-white hover:text-orange-400 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+        </svg>
+        <span class="absolute -top-2 -right-2 bg-orange-400 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+          0
+        </span>
+      </a>
+
+      <!-- User Authentication -->
+      {% if user.is_authenticated %}
+        <div class="flex items-center space-x-2">
+          <span class="text-white">Welcome, {{ user.username }}</span>
+          <a href="{% url 'logout' %}" class="bg-orange-400 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition-colors">
+            Logout
+          </a>
+        </div>
+      {% else %}
+        <div class="flex items-center space-x-2">
+          <a href="{% url 'login' %}" class="text-white hover:text-orange-400 transition-colors">Login</a>
+          <a href="{% url 'signup' %}" class="bg-orange-400 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition-colors">
+            Sign Up
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</header>
+</nav>
+
+<!-- Main Content -->
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+    <h1 class="text-4xl font-bold text-gray-800 mb-8">Frequently Asked Questions</h1>
+    
+    <div class="space-y-6">
+      <!-- General Questions -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6">General Questions</h2>
+        
+        <div class="space-y-4">
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">What is FutureFinds?</h3>
+            <p class="text-gray-600">
+              FutureFinds is your premier destination for the latest gadgets and technology products. We offer a wide range of electronics, 
+              including smartphones, laptops, accessories, and more, with options to buy, pre-order, or rent.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">How do I create an account?</h3>
+            <p class="text-gray-600">
+              Click on the "Sign Up" button in the top right corner of our website. Fill in your details including username, 
+              email, and password. Once registered, you can start shopping and tracking your orders.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Do you ship internationally?</h3>
+            <p class="text-gray-600">
+              Currently, we ship within our local region. Please check our shipping information page for specific countries 
+              and regions we serve. International shipping options may be available for select products.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ordering & Payment -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Ordering & Payment</h2>
+        
+        <div class="space-y-4">
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">What payment methods do you accept?</h3>
+            <p class="text-gray-600">
+              We accept all major credit cards (Visa, MasterCard), mobile payment services like bKash, and secure online 
+              payment through SSLCommerz. Cash on delivery is also available for select areas.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">How do I track my order?</h3>
+            <p class="text-gray-600">
+              Once your order is placed, you'll receive a confirmation email with tracking information. You can also log 
+              into your account and visit the "Orders" section to view your order status and tracking details.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Can I cancel my order?</h3>
+            <p class="text-gray-600">
+              Yes, you can cancel your order if it's still in "Pending" status. Once the order is processed and shipped, 
+              cancellation may not be possible. Visit your order details page to cancel an eligible order.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Shipping & Delivery -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Shipping & Delivery</h2>
+        
+        <div class="space-y-4">
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">How long does shipping take?</h3>
+            <p class="text-gray-600">
+              Standard shipping typically takes 3-5 business days. Express shipping options are available for faster delivery. 
+              Delivery times may vary based on your location and product availability.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Do you offer same-day delivery?</h3>
+            <p class="text-gray-600">
+              Same-day delivery is available in select metropolitan areas for in-stock items ordered before 2 PM. 
+              Additional fees may apply for same-day delivery service.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">What if I'm not available for delivery?</h3>
+            <p class="text-gray-600">
+              If you're not available, our delivery partner will attempt delivery again the next business day. 
+              You can also contact us to reschedule delivery or arrange pickup from a nearby location.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Returns & Exchanges -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Returns & Exchanges</h2>
+        
+        <div class="space-y-4">
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">What is your return policy?</h3>
+            <p class="text-gray-600">
+              We offer a 30-day return policy for unused items in original packaging. Items must be in resellable condition. 
+              Some products like software and personalized items may not be eligible for returns.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">How do I return an item?</h3>
+            <p class="text-gray-600">
+              Log into your account, go to your order details, and click "Return Item." Follow the instructions to print 
+              a return label and package your item. We'll process your refund once we receive the returned item.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">How long do refunds take?</h3>
+            <p class="text-gray-600">
+              Refunds are typically processed within 5-10 business days after we receive and inspect your returned item. 
+              The refund will be credited to your original payment method.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pre-Orders & Flash Sales -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Pre-Orders & Flash Sales</h2>
+        
+        <div class="space-y-4">
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">How do pre-orders work?</h3>
+            <p class="text-gray-600">
+              Pre-orders allow you to reserve upcoming products before they're officially released. You'll be charged 
+              when the item ships, and you'll receive priority delivery once the product becomes available.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">What are flash sales?</h3>
+            <p class="text-gray-600">
+              Flash sales are limited-time offers with significant discounts on select products. These sales have limited 
+              quantities and are available on a first-come, first-served basis.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Can I cancel a pre-order?</h3>
+            <p class="text-gray-600">
+              Yes, you can cancel pre-orders before they ship. Once the product is ready and ships, normal return policies apply. 
+              Visit your pre-order section in your account to manage your pre-orders.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rental Services -->
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Rental Services</h2>
+        
+        <div class="space-y-4">
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">How does the rental service work?</h3>
+            <p class="text-gray-600">
+              Our rental service allows you to rent high-end gadgets for a specified period. You pay a daily rate, 
+              and the total cost depends on the rental duration. Perfect for trying out new technology or short-term needs.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">What happens if I damage a rented item?</h3>
+            <p class="text-gray-600">
+              Normal wear and tear is expected. However, significant damage may result in additional charges. 
+              We recommend handling rented items with care and reporting any issues immediately.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Can I extend my rental period?</h3>
+            <p class="text-gray-600">
+              Yes, you can extend your rental period if the item is available. Contact our customer service team 
+              or manage your rental through your account dashboard.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Support -->
+      <section class="bg-gray-50 p-6 rounded-lg">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Still Have Questions?</h2>
+        <p class="text-gray-600 mb-4">
+          If you couldn't find the answer to your question, our customer support team is here to help!
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="{% url 'contact' %}" class="bg-orange-400 text-white px-6 py-3 rounded-lg hover:bg-orange-500 transition-colors text-center">
+            Contact Support
+          </a>
+          <a href="mailto:support@futurefinds.com" class="bg-blue-400 text-white px-6 py-3 rounded-lg hover:bg-blue-500 transition-colors text-center">
+            Email Us
+          </a>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-slate-950 text-white py-12">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <!-- Company Info -->
+      <div>
+        <div class="flex items-center mb-4">
+          <span class="text-orange-400 text-2xl font-bold">Future</span>
+          <span class="text-blue-400 text-2xl font-bold ml-1">Finds</span>
+        </div>
+        <p class="text-gray-300 mb-4">Your trusted partner for the latest gadgets and technology products.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><a href="{% url 'products' %}" class="text-gray-300 hover:text-orange-400 transition-colors">Products</a></li>
+          <li><a href="{% url 'preorder_products' %}" class="text-gray-300 hover:text-orange-400 transition-colors">Pre-Orders</a></li>
+          <li><a href="{% url 'rental_products' %}" class="text-gray-300 hover:text-orange-400 transition-colors">Rent</a></li>
+          <li><a href="{% url 'flash_sale' %}" class="text-gray-300 hover:text-orange-400 transition-colors">Flash Sale</a></li>
+        </ul>
+      </div>
+
+      <!-- Customer Service -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Customer Service</h3>
+        <ul class="space-y-2">
+          <li><a href="{% url 'contact' %}" class="text-gray-300 hover:text-orange-400 transition-colors">Contact Us</a></li>
+          <li><a href="{% url 'faq' %}" class="text-gray-300 hover:text-orange-400 transition-colors">FAQ</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-orange-400 transition-colors">Shipping Info</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-orange-400 transition-colors">Returns</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
+        <div class="space-y-2 text-gray-300">
+          <p>📧 info@futurefinds.com</p>
+          <p>📞 +880 1695354697</p>
+          <p>📍 174 Gulshan Ave<br>Dhaka, Bangladesh</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-gray-700 py-6">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center gap-4">
+      <p class="text-sm">&copy; 2025 FutureFinds. All rights reserved.</p>
+      <ul class="flex flex-wrap justify-center gap-4">
+         <li><a href="{% url 'privacy_policy' %}" class="hover:text-orange-400">Privacy Policy</a></li>
+         <li><a href="{% url 'terms_of_service' %}" class="hover:text-orange-400">Terms</a></li>
+         <li><a href="{% url 'faq' %}" class="hover:text-orange-400">FAQ</a></li>
+      </ul>
+      <!-- Payment Methods -->
+      <div class="flex items-center justify-center gap-3">
+        <img src="{% static 'images/sslcommerz.png'%}" alt="SSLCommerz" class="h-6">
+        <img src="{% static 'images/visa_11378344.png' %}" alt="Visa" class="h-6">
+        <img src="{% static 'images/card_16174534.png' %}" alt="MasterCard" class="h-6">
+        <img src="{% static 'images/unnamed.webp' %}" alt="bKash" class="h-6">
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="node_modules/swiper/swiper-bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script src="assets/js/script.js"></script>
+</body>
+</html>
