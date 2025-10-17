@@ -172,152 +172,189 @@
   <!-- Nav bar End-->
 
 
+{# Order History - robust + responsive template #}
+<div class="container mx-auto px-4 py-12 min-h-screen ">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-8 text-center  pb-4">
+      Your Order History
+    </h1>
 
-<div class="container mx-auto px-4 py-8 min-h-screen">
-    <!-- Stats Summary -->
+    {% comment %} Show combined area when we have any orders {% endcomment %}
+    {% if orders|length > 0 or flash_sale_orders|length > 0 %}
+    <div class="space-y-6">
 
+      {# -------- Regular Orders -------- #}
+      {% for order in orders %}
+      <div
+        class="bg-white shadow rounded-xl p-5 flex flex-col md:flex-row md:items-center md:justify-between border border-gray-100 hover:shadow-lg transition">
+        <!-- Left: basic info + product preview -->
+        <div class="flex items-start md:items-center gap-4 md:gap-6 w-full md:w-3/4">
+          <div class="flex-1">
+            <h2 class="text-lg font-semibold text-gray-900 hover:text-orange-500 transition">
+              Order <span class="font-medium text-gray-500">#{{ order.id }}</span>
+            </h2>
 
-    <!-- Order List -->
-    <div class="max-w-5xl mx-auto">
-        <h1 class="text-3xl font-bold mb-6 text-gray-800">Your Order History</h1>
+            <div class="text-sm text-gray-600 mt-1 space-y-1">
+              <div>
+                <span class="font-medium text-gray-800">Placed:</span>
+                {{ order.created_at|date:"F d, Y" }} • {{ order.created_at|date:"H:i" }}
+              </div>
 
-        {% if orders or flash_sale_orders %}
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <div class="divide-y divide-gray-200">
-                <!-- Regular Orders -->
-                {% for order in orders %}
-                <div class="flex items-center p-4 hover:bg-gray-50 transition-colors">
-                    <!-- Order Details -->
-                    <div class="flex-grow">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-lg font-semibold text-gray-800">
-                                Order #{{ order.id }}
-                            </h2>
-                            <span class="
-                                {% if order.status == 'Pending' %}bg-yellow-100 text-yellow-800
-                                {% elif order.status == 'Confirmed' %}bg-blue-100 text-blue-800
-                                {% elif order.status == 'Shipped' %}bg-green-100 text-green-800
-                                {% elif order.status == 'Delivered' %}bg-green-200 text-green-900
-                                {% else %}bg-red-100 text-red-800
-                                {% endif %}
-                                px-2 py-1 rounded-full text-xs font-medium uppercase">
-                                {{ order.status }}
-                            </span>
-                        </div>
-                        <div class="mt-2 text-gray-600 text-sm">
-                            <span class="mr-4">
-                                <i class="bx bx-calendar mr-1 align-middle"></i>
-                                {{ order.created_at|date:"F d, Y" }}
-                            </span>
-                            <span>
-                                <i class="bx bx-time mr-1 align-middle"></i>
-                                {{ order.created_at|date:"H:i" }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Order Total -->
-                    <div class="mx-4 text-right">
-                        <span class="text-xl font-bold text-green-600">৳ {{ order.total_price }}</span>
-                    </div>
-
-                    <!-- Order Actions -->
-                    <div class="flex items-center space-x-2">
-                        <a href="{% url 'order_detail' order.id %}" class="flex items-center text-blue-600 hover:text-blue-800 transition">
-                            <i class="bx bx-detail text-xl mr-1"></i>
-                            Details
-                        </a>
-                    </div>
-                </div>
-                {% endfor %}
-                
-                <!-- Flash Sale Orders -->
-                {% for flash_order in flash_sale_orders %}
-                <div class="flex items-center p-4 hover:bg-gray-50 transition-colors bg-orange-50">
-                    <!-- Order Details -->
-                    <div class="flex-grow">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-lg font-semibold text-gray-800">
-                                Flash Sale Order #{{ flash_order.id }}
-                                <span class="ml-2 bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-xs font-medium">FLASH SALE</span>
-                            </h2>
-                            <span class="
-                                {% if flash_order.status == 'Pending' %}bg-yellow-100 text-yellow-800
-                                {% elif flash_order.status == 'Confirmed' %}bg-blue-100 text-blue-800
-                                {% elif flash_order.status == 'Shipped' %}bg-green-100 text-green-800
-                                {% elif flash_order.status == 'Delivered' %}bg-green-200 text-green-900
-                                {% else %}bg-red-100 text-red-800
-                                {% endif %}
-                                px-2 py-1 rounded-full text-xs font-medium uppercase">
-                                {{ flash_order.status }}
-                            </span>
-                        </div>
-                        <div class="mt-2 text-gray-600 text-sm">
-                            <span class="mr-4">
-                                <i class="bx bx-calendar mr-1 align-middle"></i>
-                                {{ flash_order.created_at|date:"F d, Y" }}
-                            </span>
-                            <span>
-                                <i class="bx bx-time mr-1 align-middle"></i>
-                                {{ flash_order.created_at|date:"H:i" }}
-                            </span>
-                        </div>
-                        <div class="mt-1 text-sm text-gray-500">
-                            Product: {{ flash_order.product.name }}
-                        </div>
-                    </div>
-
-                    <!-- Order Total -->
-                    <div class="mx-4 text-right">
-                        <span class="text-xl font-bold text-green-600">৳ {{ flash_order.total_price }}</span>
-                    </div>
-
-                    <!-- Order Actions -->
-                    <div class="flex items-center space-x-2">
-                        <span class="text-sm text-gray-500">Flash Sale Order</span>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        {% else %}
-        <div class="text-center bg-white shadow-md rounded-lg p-10">
-            <i class="bx bx-package text-6xl text-gray-300 mb-4"></i>
-            <p class="text-xl text-gray-600">You haven't placed any orders yet</p>
-            <a href="{% url 'products' %}" class="mt-4 inline-block bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
-                Start Shopping
-            </a>
-        </div>
-        {% endif %}
-
-        {% if is_paginated %}
-        <div class="mt-6 flex justify-center space-x-2">
-            {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-100">
-                Previous
-            </a>
-            {% endif %}
-
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                <span class="px-4 py-2 bg-blue-500 text-white rounded-lg">{{ num }}</span>
+              {# Product preview: show up to 2 product names from order.items #}
+              {% with items=order.items.all %}
+                {% if items|length > 0 %}
+                  <div>
+                    <span class="font-medium text-gray-800">Items:</span>
+                    {% for item in items|slice:":2" %}
+                      <span class="text-gray-700">{{ item.product.name }}</span>{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                    {% if items|length > 2 %}
+                      <span class="text-gray-500">+{{ items|length|add:"-2" }} more</span>
+                    {% endif %}
+                  </div>
                 {% else %}
-                <a href="?page={{ num }}" class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-100">
-                    {{ num }}
-                </a>
+                  <div class="text-gray-500">
+                    No item details available.
+                  </div>
                 {% endif %}
-            {% endfor %}
-
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-100">
-                Next
-            </a>
-            {% endif %}
+              {% endwith %}
+            </div>
+          </div>
         </div>
-        {% endif %}
+
+        <!-- Middle: status -->
+        <div class="mt-4 md:mt-0 md:w-1/5 text-left md:text-center">
+          <span class="
+            {% if order.status == 'Pending' %}bg-yellow-100 text-yellow-800
+            {% elif order.status == 'Confirmed' %}bg-blue-100 text-blue-800
+            {% elif order.status == 'Shipped' %}bg-green-100 text-green-800
+            {% elif order.status == 'Delivered' %}bg-green-200 text-green-900
+            {% else %}bg-red-100 text-red-800
+            {% endif %}
+            inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
+            {{ order.status }}
+          </span>
+        </div>
+
+        <!-- Right: total + actions -->
+        <div class="mt-4 md:mt-0 md:w-1/4 text-right flex flex-col items-start md:items-end gap-2">
+          <div class="text-xl font-bold text-green-600">৳ {{ order.total_price }}</div>
+          <a href="{% url 'order_detail' order.id %}" class="text-sm text-blue-600 hover:text-orange-500 transition">
+            View details &rarr;
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      {# no regular orders block handled by outer if, but keep for safety #}
+      {% endfor %}
+
+      {# -------- Flash Sale Orders (styled distinct) -------- #}
+      {% for flash_order in flash_sale_orders %}
+      <div
+        class="bg-orange-50 border border-orange-200 shadow rounded-xl p-5 flex flex-col md:flex-row md:items-center md:justify-between hover:shadow-lg transition">
+        <div class="flex items-start md:items-center gap-4 md:gap-6 w-full md:w-3/4">
+          <div class="flex-1">
+            <h2 class="text-lg font-semibold text-gray-900">
+              Flash Sale Order <span class="font-medium text-gray-500">#{{ flash_order.id }}</span>
+              <span class="ml-2 inline-block bg-orange-100 text-orange-700 px-2 py-0.5 text-xs font-semibold rounded">FLASH SALE</span>
+            </h2>
+
+            <div class="text-sm text-gray-600 mt-1 space-y-1">
+              <div>
+                <span class="font-medium text-gray-800">Placed:</span>
+                {{ flash_order.created_at|date:"F d, Y" }} • {{ flash_order.created_at|date:"H:i" }}
+              </div>
+
+              {# try to show items like above, fallback to flash_order.product if exists #}
+              {% with items=flash_order.items.all %}
+                {% if items|length > 0 %}
+                  <div>
+                    <span class="font-medium text-gray-800">Items:</span>
+                    {% for item in items|slice:":2" %}
+                      <span class="text-gray-700">{{ item.product.name }}</span>{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                    {% if items|length > 2 %}
+                      <span class="text-gray-500">+{{ items|length|add:"-2" }} more</span>
+                    {% endif %}
+                  </div>
+                {% else %}
+                  {% if flash_order.product %}
+                    <div>
+                      <span class="font-medium text-gray-800">Product:</span>
+                      <span class="text-gray-700">{{ flash_order.product.name }}</span>
+                    </div>
+                  {% else %}
+                    <div class="text-gray-500">No item details available.</div>
+                  {% endif %}
+                {% endif %}
+              {% endwith %}
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 md:mt-0 md:w-1/5 text-center">
+          <span class="
+            {% if flash_order.status == 'Pending' %}bg-yellow-100 text-yellow-800
+            {% elif flash_order.status == 'Confirmed' %}bg-blue-100 text-blue-800
+            {% elif flash_order.status == 'Shipped' %}bg-green-100 text-green-800
+            {% elif flash_order.status == 'Delivered' %}bg-green-200 text-green-900
+            {% else %}bg-red-100 text-red-800
+            {% endif %}
+            inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
+            {{ flash_order.status }}
+          </span>
+        </div>
+
+        <div class="mt-4 md:mt-0 md:w-1/4 text-right flex flex-col items-start md:items-end gap-2">
+          <div class="text-xl font-bold text-green-600">৳ {{ flash_order.total_price }}</div>
+          <span class="text-sm text-orange-600 font-medium">Flash Sale</span>
+        </div>
+      </div>
+      {% empty %}
+      {% endfor %}
+
+    </div> <!-- /space-y-6 -->
+
+    {% else %}
+    <div class="text-center bg-white shadow rounded-xl py-16">
+      <div class="mx-auto w-28 h-28 flex items-center justify-center rounded-full bg-gray-100 mb-6">
+        <!-- simple svg cart icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l1-5H6.4M7 13l-1 5m0 0a1 1 0 001 1h12a1 1 0 001-1m-14 0h14" />
+        </svg>
+      </div>
+      <h2 class="text-2xl font-semibold text-gray-700 mb-3">You have no orders yet</h2>
+      <p class="text-gray-500 mb-6">Start shopping to see your orders here.</p>
+      <a href="{% url 'products' %}" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition">
+        Start Shopping
+      </a>
     </div>
+    {% endif %}
+
+    {# Pagination block (safe: only shown when is_paginated True) #}
+    {% if is_paginated %}
+    <div class="mt-8 flex justify-center items-center gap-3">
+      {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 bg-white border rounded-full hover:bg-gray-100">Prev</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <span class="px-4 py-2 bg-blue-600 text-white rounded-full">{{ num }}</span>
+        {% else %}
+          <a href="?page={{ num }}" class="px-4 py-2 bg-white border rounded-full hover:bg-gray-100">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 bg-white border rounded-full hover:bg-gray-100">Next</a>
+      {% endif %}
+    </div>
+    {% endif %}
+
+  </div>
 </div>
+
 
 
 <!-- Rental order section start -->
