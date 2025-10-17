@@ -136,7 +136,7 @@
     <!-- Pre-Order Badge -->
     <div class="text-center mb-6">
       <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full text-lg font-semibold shadow-lg">
-        🔮 PRE-ORDER
+         PRE-ORDER
       </span>
     </div>
 
@@ -187,11 +187,11 @@
         <div class="mt-4">
           {% if product.is_preorder_available %}
             <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-              ✅ Available for Pre-Order
+               Available for Pre-Order
             </span>
           {% else %}
             <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
-              ❌ Pre-Order Unavailable
+               Pre-Order Unavailable
             </span>
           {% endif %}
         </div>
@@ -203,7 +203,7 @@
       {% if product.is_preorder_available %}
         <a href="{% url 'add_to_preorder_cart' product.id %}"
            class="w-full sm:w-auto text-center bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-300">
-           🔮 Pre-Order Now
+           Pre-Order Now
         </a>
       {% else %}
         <button class="w-full sm:w-auto text-center bg-gray-300 text-gray-600 font-semibold py-3 px-8 rounded-full cursor-not-allowed">
