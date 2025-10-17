@@ -20,137 +20,135 @@
 </head>
 
 <body>
-    <div class="font-bold bg-[#0d2329] flex items-center md:h-screen p-4">
-        <div class="w-full max-w-5xl mx-auto">
-            <div class="grid md:grid-cols-2 gap-16 bg-gray-50 shadow w-full sm:p-8 p-6 rounded-xl relative">
-                <div>
-                    <div class="mb-16">
-                         {% load static %}
-                        <a href="{% url 'home' %}"><img src="{% static 'images/Future Finds banner (1)_prev_ui.png' %}" alt="logo"
-                                class='w-40 inline-block' />
-                        </a>
-                    </div>
+{% load static %}
+<main class="font-sans bg-gradient-to-br from-[#fef9f5] via-[#f4f8ff] to-[#f2fcf9] flex items-center justify-center min-h-screen p-4 relative overflow-hidden">
 
-                    <div class="space-y-8">
-                        <div class="flex items-center gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="w-5 h-5 bg-blue-600 fill-white rounded-full p-1 shrink-0" viewBox="0 0 24 24">
-                                <path
-                                    d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
-                                    data-original="#000000"></path>
-                            </svg>
-                            <h4 class="text-gray-800 text-base font-semibold">Create Your Account</h4>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="w-5 h-5 bg-blue-600 fill-white rounded-full p-1 shrink-0" viewBox="0 0 24 24">
-                                <path
-                                    d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
-                                    data-original="#000000"></path>
-                            </svg>
-                            <h4 class="text-gray-800 text-base font-semibold">Simple & Secure Registration</h4>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="w-5 h-5 bg-blue-600 fill-white rounded-full p-1 shrink-0" viewBox="0 0 24 24">
-                                <path
-                                    d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
-                                    data-original="#000000"></path>
-                            </svg>
-                            <h4 class="text-gray-800 text-base font-semibold">Terms and Conditions Agreement</h4>
-                        </div>
-                    </div>
-                </div>
+  <!-- Soft gradient glow -->
+  <div class="absolute inset-0 bg-gradient-to-r from-orange-300/20 via-blue-400/20 to-cyan-300/20 blur-3xl opacity-60 animate-pulse"></div>
 
-                <form class="md:max-w-sm w-full mx-auto" method="post">
-                    {% csrf_token %}
-                    <div class="mb-8">
-                        <h3 class="text-gray-800 text-2xl font-bold text-center">
-                            Create New Account
-                        </h3>
-                    </div>
+  <div class="w-full max-w-6xl mx-auto relative z-10">
+    <div class="grid md:grid-cols-2 gap-14 bg-white/80 backdrop-blur-xl shadow-2xl border border-gray-200 w-full sm:p-10 p-6 rounded-2xl transition-all duration-300 hover:shadow-blue-100 hover:border-blue-300/60">
 
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-gray-800 text-sm mb-2 block">Username</label>
-                            <div class="relative flex items-center">
-                                <input name="username" type="text" required
-                                    class="bg-transparent border border-gray-400 w-full text-gray-800 text-sm pl-4 pr-10 py-3 rounded-xl outline-blue-600"
-                                    placeholder="Enter Your Username" />
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
-                                    class="w-4 h-4 absolute right-4" viewBox="0 0 24 24">
-                                    <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
-                                    <path
-                                        d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
-                                        data-original="#000000"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="text-gray-800 text-sm mb-2 block">Email</label>
-                            <div class="relative flex items-center">
-                                <input name="email" type="email" required
-                                    class="bg-transparent border border-gray-400 w-full text-gray-800 text-sm pl-4 pr-10 py-3 rounded-xl outline-blue-600"
-                                    placeholder="Enter email" />
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
-                                    class="w-4 h-4 absolute right-4" viewBox="0 0 682.667 682.667">
-                                    <defs>
-                                        <clipPath id="a" clipPathUnits="userSpaceOnUse">
-                                            <path d="M0 512h512V0H0Z" data-original="#000000"></path>
-                                        </clipPath>
-                                    </defs>
-                                    <g clip-path="url(#a)" transform="matrix(1.33 0 0 -1.33 0 682.667)">
-                                        <path fill="none" stroke-miterlimit="10" stroke-width="40"
-                                            d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
-                                            data-original="#000000"></path>
-                                        <path
-                                            d="M472 274.9V107.999c0-11.027-8.972-20-20-20H60c-11.028 0-20 8.973-20 20V274.9L0 304.652V107.999c0-33.084 26.916-60 60-60h392c33.084 0 60 26.916 60 60v196.653Z"
-                                            data-original="#000000"></path>
-                                    </g>
-                                </svg>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="text-gray-800 text-sm mb-2 block">Password</label>
-                            <div class="relative flex items-center">
-                                <input name="password" type="password" required
-                                    class="bg-transparent border border-gray-400 w-full text-gray-800 text-sm pl-4 pr-10 py-3 rounded-xl outline-blue-600"
-                                    placeholder="Enter password" />
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
-                                    class="w-4 h-4 absolute right-4 cursor-pointer" viewBox="0 0 128 128">
-                                    <path
-                                        d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z"
-                                        data-original="#000000"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="flex items-center">
-                            <input id="remember-me" name="remember-me" type="checkbox"
-                                class="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
-                            <label for="remember-me" class="ml-3 block text-sm text-gray-800">
-                                I accept the <a href="javascript:void(0);"
-                                    class="text-blue-600 font-semibold hover:underline ml-1">Terms and Conditions</a>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="mt-12">
-                        <button type="submit"
-                            class="w-full py-3 px-6 text-sm tracking-wide font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white focus:outline-none">
-                            Create Account
-                        </button>
-                    </div>
-
-                    <p class="text-sm text-gray-800 mt-6 text-center">Already have an account? <a
-                            href="{% url 'login' %}" class="text-blue-600 font-semibold hover:underline ml-1">Login
-                            here</a></p>
-                </form>
-                <div class="divider absolute left-0 right-0 mx-auto w-1 h-full border-l border-gray-400 max-md:hidden">
-                </div>
-
-            </div>
+      <!-- Left Info Section -->
+      <div class="flex flex-col justify-center text-gray-700 space-y-8">
+        <div>
+          <a href="{% url 'home' %}">
+            <img src="{% static 'images/Future Finds banner (1)_prev_ui.png' %}" alt="logo" class="w-48 md:w-56 transition-transform duration-500 hover:scale-110">
+          </a>
         </div>
+
+        <div class="space-y-6">
+          <div class="flex items-center gap-3 group">
+            <div class="bg-gradient-to-r from-orange-400 to-pink-500 p-1.5 rounded-full shadow-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24">
+                <path d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-semibold group-hover:text-orange-500 transition">Quick Account Creation</h4>
+          </div>
+
+          <div class="flex items-center gap-3 group">
+            <div class="bg-gradient-to-r from-blue-500 to-cyan-400 p-1.5 rounded-full shadow-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24">
+                <path d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-semibold group-hover:text-blue-600 transition">Secure Registration</h4>
+          </div>
+
+          <div class="flex items-center gap-3 group">
+            <div class="bg-gradient-to-r from-cyan-400 to-teal-400 p-1.5 rounded-full shadow-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24">
+                <path d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-semibold group-hover:text-teal-500 transition">Easy Terms & Setup</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Form Section -->
+      <form class="md:max-w-sm w-full mx-auto text-gray-700" method="post">
+        {% csrf_token %}
+        <div class="mb-8 text-center">
+          <h3 class="text-3xl font-bold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">Create New Account</h3>
+          <p class="text-sm text-gray-500 mt-2">Join FutureFinds and enhance your tech journey</p>
+        </div>
+
+        <div class="space-y-5">
+          <!-- Username -->
+          <div>
+            <label class="text-gray-700 text-sm mb-1 block font-semibold">Username</label>
+            <div class="relative">
+              <input name="username" type="text" required
+                class="bg-white border border-gray-300 w-full text-gray-800 text-sm pl-4 pr-10 py-3 rounded-xl outline-none focus:ring-2 focus:ring-orange-400/70 transition-all duration-300"
+                placeholder="Enter your username">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 absolute right-4 top-3 text-gray-400" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                      d="M12 12c2.67 0 8 1.34 8 4v2H4v-2c0-2.66 5.33-4 8-4zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="text-gray-700 text-sm mb-1 block font-semibold">Email</label>
+            <div class="relative">
+              <input name="email" type="email" required
+                class="bg-white border border-gray-300 w-full text-gray-800 text-sm pl-4 pr-10 py-3 rounded-xl outline-none focus:ring-2 focus:ring-blue-400/70 transition-all duration-300"
+                placeholder="Enter your email">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 absolute right-4 top-3 text-gray-400" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                      d="M12 12.713L1.8 6h20.4L12 12.713zm0 2.574L2 8v10h20V8l-10 7.287z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label class="text-gray-700 text-sm mb-1 block font-semibold">Password</label>
+            <div class="relative">
+              <input name="password" type="password" required
+                class="bg-white border border-gray-300 w-full text-gray-800 text-sm pl-4 pr-10 py-3 rounded-xl outline-none focus:ring-2 focus:ring-cyan-400/70 transition-all duration-300"
+                placeholder="Enter your password">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 absolute right-4 top-3 text-gray-400" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                      d="M12 17a2 2 0 1 0 .001-3.999A2 2 0 0 0 12 17zm6-8h-1V7a5 5 0 1 0-10 0v2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2zm-3 0H9V7a3 3 0 1 1 6 0v2z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Terms -->
+          <div class="flex items-center text-gray-600">
+            <input id="remember-me" name="remember-me" type="checkbox"
+              class="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-400/50">
+            <label for="remember-me" class="ml-2 text-sm">
+              I accept the <a href="#" class="text-orange-500 font-semibold hover:underline">Terms & Conditions</a>
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-8">
+          <button type="submit"
+            class="w-full py-3 px-6 text-sm tracking-wide font-semibold rounded-xl bg-gradient-to-r from-orange-500 to-pink-500 hover:from-pink-500 hover:to-orange-400 transition-all duration-300 text-white shadow-lg hover:shadow-orange-200 transform hover:-translate-y-1">
+            Create Account
+          </button>
+        </div>
+
+        <p class="text-sm text-gray-600 mt-6 text-center">
+          Already have an account?
+          <a href="{% url 'login' %}" class="text-orange-500 font-semibold hover:underline ml-1">Login here</a>
+        </p>
+      </form>
+
+      <!-- Divider Line -->
+      <div class="absolute left-1/2 top-0 bottom-0 border-l border-gray-200 hidden md:block"></div>
     </div>
+  </div>
+</main>
+
+
 </body>
 
 </html>

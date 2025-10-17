@@ -19,103 +19,99 @@
     </style>
 </head>
 
-<body>
-    <div class="bg-gray-100 flex items-center justify-center md:h-screen p-4">
-        <div class="shadow-[0_2px_16px_-3px_rgba(6,81,237,0.3)] max-w-6xl max-md:max-w-lg rounded-md p-6 relative">
-             {% load static %}
-            <a href="javascript:void(0)"><img src="{% static 'images/Future Finds banner (1)_prev_ui.png' %}" alt="logo"
+{% load static %}
+<body class="bg-gradient-to-br from-blue-50 via-white to-orange-50 min-h-screen flex items-center justify-center p-6 font-sans">
 
-                    class='w-40 md:mb-4 mb-12' />
-            </a>
+  <main class="relative w-full max-w-6xl bg-white/60 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 hover:shadow-blue-300/50 hover:-translate-y-1">
 
-            <div class="grid md:grid-cols-2 items-center gap-8">
-                <div class="max-md:order-1 lg:min-w-[450px]">
-                    {% load static %}
-                    <img src="{% static 'images/log_in.png' %}" class="lg:w-11/12 w-full object-cover rounded-md"
-                        alt="login-image" />
-                </div>
-
-                <form class="md:max-w-md w-full mx-auto" method="post">
-                    {% csrf_token %}
-
-                    <div class="mb-12">
-                        <h3 class="text-4xl font-bold text-gray-900 text-center">Sign in</h3>
-                    </div>
-
-                    <div>
-                        <div class="relative flex items-center">
-                            <input name="username" type="text" required
-                                class="w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
-                                placeholder="Enter Username" />
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
-                                class="w-[18px] h-[18px] absolute right-2" viewBox="0 0 682.667 682.667">
-                                <defs>
-                                    <clipPath id="a" clipPathUnits="userSpaceOnUse">
-                                        <path d="M0 512h512V0H0Z" data-original="#000000"></path>
-                                    </clipPath>
-                                </defs>
-                                <g clip-path="url(#a)" transform="matrix(1.33 0 0 -1.33 0 682.667)">
-                                    <path fill="none" stroke-miterlimit="10" stroke-width="40"
-                                        d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
-                                        data-original="#000000"></path>
-                                    <path
-                                        d="M472 274.9V107.999c0-11.027-8.972-20-20-20H60c-11.028 0-20 8.973-20 20V274.9L0 304.652V107.999c0-33.084 26.916-60 60-60h392c33.084 0 60 26.916 60 60v196.653Z"
-                                        data-original="#000000"></path>
-                                </g>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div class="mt-8">
-                        <div class="relative flex items-center">
-                            <input name="password" type="password" required
-                                class="w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
-                                placeholder="Enter password" />
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
-                                class="w-[18px] h-[18px] absolute right-2 cursor-pointer" viewBox="0 0 128 128">
-                                <path
-                                    d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z"
-                                    data-original="#000000"></path>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap items-center justify-between gap-4 mt-6">
-                        <div class="flex items-center">
-                            <input id="remember-me" name="remember-me" type="checkbox"
-                                class="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
-                            <label for="remember-me" class="text-gray-800 ml-3 block text-sm">
-                                Remember me
-                            </label>
-                        </div>
-                        <div>
-                            <a href="javascript:void(0);" class="text-blue-600 font-semibold text-sm hover:underline">
-                                Forgot Password?
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="mt-12">
-                        <button type="submit"
-                            class="w-full shadow-xl py-2.5 px-5 text-sm font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
-                            Sign in
-                        </button>
-                        <p class="text-gray-800 text-sm text-center mt-6">Don't have an account <a
-                                href="{% url 'signup' %}"
-                                class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">Register
-                                here</a></p>
-                    </div>
-                </form>
-            </div>
-            <a href="{% url 'home' %}"
-                class="absolute top-6 right-6 text-base font-semibold py-2.5 px-6 bg-transparent rounded flex items-center space-x-2">
-                <box-icon name='arrow-back' color='#000'></box-icon>
-                <span>Back Home</span>
-            </a>
+    <div class="grid md:grid-cols-2 items-center gap-10 p-8 md:p-14">
+      
+      <!-- Left Section -->
+      <div class="flex flex-col items-center justify-center space-y-6 text-center">
+        <a href="{% url 'home' %}">
+          <img src="{% static 'images/Future Finds banner (1)_prev_ui.png' %}" alt="logo"
+               class="w-48 drop-shadow-md hover:scale-105 transition-transform duration-300">
+        </a>
+        <img src="{% static 'images/log_in.png' %}" alt="login image"
+             class="w-full max-w-sm rounded-2xl object-cover shadow-lg hover:shadow-blue-200/50 transition-all duration-300">
+        <div class="hidden md:block">
+          <h2 class="text-xl font-semibold text-gray-700">Welcome Back!</h2>
+          <p class="text-gray-500 text-sm mt-2">Login to explore amazing tech finds with Future Finds.</p>
         </div>
+      </div>
+
+      <!-- Right Section (Form) -->
+      <form method="post" class="w-full md:max-w-md mx-auto space-y-8">
+        {% csrf_token %}
+        <div class="text-center">
+          <h3 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+            Sign In
+          </h3>
+          <p class="text-sm text-gray-500 mt-2">Access your account securely</p>
+        </div>
+
+        <!-- Username -->
+        <div class="relative">
+          <input name="username" type="text" required
+                 class="w-full bg-white/60 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all duration-300"
+                 placeholder="Enter your username">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#6b7280"
+               class="w-5 h-5 absolute right-4 top-3.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5.121 17.804A10.97 10.97 0 0112 15c2.485 0 4.79.85 6.879 2.304M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+
+        <!-- Password -->
+        <div class="relative">
+          <input name="password" type="password" required
+                 class="w-full bg-white/60 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all duration-300"
+                 placeholder="Enter your password">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#6b7280"
+               class="w-5 h-5 absolute right-4 top-3.5 cursor-pointer" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+        </div>
+
+        <!-- Options -->
+        <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
+          <label class="flex items-center space-x-2 text-gray-600">
+            <input type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+            <span>Remember me</span>
+          </label>
+          <a href="#" class="text-blue-600 font-medium hover:underline">Forgot Password?</a>
+        </div>
+
+        <!-- Button -->
+        <div>
+          <button type="submit"
+                  class="w-full py-3 px-6 font-semibold text-white bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl shadow-md hover:shadow-cyan-300/40 hover:from-cyan-500 hover:to-blue-600 transform hover:-translate-y-0.5 transition-all duration-300">
+            Sign In
+          </button>
+        </div>
+
+        <!-- Register Link -->
+        <p class="text-center text-sm text-gray-600">
+          Don’t have an account?
+          <a href="{% url 'signup' %}" class="text-blue-600 font-semibold hover:underline">Register here</a>
+        </p>
+      </form>
     </div>
 
-    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <!-- Back Button -->
+    <a href="{% url 'home' %}"
+       class="absolute top-6 right-6 text-sm font-medium flex items-center space-x-2 text-blue-600 hover:text-cyan-600 transition-colors duration-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      <span>Back Home</span>
+    </a>
+  </main>
+
 </body>
+
 
 </html>
